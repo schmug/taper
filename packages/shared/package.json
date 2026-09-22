@@ -1,0 +1,14 @@
+{
+  "name": "@taper/shared",
+  "version": "0.0.0",
+  "description": "Boundary schemas (zod), OTLP JSON types, constants shared by agent and control plane.",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  }
+}

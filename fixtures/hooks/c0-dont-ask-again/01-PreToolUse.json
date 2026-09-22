@@ -1,0 +1,14 @@
+{
+  "session_id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+  "transcript_path": "/home/user/.claude/projects/-probe-c0-dont-ask-again-repo/992c2c17-306b-4adc-9ed2-2f21b2476d68.jsonl",
+  "cwd": "/probe/c0-dont-ask-again/repo",
+  "scratchpad_dir": "/private/tmp/claude-501/-probe-c0-dont-ask-again-repo/992c2c17-306b-4adc-9ed2-2f21b2476d68/scratchpad",
+  "prompt_id": "f210f195-66e9-4a20-aec3-6e520f6986a2",
+  "permission_mode": "default",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "./probe.sh c"
+  },
+  "tool_use_id": "toolu_0168SqABQT8LA7KpUcpaYpnW"
+}

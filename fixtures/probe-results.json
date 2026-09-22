@@ -1,0 +1,4993 @@
+{
+  "claudeVersion": "2.1.278 (Claude Code)",
+  "model": "haiku",
+  "ranAt": "2026-09-22T21:49:05.587Z",
+  "scenarios": {
+    "a0-allow-control": {
+      "purpose": "(a) control: project allow alone lets the command run with source=config",
+      "command": "./probe.sh a",
+      "rules": {
+        "project": {
+          "allow": [
+            "Bash(./probe.sh a)"
+          ]
+        }
+      },
+      "trustedBeforeRun": true,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "",
+      "uses": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "./probe.sh a"
+          }
+        }
+      ],
+      "results": [
+        {
+          "is_error": false,
+          "content": "taper-probe ran: a"
+        }
+      ],
+      "permission_denials": [],
+      "result": "taper-probe ran: a",
+      "settingsAfter": {
+        "settings.json": {
+          "permissions": {
+            "allow": [
+              "Bash(./probe.sh a)"
+            ]
+          }
+        }
+      },
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6d0d1764-20b3-425e-826e-b46d9af7ddd5",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:03.274Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6d0d1764-20b3-425e-826e-b46d9af7ddd5",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:03.274Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6d0d1764-20b3-425e-826e-b46d9af7ddd5",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:03.274Z",
+            "event.sequence": 4,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6d0d1764-20b3-425e-826e-b46d9af7ddd5",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:03.274Z",
+            "event.sequence": 5,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6d0d1764-20b3-425e-826e-b46d9af7ddd5",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:03.274Z",
+            "event.sequence": 6,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6d0d1764-20b3-425e-826e-b46d9af7ddd5",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:03.274Z",
+            "event.sequence": 7,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6898c6bf-fbea-45e3-a484-e9e02afe0e2c",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:09.610Z",
+            "event.sequence": 1,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6898c6bf-fbea-45e3-a484-e9e02afe0e2c",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:09.610Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6898c6bf-fbea-45e3-a484-e9e02afe0e2c",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:09.610Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6898c6bf-fbea-45e3-a484-e9e02afe0e2c",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:09.610Z",
+            "event.sequence": 4,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6898c6bf-fbea-45e3-a484-e9e02afe0e2c",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:09.610Z",
+            "event.sequence": 5,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6898c6bf-fbea-45e3-a484-e9e02afe0e2c",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:09.610Z",
+            "event.sequence": 6,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "tool_decision",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6898c6bf-fbea-45e3-a484-e9e02afe0e2c",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_decision",
+            "event.timestamp": "2026-09-22T21:43:13.038Z",
+            "event.sequence": 9,
+            "prompt.id": "db0c5022-1d51-4829-91cf-f01bb8243c3f",
+            "decision": "accept",
+            "source": "config",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_01RXQpAkxUUbQeEyW6L2WrFp",
+            "tool_source": "builtin",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh a\"}"
+          }
+        },
+        {
+          "name": "tool_result",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "6898c6bf-fbea-45e3-a484-e9e02afe0e2c",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_result",
+            "event.timestamp": "2026-09-22T21:43:13.892Z",
+            "event.sequence": 11,
+            "prompt.id": "db0c5022-1d51-4829-91cf-f01bb8243c3f",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_01RXQpAkxUUbQeEyW6L2WrFp",
+            "success": "true",
+            "duration_ms": "854",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh a\"}",
+            "tool_input": "{\"command\":\"./probe.sh a\"}",
+            "tool_input_size_bytes": "26",
+            "tool_result_size_bytes": "18"
+          }
+        }
+      ]
+    },
+    "a1-local-ask-over-project-allow": {
+      "purpose": "(a) identical-specifier ask in settings.local.json overrides allow in settings.json",
+      "command": "./probe.sh a",
+      "rules": {
+        "project": {
+          "allow": [
+            "Bash(./probe.sh a)"
+          ]
+        },
+        "local": {
+          "ask": [
+            "Bash(./probe.sh a)"
+          ]
+        }
+      },
+      "trustedBeforeRun": true,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "",
+      "uses": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "./probe.sh a"
+          }
+        }
+      ],
+      "results": [
+        {
+          "is_error": true,
+          "content": "Claude requested permissions to use Bash, but you haven't granted it yet."
+        }
+      ],
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01XGF8qjLABx1gCK8TbwEdqR",
+          "tool_input": {
+            "command": "./probe.sh a"
+          }
+        }
+      ],
+      "result": "DENIED",
+      "settingsAfter": {
+        "settings.json": {
+          "permissions": {
+            "allow": [
+              "Bash(./probe.sh a)"
+            ]
+          }
+        },
+        "settings.local.json": {
+          "permissions": {
+            "ask": [
+              "Bash(./probe.sh a)"
+            ]
+          }
+        }
+      },
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "70583a5a-81db-49a4-9c6f-3b07e3522a33",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:28.230Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "70583a5a-81db-49a4-9c6f-3b07e3522a33",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:28.230Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "70583a5a-81db-49a4-9c6f-3b07e3522a33",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:28.230Z",
+            "event.sequence": 4,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "70583a5a-81db-49a4-9c6f-3b07e3522a33",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:28.230Z",
+            "event.sequence": 5,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "70583a5a-81db-49a4-9c6f-3b07e3522a33",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:28.230Z",
+            "event.sequence": 6,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "70583a5a-81db-49a4-9c6f-3b07e3522a33",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:28.230Z",
+            "event.sequence": 7,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "f9c768d3-43dc-482d-b4c8-1f499d45364f",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:34.643Z",
+            "event.sequence": 1,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "f9c768d3-43dc-482d-b4c8-1f499d45364f",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:34.643Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "f9c768d3-43dc-482d-b4c8-1f499d45364f",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:34.643Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "f9c768d3-43dc-482d-b4c8-1f499d45364f",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:34.643Z",
+            "event.sequence": 4,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "f9c768d3-43dc-482d-b4c8-1f499d45364f",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:34.643Z",
+            "event.sequence": 5,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "f9c768d3-43dc-482d-b4c8-1f499d45364f",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:34.643Z",
+            "event.sequence": 6,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        }
+      ]
+    },
+    "a2-cli-ask-over-project-allow": {
+      "purpose": "(a) identical-specifier ask in a --settings file overrides allow in settings.json",
+      "command": "./probe.sh a",
+      "rules": {
+        "project": {
+          "allow": [
+            "Bash(./probe.sh a)"
+          ]
+        },
+        "cli": {
+          "ask": [
+            "Bash(./probe.sh a)"
+          ]
+        }
+      },
+      "trustedBeforeRun": true,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "",
+      "uses": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "./probe.sh a"
+          }
+        }
+      ],
+      "results": [
+        {
+          "is_error": true,
+          "content": "Claude requested permissions to use Bash, but you haven't granted it yet."
+        }
+      ],
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_0151qyDT62dz95EgAsSA1mcq",
+          "tool_input": {
+            "command": "./probe.sh a"
+          }
+        }
+      ],
+      "result": "DENIED",
+      "settingsAfter": {
+        "settings.json": {
+          "permissions": {
+            "allow": [
+              "Bash(./probe.sh a)"
+            ]
+          }
+        }
+      },
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "510b3673-e635-4ab1-8b2f-58476bef0018",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:43.299Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "510b3673-e635-4ab1-8b2f-58476bef0018",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:43.299Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "510b3673-e635-4ab1-8b2f-58476bef0018",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:43.299Z",
+            "event.sequence": 4,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "510b3673-e635-4ab1-8b2f-58476bef0018",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:43.299Z",
+            "event.sequence": 5,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "510b3673-e635-4ab1-8b2f-58476bef0018",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:43.299Z",
+            "event.sequence": 6,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "510b3673-e635-4ab1-8b2f-58476bef0018",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:43.299Z",
+            "event.sequence": 7,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "af21e31d-c391-4f64-8265-f03c593ed183",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:49.654Z",
+            "event.sequence": 1,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "af21e31d-c391-4f64-8265-f03c593ed183",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:49.654Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "af21e31d-c391-4f64-8265-f03c593ed183",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:49.654Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "af21e31d-c391-4f64-8265-f03c593ed183",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:49.654Z",
+            "event.sequence": 4,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "af21e31d-c391-4f64-8265-f03c593ed183",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:49.654Z",
+            "event.sequence": 5,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "af21e31d-c391-4f64-8265-f03c593ed183",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:49.654Z",
+            "event.sequence": 6,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        }
+      ]
+    },
+    "a3-cli-deny-over-project-allow": {
+      "purpose": "(a) identical-specifier deny in a --settings file overrides allow in settings.json",
+      "command": "./probe.sh a",
+      "rules": {
+        "project": {
+          "allow": [
+            "Bash(./probe.sh a)"
+          ]
+        },
+        "cli": {
+          "deny": [
+            "Bash(./probe.sh a)"
+          ]
+        }
+      },
+      "trustedBeforeRun": true,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "",
+      "uses": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "./probe.sh a"
+          }
+        }
+      ],
+      "results": [
+        {
+          "is_error": true,
+          "content": "Permission to use Bash with command ./probe.sh a has been denied."
+        }
+      ],
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01Q2CZbWNHr37WBKkBMfK3Vf",
+          "tool_input": {
+            "command": "./probe.sh a"
+          }
+        }
+      ],
+      "result": "DENIED",
+      "settingsAfter": {
+        "settings.json": {
+          "permissions": {
+            "allow": [
+              "Bash(./probe.sh a)"
+            ]
+          }
+        }
+      },
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "877ea422-cf91-4fbe-a57c-473ee0a0c8a7",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:59.276Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "877ea422-cf91-4fbe-a57c-473ee0a0c8a7",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:59.277Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "877ea422-cf91-4fbe-a57c-473ee0a0c8a7",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:59.277Z",
+            "event.sequence": 4,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "877ea422-cf91-4fbe-a57c-473ee0a0c8a7",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:59.277Z",
+            "event.sequence": 5,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "877ea422-cf91-4fbe-a57c-473ee0a0c8a7",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:59.277Z",
+            "event.sequence": 6,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "877ea422-cf91-4fbe-a57c-473ee0a0c8a7",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:43:59.277Z",
+            "event.sequence": 7,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "bcd09587-bcc6-4c8d-9e9c-8453a5009809",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:05.680Z",
+            "event.sequence": 1,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "bcd09587-bcc6-4c8d-9e9c-8453a5009809",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:05.680Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "bcd09587-bcc6-4c8d-9e9c-8453a5009809",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:05.680Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "bcd09587-bcc6-4c8d-9e9c-8453a5009809",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:05.680Z",
+            "event.sequence": 4,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "bcd09587-bcc6-4c8d-9e9c-8453a5009809",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:05.680Z",
+            "event.sequence": 5,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "bcd09587-bcc6-4c8d-9e9c-8453a5009809",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:05.680Z",
+            "event.sequence": 6,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "tool_decision",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "bcd09587-bcc6-4c8d-9e9c-8453a5009809",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_decision",
+            "event.timestamp": "2026-09-22T21:44:08.644Z",
+            "event.sequence": 9,
+            "prompt.id": "84be6a3d-4c66-4d88-96c6-41b1fc82e466",
+            "decision": "reject",
+            "source": "config",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_01Q2CZbWNHr37WBKkBMfK3Vf",
+            "tool_source": "builtin",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh a\"}"
+          }
+        }
+      ]
+    },
+    "u0-untrusted-project-allow": {
+      "purpose": "trust: project allow alone in a workspace whose trust dialog was never accepted",
+      "command": "./probe.sh u",
+      "rules": {
+        "project": {
+          "allow": [
+            "Bash(./probe.sh u)"
+          ]
+        }
+      },
+      "trustedBeforeRun": false,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "Ignoring 1 permissions.allow entry from .claude/settings.json: this workspace has not been trusted. Run Claude Code interactively here once and accept the trust dialog, or set projects[\"/probe/u0-untrusted-project-allow/repo\"].hasTrustDialogAccepted: true in /home/user/.claude.json.\n",
+      "uses": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "./probe.sh u"
+          }
+        }
+      ],
+      "results": [
+        {
+          "is_error": true,
+          "content": "This command requires approval"
+        }
+      ],
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01FXcGC8rNk5bU2Fji2ZU5eG",
+          "tool_input": {
+            "command": "./probe.sh u"
+          }
+        }
+      ],
+      "result": "DENIED",
+      "settingsAfter": {
+        "settings.json": {
+          "permissions": {
+            "allow": [
+              "Bash(./probe.sh u)"
+            ]
+          }
+        }
+      },
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "503f4df4-f510-4c2e-b706-a628f9cd4cee",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:12.600Z",
+            "event.sequence": 1,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "503f4df4-f510-4c2e-b706-a628f9cd4cee",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:12.600Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "503f4df4-f510-4c2e-b706-a628f9cd4cee",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:12.600Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "503f4df4-f510-4c2e-b706-a628f9cd4cee",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:12.600Z",
+            "event.sequence": 4,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "503f4df4-f510-4c2e-b706-a628f9cd4cee",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:12.600Z",
+            "event.sequence": 5,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "503f4df4-f510-4c2e-b706-a628f9cd4cee",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:12.600Z",
+            "event.sequence": 6,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        }
+      ]
+    },
+    "u1-untrusted-local-allow": {
+      "purpose": "trust: settings.local.json allow alone in an untrusted workspace",
+      "command": "./probe.sh u",
+      "rules": {
+        "local": {
+          "allow": [
+            "Bash(./probe.sh u)"
+          ]
+        }
+      },
+      "trustedBeforeRun": false,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "",
+      "uses": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "./probe.sh u"
+          }
+        }
+      ],
+      "results": [
+        {
+          "is_error": false,
+          "content": "taper-probe ran: u"
+        }
+      ],
+      "permission_denials": [],
+      "result": "taper-probe ran: u",
+      "settingsAfter": {
+        "settings.json": {},
+        "settings.local.json": {
+          "permissions": {
+            "allow": [
+              "Bash(./probe.sh u)"
+            ]
+          }
+        }
+      },
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8c2763ff-d98f-446d-aaca-e31ceb26c345",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:19.622Z",
+            "event.sequence": 1,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8c2763ff-d98f-446d-aaca-e31ceb26c345",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:19.622Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8c2763ff-d98f-446d-aaca-e31ceb26c345",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:19.622Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8c2763ff-d98f-446d-aaca-e31ceb26c345",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:19.622Z",
+            "event.sequence": 4,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8c2763ff-d98f-446d-aaca-e31ceb26c345",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:19.622Z",
+            "event.sequence": 5,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8c2763ff-d98f-446d-aaca-e31ceb26c345",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:19.622Z",
+            "event.sequence": 6,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "tool_decision",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8c2763ff-d98f-446d-aaca-e31ceb26c345",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_decision",
+            "event.timestamp": "2026-09-22T21:44:21.542Z",
+            "event.sequence": 9,
+            "prompt.id": "14449db5-d147-4a9d-baaf-4112c19136ec",
+            "decision": "accept",
+            "source": "user_permanent",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_01Hmt9JSpxKaHhzFvfgEVZAT",
+            "tool_source": "builtin",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh u\"}"
+          }
+        },
+        {
+          "name": "tool_result",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8c2763ff-d98f-446d-aaca-e31ceb26c345",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_result",
+            "event.timestamp": "2026-09-22T21:44:22.299Z",
+            "event.sequence": 11,
+            "prompt.id": "14449db5-d147-4a9d-baaf-4112c19136ec",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_01Hmt9JSpxKaHhzFvfgEVZAT",
+            "success": "true",
+            "duration_ms": "756",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh u\"}",
+            "tool_input": "{\"command\":\"./probe.sh u\"}",
+            "tool_input_size_bytes": "26",
+            "tool_result_size_bytes": "18"
+          }
+        }
+      ]
+    },
+    "u2-untrusted-cli-allow": {
+      "purpose": "trust: --settings file allow alone in an untrusted workspace",
+      "command": "./probe.sh u",
+      "rules": {
+        "cli": {
+          "allow": [
+            "Bash(./probe.sh u)"
+          ]
+        }
+      },
+      "trustedBeforeRun": false,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "",
+      "uses": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "./probe.sh u"
+          }
+        }
+      ],
+      "results": [
+        {
+          "is_error": false,
+          "content": "taper-probe ran: u"
+        }
+      ],
+      "permission_denials": [],
+      "result": "taper-probe ran: u",
+      "settingsAfter": {
+        "settings.json": {}
+      },
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "c31a0f38-922c-4f6c-ba18-c146f7ee4bd1",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:26.322Z",
+            "event.sequence": 1,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "c31a0f38-922c-4f6c-ba18-c146f7ee4bd1",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:26.322Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "c31a0f38-922c-4f6c-ba18-c146f7ee4bd1",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:26.322Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "c31a0f38-922c-4f6c-ba18-c146f7ee4bd1",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:26.322Z",
+            "event.sequence": 4,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "c31a0f38-922c-4f6c-ba18-c146f7ee4bd1",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:26.322Z",
+            "event.sequence": 5,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "c31a0f38-922c-4f6c-ba18-c146f7ee4bd1",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:26.322Z",
+            "event.sequence": 6,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "tool_decision",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "c31a0f38-922c-4f6c-ba18-c146f7ee4bd1",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_decision",
+            "event.timestamp": "2026-09-22T21:44:30.276Z",
+            "event.sequence": 9,
+            "prompt.id": "7ef59e80-55f9-4832-8efc-209384392052",
+            "decision": "accept",
+            "source": "config",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_01WV99U5rzvASyE24Jaz4anw",
+            "tool_source": "builtin",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh u\"}"
+          }
+        },
+        {
+          "name": "tool_result",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "c31a0f38-922c-4f6c-ba18-c146f7ee4bd1",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_result",
+            "event.timestamp": "2026-09-22T21:44:31.015Z",
+            "event.sequence": 11,
+            "prompt.id": "7ef59e80-55f9-4832-8efc-209384392052",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_01WV99U5rzvASyE24Jaz4anw",
+            "success": "true",
+            "duration_ms": "738",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh u\"}",
+            "tool_input": "{\"command\":\"./probe.sh u\"}",
+            "tool_input_size_bytes": "26",
+            "tool_result_size_bytes": "18"
+          }
+        }
+      ]
+    },
+    "e0-headless-unmatched": {
+      "purpose": "(e) headless -p, no rule matches, manual mode: prompt with no permission host",
+      "command": "./probe.sh e",
+      "rules": {},
+      "trustedBeforeRun": true,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "",
+      "uses": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "./probe.sh e"
+          }
+        }
+      ],
+      "results": [
+        {
+          "is_error": true,
+          "content": "This command requires approval"
+        }
+      ],
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01LtsP8qFufbtpmV3R6bjdkm",
+          "tool_input": {
+            "command": "./probe.sh e"
+          }
+        }
+      ],
+      "result": "DENIED",
+      "settingsAfter": {
+        "settings.json": {}
+      },
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "0ead98a7-5d7e-4b81-b051-d4ffc1b36708",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:38.836Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "0ead98a7-5d7e-4b81-b051-d4ffc1b36708",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:38.836Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "0ead98a7-5d7e-4b81-b051-d4ffc1b36708",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:38.836Z",
+            "event.sequence": 4,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "0ead98a7-5d7e-4b81-b051-d4ffc1b36708",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:38.836Z",
+            "event.sequence": 5,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "0ead98a7-5d7e-4b81-b051-d4ffc1b36708",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:38.836Z",
+            "event.sequence": 6,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "0ead98a7-5d7e-4b81-b051-d4ffc1b36708",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:38.836Z",
+            "event.sequence": 7,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8895704a-f31c-41c3-b4f7-75863c695e79",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:45.176Z",
+            "event.sequence": 1,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8895704a-f31c-41c3-b4f7-75863c695e79",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:45.177Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8895704a-f31c-41c3-b4f7-75863c695e79",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:45.177Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8895704a-f31c-41c3-b4f7-75863c695e79",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:45.177Z",
+            "event.sequence": 4,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8895704a-f31c-41c3-b4f7-75863c695e79",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:45.177Z",
+            "event.sequence": 5,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "8895704a-f31c-41c3-b4f7-75863c695e79",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:44:45.177Z",
+            "event.sequence": 6,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        }
+      ]
+    },
+    "b0-hook-passthrough": {
+      "purpose": "(b) hook prints nothing; allow rule applies; records every hook stdin shape",
+      "command": "./probe.sh b-pass",
+      "rules": {
+        "project": {
+          "allow": [
+            "Bash(./probe.sh:*)"
+          ]
+        }
+      },
+      "trustedBeforeRun": true,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "",
+      "uses": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "./probe.sh b-pass",
+            "description": "Run probe.sh with b-pass argument"
+          }
+        }
+      ],
+      "results": [
+        {
+          "is_error": false,
+          "content": "taper-probe ran: b-pass"
+        }
+      ],
+      "permission_denials": [],
+      "result": "taper-probe ran: b-pass",
+      "settingsAfter": {
+        "settings.json": {
+          "permissions": {
+            "allow": [
+              "Bash(./probe.sh:*)"
+            ]
+          },
+          "hooks": {
+            "SessionStart": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b0-hook-passthrough/hook.mjs' SessionStart '/probe/b0-hook-passthrough/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "PreToolUse": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b0-hook-passthrough/hook.mjs' PreToolUse '/probe/b0-hook-passthrough/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PermissionRequest": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b0-hook-passthrough/hook.mjs' PermissionRequest '/probe/b0-hook-passthrough/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PermissionDenied": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b0-hook-passthrough/hook.mjs' PermissionDenied '/probe/b0-hook-passthrough/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PostToolUse": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b0-hook-passthrough/hook.mjs' PostToolUse '/probe/b0-hook-passthrough/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PostToolUseFailure": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b0-hook-passthrough/hook.mjs' PostToolUseFailure '/probe/b0-hook-passthrough/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "Stop": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b0-hook-passthrough/hook.mjs' Stop '/probe/b0-hook-passthrough/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "SessionEnd": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b0-hook-passthrough/hook.mjs' SessionEnd '/probe/b0-hook-passthrough/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "ConfigChange": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b0-hook-passthrough/hook.mjs' ConfigChange '/probe/b0-hook-passthrough/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "hookSequence": [
+        "SessionStart",
+        "PreToolUse",
+        "PostToolUse",
+        "Stop",
+        "SessionEnd"
+      ],
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:47:12.987Z",
+            "event.sequence": 1,
+            "hook_event": "SessionStart",
+            "hook_name": "SessionStart:startup",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 4,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 5,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 6,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 7,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 8,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 9,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 10,
+            "hook_event": "PermissionRequest",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 11,
+            "hook_event": "PermissionDenied",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 12,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 13,
+            "hook_event": "PostToolUseFailure",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 14,
+            "hook_event": "Stop",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 15,
+            "hook_event": "SessionEnd",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:12.993Z",
+            "event.sequence": 16,
+            "hook_event": "ConfigChange",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:47:13.030Z",
+            "event.sequence": 18,
+            "hook_event": "SessionStart",
+            "hook_name": "SessionStart:startup",
+            "num_hooks": "1",
+            "num_success": "1",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "36",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:47:16.331Z",
+            "event.sequence": 20,
+            "prompt.id": "8d75d96e-3a7e-4ff9-b143-b22634aa901e",
+            "hook_event": "PreToolUse",
+            "hook_name": "PreToolUse:Bash",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:47:16.364Z",
+            "event.sequence": 22,
+            "prompt.id": "8d75d96e-3a7e-4ff9-b143-b22634aa901e",
+            "hook_event": "PreToolUse",
+            "hook_name": "PreToolUse:Bash",
+            "num_hooks": "1",
+            "num_success": "1",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "33",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "tool_decision",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_decision",
+            "event.timestamp": "2026-09-22T21:47:16.367Z",
+            "event.sequence": 23,
+            "prompt.id": "8d75d96e-3a7e-4ff9-b143-b22634aa901e",
+            "decision": "accept",
+            "source": "config",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_01H2uW1KKfVk9XSY8z4Da5vb",
+            "tool_source": "builtin",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh b-pass\",\"description\":\"Run probe.sh with b-pass argument\"}"
+          }
+        },
+        {
+          "name": "tool_result",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_result",
+            "event.timestamp": "2026-09-22T21:47:17.117Z",
+            "event.sequence": 24,
+            "prompt.id": "8d75d96e-3a7e-4ff9-b143-b22634aa901e",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_01H2uW1KKfVk9XSY8z4Da5vb",
+            "success": "true",
+            "duration_ms": "748",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh b-pass\",\"description\":\"Run probe.sh with b-pass argument\"}",
+            "tool_input": "{\"command\":\"./probe.sh b-pass\",\"description\":\"Run probe.sh with b-pass argument\"}",
+            "tool_input_size_bytes": "81",
+            "tool_result_size_bytes": "23"
+          }
+        },
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:47:17.117Z",
+            "event.sequence": 25,
+            "prompt.id": "8d75d96e-3a7e-4ff9-b143-b22634aa901e",
+            "hook_event": "PostToolUse",
+            "hook_name": "PostToolUse:Bash",
+            "num_hooks": "3",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:47:17.146Z",
+            "event.sequence": 26,
+            "prompt.id": "8d75d96e-3a7e-4ff9-b143-b22634aa901e",
+            "hook_event": "PostToolUse",
+            "hook_name": "PostToolUse:Bash",
+            "num_hooks": "3",
+            "num_success": "3",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "29",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:47:18.151Z",
+            "event.sequence": 29,
+            "prompt.id": "8d75d96e-3a7e-4ff9-b143-b22634aa901e",
+            "hook_event": "Stop",
+            "hook_name": "Stop",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:47:18.175Z",
+            "event.sequence": 30,
+            "prompt.id": "8d75d96e-3a7e-4ff9-b143-b22634aa901e",
+            "hook_event": "Stop",
+            "hook_name": "Stop",
+            "num_hooks": "1",
+            "num_success": "1",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "23",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        }
+      ]
+    },
+    "b1-hook-deny": {
+      "purpose": "(b) PreToolUse permissionDecision=deny against a matching allow rule",
+      "command": "./probe.sh hook-deny",
+      "rules": {
+        "project": {
+          "allow": [
+            "Bash(./probe.sh:*)"
+          ]
+        }
+      },
+      "trustedBeforeRun": true,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "",
+      "uses": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "./probe.sh hook-deny"
+          }
+        }
+      ],
+      "results": [
+        {
+          "is_error": true,
+          "content": "PreToolUse:Bash hook error: taper-probe: hook deny"
+        }
+      ],
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01Vna7gqVXvfxSs7HtFur2QV",
+          "tool_input": {
+            "command": "./probe.sh hook-deny"
+          }
+        }
+      ],
+      "result": "DENIED",
+      "settingsAfter": {
+        "settings.json": {
+          "permissions": {
+            "allow": [
+              "Bash(./probe.sh:*)"
+            ]
+          },
+          "hooks": {
+            "SessionStart": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b1-hook-deny/hook.mjs' SessionStart '/probe/b1-hook-deny/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "PreToolUse": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b1-hook-deny/hook.mjs' PreToolUse '/probe/b1-hook-deny/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PermissionRequest": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b1-hook-deny/hook.mjs' PermissionRequest '/probe/b1-hook-deny/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PermissionDenied": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b1-hook-deny/hook.mjs' PermissionDenied '/probe/b1-hook-deny/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PostToolUse": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b1-hook-deny/hook.mjs' PostToolUse '/probe/b1-hook-deny/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PostToolUseFailure": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b1-hook-deny/hook.mjs' PostToolUseFailure '/probe/b1-hook-deny/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "Stop": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b1-hook-deny/hook.mjs' Stop '/probe/b1-hook-deny/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "SessionEnd": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b1-hook-deny/hook.mjs' SessionEnd '/probe/b1-hook-deny/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "ConfigChange": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b1-hook-deny/hook.mjs' ConfigChange '/probe/b1-hook-deny/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "hookSequence": [
+        "SessionStart",
+        "PreToolUse",
+        "Stop",
+        "SessionEnd"
+      ],
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:47:21.325Z",
+            "event.sequence": 1,
+            "hook_event": "SessionStart",
+            "hook_name": "SessionStart:startup",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 4,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 5,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 6,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 7,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 8,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 9,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 10,
+            "hook_event": "PermissionRequest",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 11,
+            "hook_event": "PermissionDenied",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 12,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 13,
+            "hook_event": "PostToolUseFailure",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 14,
+            "hook_event": "Stop",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 15,
+            "hook_event": "SessionEnd",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:21.331Z",
+            "event.sequence": 16,
+            "hook_event": "ConfigChange",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:47:21.367Z",
+            "event.sequence": 18,
+            "hook_event": "SessionStart",
+            "hook_name": "SessionStart:startup",
+            "num_hooks": "1",
+            "num_success": "1",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "35",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:47:23.973Z",
+            "event.sequence": 20,
+            "prompt.id": "b12b4486-064f-4e0b-aa74-bb158de939cb",
+            "hook_event": "PreToolUse",
+            "hook_name": "PreToolUse:Bash",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:47:24.009Z",
+            "event.sequence": 22,
+            "prompt.id": "b12b4486-064f-4e0b-aa74-bb158de939cb",
+            "hook_event": "PreToolUse",
+            "hook_name": "PreToolUse:Bash",
+            "num_hooks": "1",
+            "num_success": "0",
+            "num_blocking": "1",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "36",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "tool_decision",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_decision",
+            "event.timestamp": "2026-09-22T21:47:24.010Z",
+            "event.sequence": 23,
+            "prompt.id": "b12b4486-064f-4e0b-aa74-bb158de939cb",
+            "decision": "reject",
+            "source": "hook",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_01Vna7gqVXvfxSs7HtFur2QV",
+            "tool_source": "builtin",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh hook-deny\"}"
+          }
+        },
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:47:25.155Z",
+            "event.sequence": 26,
+            "prompt.id": "b12b4486-064f-4e0b-aa74-bb158de939cb",
+            "hook_event": "Stop",
+            "hook_name": "Stop",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:47:25.185Z",
+            "event.sequence": 27,
+            "prompt.id": "b12b4486-064f-4e0b-aa74-bb158de939cb",
+            "hook_event": "Stop",
+            "hook_name": "Stop",
+            "num_hooks": "1",
+            "num_success": "1",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "30",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        }
+      ]
+    },
+    "b2-hook-ask": {
+      "purpose": "(b)+(e) PreToolUse permissionDecision=ask against a matching allow rule, headless",
+      "command": "./probe.sh hook-ask",
+      "rules": {
+        "project": {
+          "allow": [
+            "Bash(./probe.sh:*)"
+          ]
+        }
+      },
+      "trustedBeforeRun": true,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "",
+      "uses": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "./probe.sh hook-ask"
+          }
+        }
+      ],
+      "results": [
+        {
+          "is_error": true,
+          "content": "taper-probe: hook ask"
+        }
+      ],
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_014A3SFpDBvmo3HfmNya9ur4",
+          "tool_input": {
+            "command": "./probe.sh hook-ask"
+          }
+        }
+      ],
+      "result": "taper-probe: hook ask",
+      "settingsAfter": {
+        "settings.json": {
+          "permissions": {
+            "allow": [
+              "Bash(./probe.sh:*)"
+            ]
+          },
+          "hooks": {
+            "SessionStart": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b2-hook-ask/hook.mjs' SessionStart '/probe/b2-hook-ask/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "PreToolUse": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b2-hook-ask/hook.mjs' PreToolUse '/probe/b2-hook-ask/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PermissionRequest": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b2-hook-ask/hook.mjs' PermissionRequest '/probe/b2-hook-ask/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PermissionDenied": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b2-hook-ask/hook.mjs' PermissionDenied '/probe/b2-hook-ask/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PostToolUse": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b2-hook-ask/hook.mjs' PostToolUse '/probe/b2-hook-ask/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PostToolUseFailure": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b2-hook-ask/hook.mjs' PostToolUseFailure '/probe/b2-hook-ask/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "Stop": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b2-hook-ask/hook.mjs' Stop '/probe/b2-hook-ask/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "SessionEnd": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b2-hook-ask/hook.mjs' SessionEnd '/probe/b2-hook-ask/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "ConfigChange": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/b2-hook-ask/hook.mjs' ConfigChange '/probe/b2-hook-ask/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "hookSequence": [
+        "SessionStart",
+        "PreToolUse",
+        "Stop",
+        "SessionEnd"
+      ],
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:47:28.260Z",
+            "event.sequence": 1,
+            "hook_event": "SessionStart",
+            "hook_name": "SessionStart:startup",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 4,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 5,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 6,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 7,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 8,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 9,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 10,
+            "hook_event": "PermissionRequest",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 11,
+            "hook_event": "PermissionDenied",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 12,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 13,
+            "hook_event": "PostToolUseFailure",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 14,
+            "hook_event": "Stop",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 15,
+            "hook_event": "SessionEnd",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:47:28.266Z",
+            "event.sequence": 16,
+            "hook_event": "ConfigChange",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:47:28.305Z",
+            "event.sequence": 18,
+            "hook_event": "SessionStart",
+            "hook_name": "SessionStart:startup",
+            "num_hooks": "1",
+            "num_success": "1",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "38",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:47:30.199Z",
+            "event.sequence": 20,
+            "prompt.id": "231e2d30-9882-4847-b1f3-f2891cb2d52a",
+            "hook_event": "PreToolUse",
+            "hook_name": "PreToolUse:Bash",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:47:30.246Z",
+            "event.sequence": 22,
+            "prompt.id": "231e2d30-9882-4847-b1f3-f2891cb2d52a",
+            "hook_event": "PreToolUse",
+            "hook_name": "PreToolUse:Bash",
+            "num_hooks": "1",
+            "num_success": "1",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "47",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:47:31.344Z",
+            "event.sequence": 25,
+            "prompt.id": "231e2d30-9882-4847-b1f3-f2891cb2d52a",
+            "hook_event": "Stop",
+            "hook_name": "Stop",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:47:31.379Z",
+            "event.sequence": 26,
+            "prompt.id": "231e2d30-9882-4847-b1f3-f2891cb2d52a",
+            "hook_event": "Stop",
+            "hook_name": "Stop",
+            "num_hooks": "1",
+            "num_success": "1",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "35",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        }
+      ]
+    },
+    "c0-dont-ask-again": {
+      "purpose": "(c) interactive \"Yes, and don't ask again\": which file gets the new allow rule",
+      "command": "./probe.sh c",
+      "rules": {},
+      "trustedBeforeRun": false,
+      "interactive": {
+        "log": [
+          "trust",
+          "selected option 2: 2. Yes, and don’t ask again for: ./probe.sh c *",
+          "command ran"
+        ],
+        "completed": true
+      },
+      "permissionScreen": " ▐▛███▛█   Claude Code v2.1.278\n▝▜██████▀  Haiku 4.5 · Claude Max\n  ▝▝ ▝▝    ~/.cache/taper-probe/c0-dont-ask-again/repo\n\n\n❯ Use the Bash tool to run exactly this command, verbatim, once: ./probe.sh c\n  Do not run any other command. If the command is denied or blocked, do not retry; reply with the single word DENIED. Otherwise reply with the command output.\n\n⏺ Bash(./probe.sh c)\n  ⎿  Waiting…\n\n────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\n Bash command\n\n   ./probe.sh c\n   Run shell command\n\n This command requires approval\n\n Do you want to proceed?\n ❯ 1. Yes\n   2. Yes, and don’t ask again for: ./probe.sh c *\n   3. No\n\n Esc to cancel · Tab to amend\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "finalScreen": " ▐▛███▛█   Claude Code v2.1.278\n▝▜██████▀  Haiku 4.5 · Claude Max\n  ▝▝ ▝▝    ~/.cache/taper-probe/c0-dont-ask-again/repo\n\n\n❯ Use the Bash tool to run exactly this command, verbatim, once: ./probe.sh c\n  Do not run any other command. If the command is denied or blocked, do not retry; reply with the single word DENIED. Otherwise reply with the command output.\n\n⏺ Bash(./probe.sh c)\n  ⎿  taper-probe ran: c\n\n✽ Choreographing… (4s · ↓ 280 tokens)\n\n────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\n❯ \n────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\n  ⏸ manual mode on · esc to interrupt · ← for agents\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "settingsAfter": {
+        "settings.json": {
+          "hooks": {
+            "SessionStart": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/c0-dont-ask-again/hook.mjs' SessionStart '/probe/c0-dont-ask-again/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "PreToolUse": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/c0-dont-ask-again/hook.mjs' PreToolUse '/probe/c0-dont-ask-again/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PermissionRequest": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/c0-dont-ask-again/hook.mjs' PermissionRequest '/probe/c0-dont-ask-again/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PermissionDenied": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/c0-dont-ask-again/hook.mjs' PermissionDenied '/probe/c0-dont-ask-again/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PostToolUse": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/c0-dont-ask-again/hook.mjs' PostToolUse '/probe/c0-dont-ask-again/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "PostToolUseFailure": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/c0-dont-ask-again/hook.mjs' PostToolUseFailure '/probe/c0-dont-ask-again/hooks'",
+                    "timeout": 10
+                  }
+                ],
+                "matcher": "*"
+              }
+            ],
+            "Stop": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/c0-dont-ask-again/hook.mjs' Stop '/probe/c0-dont-ask-again/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "SessionEnd": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/c0-dont-ask-again/hook.mjs' SessionEnd '/probe/c0-dont-ask-again/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ],
+            "ConfigChange": [
+              {
+                "hooks": [
+                  {
+                    "type": "command",
+                    "command": "node '/probe/c0-dont-ask-again/hook.mjs' ConfigChange '/probe/c0-dont-ask-again/hooks'",
+                    "timeout": 10
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "settings.local.json": {
+          "permissions": {
+            "allow": [
+              "Bash(./probe.sh c *)"
+            ]
+          }
+        }
+      },
+      "hookSequence": [
+        "SessionStart",
+        "PreToolUse",
+        "PermissionRequest",
+        "PostToolUse",
+        "SessionEnd"
+      ],
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:46:12.163Z",
+            "event.sequence": 1,
+            "hook_event": "SessionStart",
+            "hook_name": "SessionStart:startup",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 4,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 5,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 6,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 7,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 8,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 9,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 10,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 11,
+            "hook_event": "PermissionRequest",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 12,
+            "hook_event": "PermissionDenied",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 13,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 14,
+            "hook_event": "PostToolUseFailure",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false",
+            "hook_matcher": "*"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 15,
+            "hook_event": "Stop",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 16,
+            "hook_event": "SessionEnd",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:46:12.303Z",
+            "event.sequence": 17,
+            "hook_event": "ConfigChange",
+            "hook_type": "command",
+            "hook_source": "projectSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:46:12.306Z",
+            "event.sequence": 19,
+            "hook_event": "SessionStart",
+            "hook_name": "SessionStart:startup",
+            "num_hooks": "1",
+            "num_success": "1",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "131",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:46:15.718Z",
+            "event.sequence": 23,
+            "prompt.id": "f210f195-66e9-4a20-aec3-6e520f6986a2",
+            "hook_event": "PreToolUse",
+            "hook_name": "PreToolUse:Bash",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:46:15.755Z",
+            "event.sequence": 25,
+            "prompt.id": "f210f195-66e9-4a20-aec3-6e520f6986a2",
+            "hook_event": "PreToolUse",
+            "hook_name": "PreToolUse:Bash",
+            "num_hooks": "1",
+            "num_success": "1",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "37",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:46:15.761Z",
+            "event.sequence": 26,
+            "prompt.id": "f210f195-66e9-4a20-aec3-6e520f6986a2",
+            "hook_event": "PermissionRequest",
+            "hook_name": "PermissionRequest:Bash",
+            "num_hooks": "1",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:46:15.794Z",
+            "event.sequence": 27,
+            "prompt.id": "f210f195-66e9-4a20-aec3-6e520f6986a2",
+            "hook_event": "PermissionRequest",
+            "hook_name": "PermissionRequest:Bash",
+            "num_hooks": "1",
+            "num_success": "1",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "33",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "tool_decision",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "tool_decision",
+            "event.timestamp": "2026-09-22T21:46:16.434Z",
+            "event.sequence": 28,
+            "prompt.id": "f210f195-66e9-4a20-aec3-6e520f6986a2",
+            "decision": "accept",
+            "source": "user_permanent",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_0168SqABQT8LA7KpUcpaYpnW",
+            "tool_source": "builtin",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh c\"}"
+          }
+        },
+        {
+          "name": "tool_result",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "tool_result",
+            "event.timestamp": "2026-09-22T21:46:17.227Z",
+            "event.sequence": 29,
+            "prompt.id": "f210f195-66e9-4a20-aec3-6e520f6986a2",
+            "tool_name": "Bash",
+            "tool_use_id": "toolu_0168SqABQT8LA7KpUcpaYpnW",
+            "success": "true",
+            "duration_ms": "792",
+            "tool_parameters": "{\"bash_command\":\"./probe.sh\",\"full_command\":\"./probe.sh c\"}",
+            "tool_input": "{\"command\":\"./probe.sh c\"}",
+            "tool_input_size_bytes": "26",
+            "tool_result_size_bytes": "18",
+            "decision_source": "user_permanent",
+            "decision_type": "accept"
+          }
+        },
+        {
+          "name": "hook_execution_start",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_execution_start",
+            "event.timestamp": "2026-09-22T21:46:17.228Z",
+            "event.sequence": 30,
+            "prompt.id": "f210f195-66e9-4a20-aec3-6e520f6986a2",
+            "hook_event": "PostToolUse",
+            "hook_name": "PostToolUse:Bash",
+            "num_hooks": "3",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_execution_complete",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_execution_complete",
+            "event.timestamp": "2026-09-22T21:46:17.265Z",
+            "event.sequence": 31,
+            "prompt.id": "f210f195-66e9-4a20-aec3-6e520f6986a2",
+            "hook_event": "PostToolUse",
+            "hook_name": "PostToolUse:Bash",
+            "num_hooks": "3",
+            "num_success": "3",
+            "num_blocking": "0",
+            "num_non_blocking_error": "0",
+            "num_cancelled": "0",
+            "total_duration_ms": "36",
+            "managed_only": "false",
+            "hook_source": "merged",
+            "safe_mode": "false"
+          }
+        }
+      ]
+    },
+    "r0-read-in-workdir": {
+      "purpose": "C2: does an in-workdir Read with no rule emit tool_decision, and with which source",
+      "command": "./probe.sh",
+      "rules": {},
+      "trustedBeforeRun": true,
+      "exitCode": 0,
+      "timedOut": false,
+      "stderr": "",
+      "uses": [
+        {
+          "name": "Read",
+          "input": {
+            "file_path": "/probe/r0-read-in-workdir/repo/probe.sh"
+          }
+        }
+      ],
+      "results": [
+        {
+          "content": "1\t#!/bin/sh\n2\techo \"taper-probe ran: $*\"\n3\t"
+        }
+      ],
+      "permission_denials": [],
+      "result": "The first line of `./probe.sh` is:\n\n```\n#!/bin/sh\n```",
+      "settingsAfter": {
+        "settings.json": {}
+      },
+      "otelContentTypes": [
+        "/v1/logs application/json",
+        "/v1/metrics application/json"
+      ],
+      "otelEvents": [
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "86cd0015-fae7-4879-9e20-d29898dbf025",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:53.525Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "86cd0015-fae7-4879-9e20-d29898dbf025",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:53.525Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "86cd0015-fae7-4879-9e20-d29898dbf025",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:53.525Z",
+            "event.sequence": 4,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "86cd0015-fae7-4879-9e20-d29898dbf025",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:53.525Z",
+            "event.sequence": 5,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "86cd0015-fae7-4879-9e20-d29898dbf025",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:53.525Z",
+            "event.sequence": 6,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "86cd0015-fae7-4879-9e20-d29898dbf025",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:53.525Z",
+            "event.sequence": 7,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "2fdc22dd-681a-4988-a238-db1c8c0c5a17",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:59.850Z",
+            "event.sequence": 1,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "2fdc22dd-681a-4988-a238-db1c8c0c5a17",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:59.850Z",
+            "event.sequence": 2,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "2fdc22dd-681a-4988-a238-db1c8c0c5a17",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:59.850Z",
+            "event.sequence": 3,
+            "hook_event": "PreToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "2fdc22dd-681a-4988-a238-db1c8c0c5a17",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:59.850Z",
+            "event.sequence": 4,
+            "hook_event": "PostToolUse",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "Bash"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "2fdc22dd-681a-4988-a238-db1c8c0c5a17",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:59.850Z",
+            "event.sequence": 5,
+            "hook_event": "SessionStart",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false",
+            "hook_matcher": "startup"
+          }
+        },
+        {
+          "name": "hook_registered",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "2fdc22dd-681a-4988-a238-db1c8c0c5a17",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "hook_registered",
+            "event.timestamp": "2026-09-22T21:48:59.850Z",
+            "event.sequence": 6,
+            "hook_event": "UserPromptSubmit",
+            "hook_type": "command",
+            "hook_source": "userSettings",
+            "safe_mode": "false"
+          }
+        },
+        {
+          "name": "tool_decision",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "2fdc22dd-681a-4988-a238-db1c8c0c5a17",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_decision",
+            "event.timestamp": "2026-09-22T21:49:01.709Z",
+            "event.sequence": 9,
+            "prompt.id": "4e00fbf0-68bd-448a-a2e9-3b0881a42b7b",
+            "decision": "accept",
+            "source": "config",
+            "tool_name": "Read",
+            "tool_use_id": "toolu_01JJqmMg3BNf7moZjfP7hZMj",
+            "tool_source": "builtin"
+          }
+        },
+        {
+          "name": "tool_result",
+          "attrs": {
+            "user.id": "redacted-user-id",
+            "session.id": "2fdc22dd-681a-4988-a238-db1c8c0c5a17",
+            "organization.id": "00000000-0000-0000-0000-000000000002",
+            "user.email": "user@example.com",
+            "user.account_uuid": "00000000-0000-0000-0000-000000000001",
+            "user.account_id": "redacted-account-id",
+            "terminal.type": "non-interactive",
+            "event.name": "tool_result",
+            "event.timestamp": "2026-09-22T21:49:01.711Z",
+            "event.sequence": 10,
+            "prompt.id": "4e00fbf0-68bd-448a-a2e9-3b0881a42b7b",
+            "tool_name": "Read",
+            "tool_use_id": "toolu_01JJqmMg3BNf7moZjfP7hZMj",
+            "success": "true",
+            "duration_ms": "2",
+            "tool_input": "{\"file_path\":\"/probe/r0-read-in-workdir/repo/probe.sh\"}",
+            "tool_input_size_bytes": "79",
+            "tool_result_size_bytes": "43"
+          }
+        }
+      ]
+    }
+  }
+}

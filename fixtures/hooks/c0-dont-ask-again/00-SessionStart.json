@@ -1,0 +1,9 @@
+{
+  "session_id": "992c2c17-306b-4adc-9ed2-2f21b2476d68",
+  "transcript_path": "/home/user/.claude/projects/-probe-c0-dont-ask-again-repo/992c2c17-306b-4adc-9ed2-2f21b2476d68.jsonl",
+  "cwd": "/probe/c0-dont-ask-again/repo",
+  "scratchpad_dir": "/private/tmp/claude-501/-probe-c0-dont-ask-again-repo/992c2c17-306b-4adc-9ed2-2f21b2476d68/scratchpad",
+  "hook_event_name": "SessionStart",
+  "source": "startup",
+  "model": "claude-haiku-4-5-20251001"
+}

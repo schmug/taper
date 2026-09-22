@@ -1,0 +1,7 @@
+{
+  "session_id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+  "transcript_path": "/home/user/.claude/projects/-probe-b2-hook-ask-repo/3ed1eea1-ad49-4a13-b941-c238a164ae01.jsonl",
+  "cwd": "/probe/b2-hook-ask/repo",
+  "hook_event_name": "SessionStart",
+  "source": "startup"
+}

@@ -1,0 +1,22 @@
+{
+  "session_id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+  "transcript_path": "/home/user/.claude/projects/-probe-b0-hook-passthrough-repo/62b7b0c8-993c-4a03-8827-f5432084a355.jsonl",
+  "cwd": "/probe/b0-hook-passthrough/repo",
+  "prompt_id": "8d75d96e-3a7e-4ff9-b143-b22634aa901e",
+  "permission_mode": "default",
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "./probe.sh b-pass",
+    "description": "Run probe.sh with b-pass argument"
+  },
+  "tool_response": {
+    "stdout": "taper-probe ran: b-pass",
+    "stderr": "",
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false
+  },
+  "tool_use_id": "toolu_01H2uW1KKfVk9XSY8z4Da5vb",
+  "duration_ms": 748
+}

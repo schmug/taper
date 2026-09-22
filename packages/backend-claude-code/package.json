@@ -1,0 +1,14 @@
+{
+  "name": "@taper/backend-claude-code",
+  "version": "0.0.0",
+  "description": "Claude Code rule parser/matcher, settings loader, event normalizer, enforcement writers.",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  }
+}

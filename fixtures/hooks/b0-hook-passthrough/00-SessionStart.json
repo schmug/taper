@@ -1,0 +1,7 @@
+{
+  "session_id": "62b7b0c8-993c-4a03-8827-f5432084a355",
+  "transcript_path": "/home/user/.claude/projects/-probe-b0-hook-passthrough-repo/62b7b0c8-993c-4a03-8827-f5432084a355.jsonl",
+  "cwd": "/probe/b0-hook-passthrough/repo",
+  "hook_event_name": "SessionStart",
+  "source": "startup"
+}

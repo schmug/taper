@@ -1,0 +1,13 @@
+{
+  "session_id": "3ed1eea1-ad49-4a13-b941-c238a164ae01",
+  "transcript_path": "/home/user/.claude/projects/-probe-b2-hook-ask-repo/3ed1eea1-ad49-4a13-b941-c238a164ae01.jsonl",
+  "cwd": "/probe/b2-hook-ask/repo",
+  "prompt_id": "231e2d30-9882-4847-b1f3-f2891cb2d52a",
+  "permission_mode": "default",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "./probe.sh hook-ask"
+  },
+  "tool_use_id": "toolu_014A3SFpDBvmo3HfmNya9ur4"
+}

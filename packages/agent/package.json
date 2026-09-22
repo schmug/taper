@@ -1,0 +1,13 @@
+{
+  "name": "taperd",
+  "version": "0.0.0",
+  "description": "taper CLI: local least-privilege decay for Claude Code permission rules.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  }
+}

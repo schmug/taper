@@ -1,0 +1,7 @@
+{
+  "session_id": "613c94e8-835f-4a78-a9d2-f5638a9e6073",
+  "transcript_path": "/home/user/.claude/projects/-probe-b1-hook-deny-repo/613c94e8-835f-4a78-a9d2-f5638a9e6073.jsonl",
+  "cwd": "/probe/b1-hook-deny/repo",
+  "hook_event_name": "SessionStart",
+  "source": "startup"
+}
