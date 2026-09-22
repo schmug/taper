@@ -601,7 +601,9 @@ async function main() {
     } else {
       const r = await runHeadless(s, env, repo, cliPath);
       const msgs = parseStream(r.stdout);
-      writeFileSync(join(FIX, 'headless', `${s.name}.stream.jsonl`), jsonl(msgs));
+      // rate_limit_event carries the account's plan utilization; irrelevant to taper, so not kept.
+      const kept = msgs.filter((m) => m.type !== 'rate_limit_event');
+      writeFileSync(join(FIX, 'headless', `${s.name}.stream.jsonl`), jsonl(kept));
       Object.assign(
         obs,
         { exitCode: r.code, timedOut: r.timedOut, stderr: scrubString(r.stderr.slice(0, 2000)) },

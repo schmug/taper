@@ -2,6 +2,12 @@
   "name": "@taper/core",
   "version": "0.0.0",
   "description": "Pure decay engine: state machine, guards, clocks, evaluate/explain/simulate. No I/O.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schmug/taper.git",
+    "directory": "packages/core"
+  },
   "private": true,
   "type": "module",
   "exports": {

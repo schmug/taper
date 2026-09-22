@@ -2,6 +2,12 @@
   "name": "taperd",
   "version": "0.0.0",
   "description": "taper CLI: local least-privilege decay for Claude Code permission rules.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schmug/taper.git",
+    "directory": "packages/agent"
+  },
   "type": "module",
   "exports": {
     ".": "./src/index.ts"

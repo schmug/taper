@@ -2,6 +2,12 @@
   "name": "@taper/backend-claude-code",
   "version": "0.0.0",
   "description": "Claude Code rule parser/matcher, settings loader, event normalizer, enforcement writers.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schmug/taper.git",
+    "directory": "packages/backend-claude-code"
+  },
   "private": true,
   "type": "module",
   "exports": {
