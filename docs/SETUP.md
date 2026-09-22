@@ -3,21 +3,21 @@
 Steps an agent cannot do. Each names the milestone that needs it. Everything before that
 boundary is implemented against mocks.
 
-## Needed now
+## Done
 
-| # | Step | Needed by | Why |
-|---|------|-----------|-----|
-| 1 | Create `github.com/schmug/taper` and `git remote add origin …`; push `main` | CI | `.github/workflows/ci.yml` exists but has never run. HANDOFF §9 switches milestone delivery to branch + PR once a remote exists. |
-| 2 | Add required status check `check` on `main` (ruleset) | merge gate | Agent PRs self-merge only through a required check. |
+| Step | When |
+|------|------|
+| `github.com/schmug/taper` created, `main` pushed, CI green | 2026-09-22 |
+| Default-branch ruleset requiring status check `check`; repo public | 2026-09-22 (see `docs/decisions/ADR-0003-merge-gate.md`) |
 
 ## Needed later
 
 | # | Step | Needed by |
 |---|------|-----------|
-| 3 | Cloudflare account; `wrangler login` | M4 (`wrangler dev` works without it; deploy does not) |
-| 4 | Cloudflare Access team domain + an Access application for the dashboard and `/api/*`; record its AUD | M4/M5 deploy |
-| 5 | Optional Access service-token policy (`Action=Service Auth`) for `/ingest/*` and `/otlp/*` | M6 |
-| 6 | GitHub token for `taper recommend --format pr` | M7 stretch |
+| 1 | Cloudflare account; `wrangler login` | M4 (`wrangler dev` works without it; deploy does not) |
+| 2 | Cloudflare Access team domain + an Access application for the dashboard and `/api/*`; record its AUD | M4/M5 deploy |
+| 3 | Optional Access service-token policy (`Action=Service Auth`) for `/ingest/*` and `/otlp/*` | M6 |
+| 4 | GitHub token for `taper recommend --format pr` | M7 stretch |
 
 ## Environment variables
 

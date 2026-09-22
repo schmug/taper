@@ -2,6 +2,12 @@
   "name": "@taper/shared",
   "version": "0.0.0",
   "description": "Boundary schemas (zod), OTLP JSON types, constants shared by agent and control plane.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schmug/taper.git",
+    "directory": "packages/shared"
+  },
   "private": true,
   "type": "module",
   "exports": {

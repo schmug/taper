@@ -12,7 +12,6 @@ Part A, `fixtures/`). Still unverified:
 | `source` for auto-mode classifier approvals; PermissionRequest under auto | M2 (attribution), M6 | Probe with `--permission-mode auto`. |
 | Full rule-form matrix (`Task(...)` alias, wrappers, compound commands, path rules) | M2 | Differential job `CLAUDE_CODE_DIFF_TESTS=1`. |
 | `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` effect on customer OTel export | M7 | One probe each. |
-| CI workflow `.github/workflows/ci.yml` has never run | merge gate | Needs the GitHub repo (SETUP #1). |
 
 ## M0 — Verify and scaffold (2026-09-22)
 
@@ -27,7 +26,7 @@ milestones in ADR-0002. No C1–C5 contradiction. Scaffold: pnpm workspace with 
 CI workflow (ADR-0001).
 **Deferred.** `apps/*` scaffolds to M4/M5. `.env.example` is blocked by the owner's global
 `Read(.env.example)` deny; env vars live in `docs/SETUP.md`.
-**Unverified.** See the table above; CI has not run (no remote).
+**Unverified.** See the table above. (Post-M0: repo `schmug/taper` created 2026-09-22; first CI run on `f134ec4` passed.)
 **Next.** M1: core engine — state machine, guards, clocks, `explain`, `simulate`, property tests.
 Prior art to consult (from `~/librarian`): `perplexityai-numbat` (hook+OTLP ingest → one event
 model, shadow/enforce split), `netflix-repokid`/`aardvark` (unused-permission removal), and
