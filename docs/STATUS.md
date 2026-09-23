@@ -9,8 +9,8 @@ Part A, `fixtures/`). Still unverified:
 |---|---|---|
 | Managed settings on disk: `managed-settings.d/` merge, `first-wins` vs `merge` across sources, `managed_settings_resolved` with a real file source | **M6** | Probe on a machine/VM where writing `/Library/Application Support/ClaudeCode/` (or `/etc/claude-code/`) is acceptable. |
 | Linux/Windows behavior and paths | M6, M7 | Run `pnpm probe` on Linux; Windows docs-only. |
-| `source` for auto-mode classifier approvals; PermissionRequest under auto | M2 (attribution), M6 | Probe with `--permission-mode auto`. |
-| Full rule-form matrix (`Task(...)` alias, wrappers, compound commands, path rules) | M2 | Differential job `CLAUDE_CODE_DIFF_TESTS=1`. |
+| `source` for auto-mode classifier approvals; PermissionRequest under auto | M6 (M2 attribution counts any `accept`, whatever the source: ADR-0007) | Probe with `--permission-mode auto`. |
+| Full rule-form matrix (`Task(...)` alias, wrappers, compound commands, path rules): the matcher's choices in ADR-0006 | M2 flag, carried from M0. Built, not run. | Owner go-ahead, then run the differential job (SETUP #5, ADR-0008; about $0.50 on haiku). |
 | `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` effect on customer OTel export | M7 | One probe each. |
 
 ## M0 — Verify and scaffold (2026-09-22)
@@ -55,3 +55,39 @@ core's `heartbeat`/`session`/`decision` signals is an M2/M4 question. A one-off 
 seeds vary per run; a failure prints its seed.
 **Next.** M2: Claude Code rule matcher and settings loader (§5.1–5.2), fixtures per rule form,
 differential job behind `CLAUDE_CODE_DIFF_TESTS=1`.
+
+## M2 — Claude Code matcher and settings loader (2026-09-23)
+
+**Done.** `@taper/backend-claude-code` has the following pieces.
+- A rule parser and `match(policy, call) → { outcome, basis, decisiveRules, allMatchingAllowRules }`.
+  It covers bare names, `Bash(x *)` / legacy `:*` / mid and leading wildcards, compound commands
+  with subshells, `$()` and `for` bodies, wrapper and env stripping, the read-only Bash set,
+  gitignore paths (`//`, `~/`, source-anchored `/`, `./`, `*`, `**`, `!`), the file-tool aliases,
+  `WebFetch(domain:)`, MCP server and tool rules and globs, `Agent`/`Task`, parameter rules,
+  `Skill`, `Monitor`, and workspace trust.
+- The decisive tie-break (scope, source order, array index) and the compound decisive set
+  (ADR-0006).
+- A read-only settings loader: managed plus `.d/`, user, project, local, and `--settings` from CI
+  workflows.
+- A snapshot→knob mapping onto `core.applySnapshot`: one knob per scope, subject and array. It
+  applies the C1–C3 defaults and never makes taper's `50-taper.json` a member.
+- The event schema, with `permission_mode` required and `unknown` allowed, and the mapping onto
+  core `Signal`/`UsageEvent` (ADR-0007).
+- zod at the settings, snapshot, hook-stdin and event boundaries (`zod` 4.6.5, pinned).
+
+Fixtures: 30 files in `fixtures/settings/`, one per rule form, 152 cases. The last full run
+(`pnpm test`) gave core 129 passing and backend 502 passing, 0 failing, 24 skipped (the gated
+differential sessions). `pnpm lint` and `pnpm typecheck` are clean. The loader read this
+machine's real settings without error, and all 28 real rules parsed as modeled kinds.
+**Deferred.**
+- Trust from `~/.claude.json` (M3).
+- `--allowedTools`/`--disallowedTools` and the action `settings:` input as `cli` sources.
+- `allowManagedPermissionRulesOnly`/`disableAllHooks` in the policy.
+- PowerShell, symlinks, Windows paths, and permission modes (ADR-0006/0007).
+**Unverified.**
+- The differential job (98 calls in 23 headless sessions) is built and gated behind
+  `CLAUDE_CODE_DIFF_TESTS=1`, but it has not run. It spends model tokens (≈$0.50 on haiku,
+  ADR-0008), so the rule-form matrix keeps its M0 flag.
+- The stream parser it uses is tested against the ten recorded M0 streams.
+**Next.** M3: the solo `taper` CLI, hooks, local ledger, hook enforcement, and trust read from
+`~/.claude.json`.

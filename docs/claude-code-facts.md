@@ -89,8 +89,10 @@ and the result's `permission_denials: [{tool_name, tool_use_id, tool_input}]`
 **CLI (all probes).** `--permission-mode` choices: `acceptEdits, auto, bypassPermissions, manual, dontAsk, plan` (`default` accepted as alias; reported as `"default"` everywhere). `--permission-prompts host|none` (default `host`); with no host, prompts are denied. The stream `init` message reports `permissionMode:"default"`.
 
 **Probe mechanics worth keeping.** A nested `claude` must run with `CLAUDECODE`, `CLAUDE_*` and
-`ANTHROPIC_BASE_URL` stripped from the environment. Each Haiku session costs a ~76k-token cached
-prefix. `--setting-sources` does not fully isolate user hooks.
+`ANTHROPIC_BASE_URL` stripped from the environment. Each two-request Haiku session used about
+27k input tokens, mostly cache reads: about $0.02 with a cold cache, $0.005 warm (the `result.usage`
+lines in `fixtures/headless/`). An earlier "~76k-token prefix" figure is wrong; see ADR-0008.
+`--setting-sources` does not fully isolate user hooks.
 
 ## A3. Not probed (UNVERIFIED)
 
@@ -99,7 +101,7 @@ prefix. `--setting-sources` does not fully isolate user hooks.
 | Managed settings on disk (`/Library/Application Support/ClaudeCode/`, `managed-settings.d/` merge, first-wins vs merge across sources) | needs root; would change the owner's machine | **M6** (org enforcement) |
 | Linux/Windows paths and behavior | macOS only | M6/M7 |
 | `source` for auto-mode classifier approvals; PermissionRequest under auto | docs silent; auto not exercised | M2 (attribution), M6 |
-| `Task(...)` as alias of `Agent(...)`; full rule-form matrix (wrappers, compound commands, path rules) | out of M0 scope | **M2** differential tests (`CLAUDE_CODE_DIFF_TESTS=1`) |
+| `Task(...)` as alias of `Agent(...)`; full rule-form matrix (wrappers, compound commands, path rules) | M2 built the job (`fixtures/settings/`, ADR-0006, ADR-0008) but has not run it: it spends tokens | M2 differential job (`CLAUDE_CODE_DIFF_TESTS=1`), owner go-ahead |
 | Whether `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` suppress customer OTel export | docs silent | M7 (dead-man edge cases) |
 | Interactive `user_temporary`/`user_reject`/`user_abort` sources | only option 2 was exercised | M3 fixtures (record when needed) |
 
@@ -140,6 +142,9 @@ Items are docs claims only unless Part A covers them.
 ## B2. Rule syntax forms (matcher fixtures)
 
 Source for all of this section: https://code.claude.com/docs/en/permissions#permission-rule-syntax, https://code.claude.com/docs/en/tools-reference#configure-tools-with-permission-rules-and-hooks
+
+Each form below has a matcher fixture in `fixtures/settings/`. Where the docs are silent, the
+matcher's choice is listed in ADR-0006 as UNVERIFIED until the differential job runs.
 
 - **Rule format.** `Tool` or `Tool(specifier)`. Parentheses inside a specifier are literal, so no escaping is needed. **CONFIRMED.**
 - **Bare names.** `Bash`, `Read`, `WebFetch`, and so on match every use of the tool, and `Bash(*)` equals `Bash`. **CONFIRMED.**
