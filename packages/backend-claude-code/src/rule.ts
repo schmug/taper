@@ -136,6 +136,11 @@ function specified(tool: string, spec: string, polarity: Polarity): ParsedRule {
       return agentRule(spec, polarity);
     case 'Skill':
       return { kind: 'skill', pattern: spec };
+    case 'WebSearch':
+      // The docs allow only the bare name, but the 2026-09-23 differential run allowed a
+      // WebSearch call under `WebSearch(anything)`. Reading it as bare over-matches at worst,
+      // which is the safe side for an allow rule (C5, ADR-0009).
+      return bare(tool, polarity);
     case 'Write':
     case 'NotebookEdit':
     case 'MultiEdit':
@@ -151,6 +156,11 @@ function specified(tool: string, spec: string, polarity: Polarity): ParsedRule {
 }
 
 function commandRule(spec: string, polarity: Polarity): ParsedRule {
+  // Docs: `:*` is the legacy prefix only at the end, and a colon before more text is literal.
+  // The 2026-09-23 differential run showed `Bash(./probe.sh:* push)` does not allow
+  // `./probe.sh:x push`, so taper does not claim to understand it (ADR-0009).
+  const colon = spec.indexOf(':*');
+  if (colon !== -1 && colon !== spec.length - 2) return inert("':*' before more text");
   const command: ParsedRule = {
     kind: 'command',
     pattern: spec.endsWith(':*') ? `${spec.slice(0, -2)} *` : spec,

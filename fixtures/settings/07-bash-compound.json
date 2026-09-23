@@ -1,6 +1,6 @@
 {
   "form": "compound shell commands",
-  "source": "facts B2 'Compound commands': allow needs every subcommand; deny/ask apply if any subcommand matches, including subshells, $() and for bodies; a trailing && or || is unparseable",
+  "source": "facts B2 'Compound commands': allow needs every subcommand; deny/ask apply if any subcommand matches, including subshells, $() and for bodies; a trailing && or || is unparseable. Differential run 2026-09-23: a background '&' prompts even when every part is allowed (ADR-0009)",
   "settings": {
     "local": {
       "allow": ["Bash(./probe.sh a *)", "Bash(./probe.sh b *)"],
@@ -42,7 +42,16 @@
       "tool": "Bash",
       "input": { "command": "./probe.sh a 1 || (./probe.sh q 2)" },
       "expect": { "outcome": "ask", "decisive": ["local.ask[0]"], "allowMatches": ["local.allow[0]"] },
-      "diff": true
+      "diff": true,
+      "unverified": "2026-09-23 observed none: the call prompted, but decision_reason_type was not 'rule'. The observer has only seen single-command asks (M0 a1/a2), so a compound command may report another reason type. The next case is the control"
+    },
+    {
+      "name": "ask on a later subcommand without a subshell",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a 1 || ./probe.sh q 2" },
+      "expect": { "outcome": "ask", "decisive": ["local.ask[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true,
+      "unverified": "added after the 2026-09-23 run as the control for the subshell case; not run yet"
     },
     {
       "name": "deny inside command substitution",
@@ -66,11 +75,19 @@
       "diffNote": "the model tends to repair the command before calling the tool"
     },
     {
-      "name": "background separator",
+      "name": "background separator prompts even when every part is allowed",
       "tool": "Bash",
       "input": { "command": "./probe.sh a 1 & ./probe.sh b 2" },
-      "expect": { "outcome": "allow", "decisive": ["local.allow[0]", "local.allow[1]"], "allowMatches": ["local.allow[0]", "local.allow[1]"] },
+      "expect": { "outcome": "none", "basis": "background", "allowMatches": ["local.allow[0]", "local.allow[1]"] },
       "diff": true
+    },
+    {
+      "name": "trailing background operator prompts too",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a 1 &" },
+      "expect": { "outcome": "none", "basis": "background", "allowMatches": ["local.allow[0]"] },
+      "diff": true,
+      "unverified": "added after the 2026-09-23 run, which saw only 'a & b'; not run yet"
     },
     {
       "name": "2>&1 is a redirection, not a separator",

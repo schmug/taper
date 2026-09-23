@@ -26,7 +26,17 @@ const Case = z
     expect: z
       .object({
         outcome: z.enum(['allow', 'ask', 'deny', 'none']),
-        basis: z.enum(['rule', 'builtin', 'too_long', 'unparseable', 'no_match']).optional(),
+        basis: z
+          .enum([
+            'rule',
+            'builtin',
+            'too_long',
+            'unparseable',
+            'background',
+            'redirect',
+            'no_match',
+          ])
+          .optional(),
         decisive: z.array(Ref).default([]),
         allowMatches: z.array(Ref).default([]),
       })
@@ -35,8 +45,16 @@ const Case = z
     diff: z.boolean().default(false),
     /** Why a case is not run by the differential job. */
     diffNote: z.string().optional(),
+    /**
+     * Why a `diff: true` case's expectation is not confirmed by a live run: it has not run yet,
+     * or the last run disagreed and the observation is suspect (ADR-0009). Cleared by a rerun.
+     */
+    unverified: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .refine((c) => c.unverified === undefined || c.diff, {
+    message: 'unverified applies only to differential cases',
+  });
 
 export const FixtureSchema = z
   .object({

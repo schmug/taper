@@ -8,6 +8,9 @@ export interface ParsedShell {
   readonly commands: readonly string[];
   /** A trailing `&&`/`||` or an unterminated quote/substitution. Allow rules never match these. */
   readonly unparseable: boolean;
+  /** A `&` control operator at any depth. Claude Code prompts for these even when every part is
+   * allowed (2026-09-23 differential run, ADR-0009). */
+  readonly background: boolean;
 }
 
 interface Segment {
@@ -80,14 +83,15 @@ function operatorAt(s: string, i: number, buf: string): string | null {
   return null;
 }
 
-function split(cmd: string): { segments: Segment[]; unparseable: boolean } {
+function split(cmd: string): { segments: Segment[]; unparseable: boolean; background: boolean } {
   const segments: Segment[] = [];
   let seg: Segment = { text: '', nested: [], group: null };
   let pendingBinary = false;
+  let background = false;
   const heredocs: { delim: string; stripTabs: boolean }[] = [];
   const fail = () => {
     segments.push(seg);
-    return { segments, unparseable: true };
+    return { segments, unparseable: true, background };
   };
   const append = (text: string) => {
     seg.text += text;
@@ -170,6 +174,7 @@ function split(cmd: string): { segments: Segment[]; unparseable: boolean } {
     }
     const op = operatorAt(cmd, i, seg.text);
     if (op !== null) {
+      if (op === '&') background = true;
       segments.push(seg);
       seg = { text: '', nested: [], group: null };
       if (op !== '\n' || !pendingBinary) pendingBinary = BINARY_OPS.has(op);
@@ -181,7 +186,7 @@ function split(cmd: string): { segments: Segment[]; unparseable: boolean } {
     i++;
   }
   segments.push(seg);
-  return { segments, unparseable: pendingBinary };
+  return { segments, unparseable: pendingBinary, background };
 }
 
 /** Skips heredoc bodies that start at `i` (just after a newline). */
@@ -203,30 +208,36 @@ function skipHeredocBodies(
   return i;
 }
 
-function commandsOf(seg: Segment, out: string[]): boolean {
+interface Flags {
+  background: boolean;
+}
+
+function commandsOf(seg: Segment, out: string[], flags: Flags): boolean {
   let ok = true;
-  if (seg.group !== null) ok = collect(seg.group, out);
+  if (seg.group !== null) ok = collect(seg.group, out, flags);
   else {
     let text = seg.text.trim();
     for (let m = LEADING_KEYWORD.exec(text); m; m = LEADING_KEYWORD.exec(text))
       text = text.slice(m[0].length);
     if (text !== '' && !CLOSING_KEYWORD.test(text) && !HEADER.test(text)) out.push(text);
   }
-  for (const n of seg.nested) ok = collect(n, out) && ok;
+  for (const n of seg.nested) ok = collect(n, out, flags) && ok;
   return ok;
 }
 
-function collect(cmd: string, out: string[]): boolean {
-  const { segments, unparseable } = split(cmd);
+function collect(cmd: string, out: string[], flags: Flags): boolean {
+  const { segments, unparseable, background } = split(cmd);
+  if (background) flags.background = true;
   let ok = !unparseable;
-  for (const seg of segments) ok = commandsOf(seg, out) && ok;
+  for (const seg of segments) ok = commandsOf(seg, out, flags) && ok;
   return ok;
 }
 
 export function parseShell(command: string): ParsedShell {
   const commands: string[] = [];
-  const ok = collect(command, commands);
-  return { commands, unparseable: !ok };
+  const flags: Flags = { background: false };
+  const ok = collect(command, commands, flags);
+  return { commands, unparseable: !ok, background: flags.background };
 }
 
 interface Word {
@@ -340,6 +351,51 @@ const FIND_ACTIONS = new Set(['-exec', '-execdir', '-delete', '-ok', '-okdir']);
 /** True when an unquoted `>` appears (output redirection). */
 function redirectsOutput(s: string): boolean {
   return words(s).some((w) => w.text.replace(/'[^']*'|"(?:\\.|[^"\\])*"/g, '').includes('>'));
+}
+
+/**
+ * True when an unquoted output redirection writes a file: `>`, `>>`, `>|`, `&>`, `&>>`, `N>`.
+ * Not a file write: fd duplication (`2>&1`, `>&2`, `>&-`), process substitution `>(…)`, and
+ * `/dev/null` (UNVERIFIED, ADR-0009). Claude Code prompts for a file redirection even when a
+ * Bash allow rule matches the command (2026-09-23 differential run, fixture 11).
+ * `$()`, backtick and `>(…)` bodies are skipped: parseShell checks them as their own commands.
+ */
+export function redirectsToFile(command: string): boolean {
+  const s = command;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (c === '\\') i++;
+    else if (c === "'") {
+      i = s.indexOf("'", i + 1);
+      if (i < 0) return false;
+    } else if (c === '"') {
+      i = findDoubleQuoteEnd(s, i, []);
+      if (i < 0) return false;
+    } else if (c === '$' && s[i + 1] === '(') {
+      i = findClose(s, i + 1);
+      if (i < 0) return false;
+    } else if (c === '`') {
+      i = findBacktickEnd(s, i);
+      if (i < 0) return false;
+    } else if (c === '>') {
+      let j = i + 1;
+      if (s[j] === '>' || s[j] === '|') j++;
+      if (s[j] === '(') {
+        i = findClose(s, j);
+        if (i < 0) return false;
+        continue;
+      }
+      if (s[j] === '&' && /^[0-9-]/.test(s[j + 1] ?? '')) {
+        i = j + 1;
+        continue;
+      }
+      while (s[j] === ' ' || s[j] === '\t') j++;
+      const target = /^[^\s;&|<>()]*/.exec(s.slice(j))?.[0] ?? '';
+      if (target.replace(/['"]/g, '') !== '/dev/null') return true;
+      i = j + target.length - 1;
+    }
+  }
+  return false;
 }
 
 /** Built-in read-only commands that run without a rule. */
