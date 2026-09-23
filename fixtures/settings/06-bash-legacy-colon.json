@@ -1,8 +1,8 @@
 {
   "form": "Bash legacy ':*' prefix",
-  "source": "facts B2 'Legacy :*' (equivalent to trailing ' *', only at the end); A1 b0 (live match of Bash(./probe.sh:*))",
+  "source": "facts B2 'Legacy :*' (equivalent to trailing ' *', only at the end); A1 b0 (live match of Bash(./probe.sh:*)); differential run 2026-09-23 (':*' before more text does not match as a literal colon; ADR-0009)",
   "settings": {
-    "local": { "allow": ["Bash(./probe.sh:*)", "Bash(./probe.sh:* push)"] }
+    "local": { "allow": ["Bash(./probe.sh:*)", "Bash(./probe.sh:* push)", "Bash(./nope.sh:* push)"] }
   },
   "cases": [
     {
@@ -27,11 +27,19 @@
       "diff": true
     },
     {
-      "name": "':*' before more text is a literal colon plus wildcard",
+      "name": "':*' before more text does not match as a literal colon",
       "tool": "Bash",
       "input": { "command": "./probe.sh:x push" },
-      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "expect": { "outcome": "none" },
       "diff": true
+    },
+    {
+      "name": "':*' before more text does not match as a space wildcard either",
+      "tool": "Bash",
+      "input": { "command": "./nope.sh x push" },
+      "expect": { "outcome": "none" },
+      "diff": true,
+      "unverified": "added after the 2026-09-23 run to tell 'rule skipped' from ':*' rewritten to ' *'; not run yet"
     }
   ]
 }

@@ -33,20 +33,28 @@ Fixtures: `fixtures/settings/*.json` (one per rule form). Resolves ADR-0002 rows
 - **Not modeled.** Permission modes, including auto mode's dropped allow rules (C4). Symlink
   resolution. Windows `/c/...` paths. `additionalDirectories`. The Skill deny aliasing. Heredoc
   and `case` edge cases beyond fixtures 07 and `test/shell.test.ts`. Output redirection
-  (`2>/dev/null` included) makes a command not read-only.
+  (`2>/dev/null` included) makes a command not read-only. Since ADR-0009, a background `&` or an
+  output redirection to a file (not `/dev/null`, not `>&N`) makes the allow outcome `none`. The
+  matching allow rules are still listed for attribution.
 
-## Choices the docs leave open (UNVERIFIED until the differential job runs)
+## Choices the docs leave open
 
-| Choice | Fixture |
-|---|---|
-| `Task(x)` rules alias `Agent(x)`; legacy `Task` calls use Agent rules | 23 |
-| `Tool(*)` equals bare `Tool` for every tool (docs say so only for Bash) | 02 |
-| `Bash(name:*)` in deny/ask with a Bash parameter name matches either reading | 24 |
-| Managed `/path` anchors at the managed file's directory | policy test |
-| `dir/**` also covers `dir` itself (for Grep/Glob on a directory) | 16 |
-| Relative patterns match only under cwd; single-segment dirs float for deny/ask only | 12, 15 |
-| Output redirection disqualifies a read-only command | 11 |
-| A bare `Read` deny also blocks the Edit family | rule test |
+Status after the 2026-09-23 differential run (ADR-0009, Claude Code 2.1.278).
+
+| Choice | Fixture | Status |
+|---|---|---|
+| `Task(x)` rules alias `Agent(x)`; legacy `Task` calls use Agent rules | 23 | UNVERIFIED: the observer cannot see Agent denies |
+| `Tool(*)` equals bare `Tool` for every tool (docs say so only for Bash) | 02 | Confirmed for Bash only |
+| `Bash(name:*)` in deny/ask with a Bash parameter name matches either reading | 24 | UNVERIFIED: not discriminated by the run |
+| Managed `/path` anchors at the managed file's directory | policy test | UNVERIFIED: managed scope is not runnable |
+| `dir/**` also covers `dir` itself (for Grep/Glob on a directory) | 16 | UNVERIFIED: not exercised |
+| Relative patterns match only under cwd; single-segment dirs float for deny/ask only | 12, 15 | Allow side confirmed; the deny side is hidden by the observer blind spot |
+| Output redirection disqualifies a read-only command | 11 | Confirmed. Also, a file redirect prompts even when an allow rule matches (ADR-0009) |
+| A bare `Read` deny also blocks the Edit family | rule test | UNVERIFIED: not run |
+| `:*` before more text is `inert` | 06 | The literal-colon reading is refuted. Skipped vs rewritten is UNVERIFIED |
+| `&` anywhere (including trailing) prompts | 07 | `a & b` confirmed; trailing `&` UNVERIFIED |
+| A redirect to `/dev/null` is not a file write | 11 | UNVERIFIED |
+| `WebSearch(x)` equals bare `WebSearch` | 27 | The call was allowed; the mechanism is UNVERIFIED |
 
 ## Consequences
 

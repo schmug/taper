@@ -62,6 +62,10 @@ describe('isProtectedByDefault', () => {
     ['Write(out/**)', 'local', 'allow', true],
     ['mcp__*', 'local', 'allow', true],
     ['Bash(', 'local', 'allow', true],
+    // ADR-0009: not understood since the 2026-09-23 run, so never decays (C5).
+    ['Bash(git:* push)', 'local', 'allow', true],
+    // ADR-0009: now read as bare WebSearch, refreshed by every WebSearch call.
+    ['WebSearch(x)', 'local', 'allow', false],
   ])('%j in %s.%s → %s', (rule, scope, polarity, expected) => {
     expect(isProtectedByDefault(rule, scope, polarity, true)).toBe(expected);
   });

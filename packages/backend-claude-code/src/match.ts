@@ -20,6 +20,7 @@ import {
   isReadOnlyCommand,
   matchCommandPattern,
   parseShell,
+  redirectsToFile,
   requiresExactRule,
   stripWrappers,
 } from './shell.ts';
@@ -42,9 +43,20 @@ export interface ToolCall {
  * - `builtin`: allowed with no rule (read-only Bash set, reads inside cwd).
  * - `too_long`: commands over 10,000 characters always prompt.
  * - `unparseable`: allow rules cannot match (e.g. trailing `&&`).
+ * - `background`: a `&` operator; Claude Code prompts even if allow rules cover every part.
+ * - `redirect`: an output redirection to a file; Claude Code prompts even if an allow rule
+ *   matches. Both from the 2026-09-23 differential run (ADR-0009). Allow rules still count as
+ *   matched for attribution (C5).
  * - `no_match`: falls through to the permission mode.
  */
-export type MatchBasis = 'rule' | 'builtin' | 'too_long' | 'unparseable' | 'no_match';
+export type MatchBasis =
+  | 'rule'
+  | 'builtin'
+  | 'too_long'
+  | 'unparseable'
+  | 'background'
+  | 'redirect'
+  | 'no_match';
 
 export interface MatchResult {
   /** `none` = no rule decided; Claude Code falls back to the permission mode (a prompt). */
@@ -234,6 +246,8 @@ function matchShell(policy: EffectivePolicy, tool: string, call: ToolCall): Matc
   if (ask) return result('ask', 'rule', [ask], allows);
   if (command.length > MAX_COMMAND_LENGTH) return result('ask', 'too_long', [], allows);
   if (parsed.unparseable) return result('none', 'unparseable', [], allows);
+  if (parsed.background) return result('none', 'background', [], allows);
+  if (subs.some((s) => redirectsToFile(s.stripped))) return result('none', 'redirect', [], allows);
 
   const callLevel = allows.find((r) => hitsShell(r.parsed, tool, call.input, null, 'allow'));
   if (subs.length === 0)

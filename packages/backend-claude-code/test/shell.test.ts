@@ -3,6 +3,7 @@ import {
   isReadOnlyCommand,
   matchCommandPattern,
   parseShell,
+  redirectsToFile,
   requiresExactRule,
   stripWrappers,
 } from '../src/shell.ts';
@@ -42,7 +43,22 @@ describe('parseShell', () => {
     ['a &', ['a']],
     ['', []],
   ])('%j', (command, commands) => {
-    expect(parseShell(command)).toEqual({ commands, unparseable: false });
+    expect(parseShell(command)).toMatchObject({ commands, unparseable: false });
+  });
+
+  it.each<[string, boolean]>([
+    ['a & b', true],
+    ['a &', true],
+    ['(a & b) && c', true],
+    ['x $(a &)', true],
+    ['a && b', false],
+    ['a 2>&1 | b', false],
+    ['a &> log; b', false],
+    ['a >&2', false],
+    ["echo 'a & b'", false],
+    ['a \\& b', false],
+  ])('%j runs something in the background: %s', (command, background) => {
+    expect(parseShell(command).background).toBe(background);
   });
 
   it.each(['a &&', 'a ||', 'a && ', 'a &&\n', "echo 'x", 'echo "x', 'a $(b', 'a `b', 'a (b'])(
@@ -128,6 +144,34 @@ describe('isReadOnlyCommand', () => {
     './ls',
   ])('%j is not read-only', (command) => {
     expect(isReadOnlyCommand(command)).toBe(false);
+  });
+});
+
+describe('redirectsToFile', () => {
+  it.each<[string, boolean]>([
+    ['ls > out.txt', true],
+    ['ls >out.txt', true],
+    ['ls >> log', true],
+    ['ls >| f', true],
+    ['ls 2> err.txt', true],
+    ['ls &> all.txt', true],
+    ['ls &>> all.txt', true],
+    ['ls 1>out', true],
+    ['ls > /dev/null', false],
+    ['ls 2>/dev/null', false],
+    ['ls &>/dev/null', false],
+    ['ls 2>&1', false],
+    ['ls >&2', false],
+    ['ls 2>&-', false],
+    ['tee >(wc -l)', false],
+    ['ls', false],
+    ["echo '>' x", false],
+    ['echo "a > b"', false],
+    ['echo a\\>b', false],
+    ['cat < in.txt', false],
+    ['cat <<EOF', false],
+  ])('%j → %s', (command, writes) => {
+    expect(redirectsToFile(command)).toBe(writes);
   });
 });
 

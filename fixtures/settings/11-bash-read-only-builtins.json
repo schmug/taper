@@ -1,6 +1,6 @@
 {
   "form": "built-in read-only Bash commands",
-  "source": "facts B2 'Built-in read-only Bash set': runs without a rule; an allow rule for these is never decisive",
+  "source": "facts B2 'Built-in read-only Bash set': runs without a rule; an allow rule for these is never decisive. Differential run 2026-09-23: output redirection to a file prompts even when a Bash allow rule matches (ADR-0009)",
   "settings": {
     "local": {
       "allow": ["Bash(ls *)", "Bash(git status)"],
@@ -37,11 +37,19 @@
       "diff": true
     },
     {
-      "name": "output redirection is not read-only; the rule decides",
+      "name": "output redirection to a file prompts even when the rule matches",
       "tool": "Bash",
       "input": { "command": "ls > out.txt" },
-      "expect": { "outcome": "allow", "basis": "rule", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "expect": { "outcome": "none", "basis": "redirect", "allowMatches": ["local.allow[0]"] },
       "diff": true
+    },
+    {
+      "name": "redirection to /dev/null is not a file write; the rule decides",
+      "tool": "Bash",
+      "input": { "command": "ls > /dev/null" },
+      "expect": { "outcome": "allow", "basis": "rule", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true,
+      "unverified": "added after the 2026-09-23 run; whether Claude Code exempts /dev/null is not known; not run yet"
     },
     {
       "name": "echo with redirection and no rule",

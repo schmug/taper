@@ -25,6 +25,8 @@ describe('parseRule', () => {
     ['Read(*)', 'deny', 'tools'],
     ['Bash(git *)', 'allow', 'command'],
     ['Bash(git:*)', 'allow', 'command'],
+    ['Bash(git:* push)', 'allow', 'inert'],
+    ['Bash(git:* push)', 'deny', 'inert'],
     ['Monitor(tail *)', 'allow', 'command'],
     ['Read(src/**)', 'allow', 'path'],
     ['Edit(//etc/**)', 'deny', 'path'],
@@ -38,7 +40,8 @@ describe('parseRule', () => {
     ['LSP(x)', 'allow', 'inert'],
     ['WebFetch(domain:x.com)', 'allow', 'domain'],
     ['WebFetch(url:x)', 'allow', 'inert'],
-    ['WebSearch(x)', 'allow', 'inert'],
+    ['WebSearch(x)', 'allow', 'tools'],
+    ['WebSearch(x)', 'deny', 'tools'],
     ['*', 'deny', 'tool_glob'],
     ['*', 'allow', 'inert'],
     ['B*', 'ask', 'tool_glob'],
@@ -76,10 +79,16 @@ describe('parseRule', () => {
 
   it('rewrites the legacy :* suffix to a trailing space-wildcard', () => {
     expect(parseRule('Bash(git:*)', 'allow')).toEqual({ kind: 'command', pattern: 'git *' });
-    expect(parseRule('Bash(git:* push)', 'allow')).toEqual({
-      kind: 'command',
-      pattern: 'git:* push',
-    });
+    expect(parseRule('Monitor(tail:*)', 'allow')).toEqual({ kind: 'command', pattern: 'tail *' });
+  });
+
+  it('treats :* before more text as not understood (2026-09-23 run, ADR-0009)', () => {
+    expect(parseRule('Bash(git:* push)', 'allow')).toMatchObject({ kind: 'inert' });
+    expect(parseRule('Bash(a:*:*)', 'allow')).toMatchObject({ kind: 'inert' });
+  });
+
+  it('reads WebSearch with any specifier as bare WebSearch (2026-09-23 run, ADR-0009)', () => {
+    expect(parseRule('WebSearch(anything)', 'allow')).toEqual(parseRule('WebSearch', 'allow'));
   });
 
   it('expands bare-name aliases', () => {

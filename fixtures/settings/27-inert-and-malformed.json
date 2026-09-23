@@ -1,6 +1,6 @@
 {
-  "form": "specifier-only, malformed, and unsupported rules never match",
-  "source": "facts B1 'Invalid entries' (skipped with a warning); B2 'WebSearch' (bare only), 'Cd(...) governs /cd only'. PowerShell rules are not modeled (ADR-0006)",
+  "form": "malformed and unsupported rules never match; WebSearch ignores a specifier",
+  "source": "facts B1 'Invalid entries' (skipped with a warning); B2 'Cd(...) governs /cd only'. PowerShell rules are not modeled (ADR-0006). Differential run 2026-09-23: WebSearch(anything) in allow let a WebSearch call run, so taper reads it as bare WebSearch (ADR-0009)",
   "settings": {
     "local": {
       "allow": [
@@ -17,11 +17,12 @@
   },
   "cases": [
     {
-      "name": "WebSearch with a specifier is skipped",
+      "name": "WebSearch with a specifier acts as bare WebSearch",
       "tool": "WebSearch",
       "input": { "query": "x" },
-      "expect": { "outcome": "none" },
-      "diff": true
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true,
+      "unverified": "2026-09-23 observed the call allowed. It is not known whether Claude Code ignores the specifier or WebSearch needed no permission at all; either way over-matching this allow is the safe side (C5)"
     },
     {
       "name": "specifier without a tool name is skipped",
