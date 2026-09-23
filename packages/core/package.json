@@ -14,7 +14,11 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "test": "vitest run --passWithNoTests",
-    "typecheck": "tsc --noEmit"
+    "test": "vitest run --coverage",
+    "typecheck": "tsc --noEmit && tsc -p test --noEmit"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "5.0.1",
+    "fast-check": "4.10.2"
   }
 }
