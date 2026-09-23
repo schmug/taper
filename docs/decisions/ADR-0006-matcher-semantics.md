@@ -54,3 +54,6 @@ Fixtures: `fixtures/settings/*.json` (one per rule form). Resolves ADR-0002 rows
   binary. MCP, Skill, Monitor, user and managed scope, and anything that would spend network or
   subagent tokens stay docs-only. Each such case gives its reason in its `diffNote`.
 - The redundancy report (M7) can call an allow rule redundant when it is never decisive.
+- `ToolCall.cwd` must be the session's primary working directory, not the shell's current one.
+  A subdirectory `cwd` would under-match relative allow rules. M3 must source it correctly from
+  hook stdin (UNVERIFIED: whether hook `cwd` follows a Bash `cd`).

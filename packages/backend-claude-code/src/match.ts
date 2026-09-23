@@ -28,7 +28,12 @@ export interface ToolCall {
   /** Tool name as Claude Code reports it (`Bash`, `Read`, `mcp__server__tool`, legacy `Task`). */
   readonly tool: string;
   readonly input: Readonly<Record<string, unknown>>;
-  /** Session working directory (hook `cwd`). */
+  /**
+   * The session's primary working directory (where Claude Code started). It anchors relative
+   * path rules and the in-cwd read built-in. Passing the shell's current directory after a `cd`
+   * would under-match relative allow rules, which is the unsafe direction (C5). M3 decides how a
+   * hook obtains it.
+   */
   readonly cwd: string;
 }
 
