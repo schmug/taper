@@ -10,7 +10,7 @@ Part A, `fixtures/`). Still unverified:
 | Managed settings on disk: `managed-settings.d/` merge, `first-wins` vs `merge` across sources, `managed_settings_resolved` with a real file source | **M6** | Probe on a machine/VM where writing `/Library/Application Support/ClaudeCode/` (or `/etc/claude-code/`) is acceptable. |
 | Linux/Windows behavior and paths | M6, M7 | Run `pnpm probe` on Linux; Windows docs-only. |
 | `source` for auto-mode classifier approvals; PermissionRequest under auto | M6 (M2 attribution counts any `accept`, whatever the source: ADR-0007) | Probe with `--permission-mode auto`. |
-| Full rule-form matrix (`Task(...)` alias, wrappers, compound commands, path rules): the matcher's choices in ADR-0006 | M2 flag, carried from M0. Built, not run. | Owner go-ahead, then run the differential job (SETUP #5, ADR-0008; about $0.50 on haiku). |
+| Rule-form matrix, remainder: path-rule and Agent denies, the `Task(...)` alias, asks inside compound commands, a bare `WebFetch` ask, and four cases added after the run. The 2026-09-23 run confirmed the rest (ADR-0006 table, ADR-0009) | M6: `50-taper.json` copies path, Agent and bare-name members into `ask`/`deny`, and needs them to take effect | Owner go-ahead for a rerun of fixtures 01, 06, 07, 11, 12, 15, 23, 27 (about $0.32). Then fix `observe()` from the saved streams. Every open case carries an `unverified` note. |
 | `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` effect on customer OTel export | M7 | One probe each. |
 
 ## M0 — Verify and scaffold (2026-09-22)
@@ -87,7 +87,40 @@ machine's real settings without error, and all 28 real rules parsed as modeled k
 **Unverified.**
 - The differential job (98 calls in 23 headless sessions) is built and gated behind
   `CLAUDE_CODE_DIFF_TESTS=1`, but it has not run. It spends model tokens (≈$0.50 on haiku,
-  ADR-0008), so the rule-form matrix keeps its M0 flag.
+  ADR-0008), so the rule-form matrix keeps its M0 flag. (It ran on 2026-09-23; see "M2
+  differential results" below.)
 - The stream parser it uses is tested against the ten recorded M0 streams.
 **Next.** M3: the solo `taper` CLI, hooks, local ledger, hook enforcement, and trust read from
 `~/.claude.json`.
+
+## M2 differential results (2026-09-23)
+
+**Done.** The differential job ran once with the owner's go-ahead against Claude Code 2.1.278
+on haiku: 23 sessions, 98 calls, 13 mismatches, 0 not attempted, 0 timeouts, 218 s, $0.705.
+The sanitized report is in `fixtures/differential/2026-09-23/`. From now on the runner also
+saves each session's sanitized stream. Its writers refuse to write unless
+`CLAUDE_CODE_DIFF_TESTS=1`. They drop thinking signatures, which embed the account's org UUID.
+Facts are in `docs/claude-code-facts.md` A4. Dispositions and their C5 direction are in
+ADR-0009.
+**Changed.** Four matcher fixes, each written as a failing fixture first:
+- a `&` operator makes the allow outcome `none` (`background`);
+- an output redirect to a file does the same (`redirect`);
+- `Bash(x:* more)` is `inert`, so it is protected;
+- `WebSearch(x)` is read as bare `WebSearch`.
+
+Allow attribution only widened or stayed the same. No guard and no human settings array
+changed.
+
+`pnpm test`: core 129 passing; backend 546 passing, 0 failing, 24 skipped (the gated sessions).
+`pnpm lint` and `pnpm typecheck` are clean.
+**Still UNVERIFIED.** Nine mismatches are suspected observer artifacts:
+- five path denies and two Agent denies read as allowed, because the observer cannot see
+  file-tool or Agent denials;
+- a subshell ask and a bare `WebFetch` ask prompted, but not with reason type `rule`.
+
+Each such case keeps `diff: true` and an `unverified` note. Four discriminator cases are new
+and have not run. No C1–C5 contradiction was found.
+**Next.** Get the owner's go-ahead for a rerun of fixtures 01, 06, 07, 11, 12, 15, 23 and 27
+(about $0.32), then teach `observe()` the denial shapes from the saved streams. Separately:
+the committed M0 streams in `fixtures/headless/` embed the org UUID inside thinking signatures.
+That is reported for a follow-up, not changed here.

@@ -8,7 +8,8 @@ or the docs change a fact, and cite it from the relevant ADR.
 - Docs read: code.claude.com/docs/en/*.md, changelog head **2.1.280** (2026-09-22).
 - Reproduce: `pnpm probe [scenario …]` (`scripts/probe-claude-code.ts`). Raw evidence:
   `fixtures/probe-results.json`, `fixtures/headless/*.stream.jsonl`, `fixtures/hooks/<scenario>/`,
-  `fixtures/otel/*.jsonl` (sanitized).
+  `fixtures/otel/*.jsonl` (sanitized). Differential runs of the matcher (ADR-0008) are recorded
+  in `fixtures/differential/<date>/` (A4).
 - Tags: **CONFIRMED** (matches research doc/HANDOFF) · **DIVERGED** (differs; says how) · **NEW**
   (not in research doc) · **UNVERIFIED** (docs silent and not probed).
 
@@ -101,9 +102,79 @@ lines in `fixtures/headless/`). An earlier "~76k-token prefix" figure is wrong; 
 | Managed settings on disk (`/Library/Application Support/ClaudeCode/`, `managed-settings.d/` merge, first-wins vs merge across sources) | needs root; would change the owner's machine | **M6** (org enforcement) |
 | Linux/Windows paths and behavior | macOS only | M6/M7 |
 | `source` for auto-mode classifier approvals; PermissionRequest under auto | docs silent; auto not exercised | M2 (attribution), M6 |
-| `Task(...)` as alias of `Agent(...)`; full rule-form matrix (wrappers, compound commands, path rules) | M2 built the job (`fixtures/settings/`, ADR-0006, ADR-0008) but has not run it: it spends tokens | M2 differential job (`CLAUDE_CODE_DIFF_TESTS=1`), owner go-ahead |
+| `Task(...)` as alias of `Agent(...)`; path-rule and Agent denies; asks inside compound commands | The 2026-09-23 differential run (A4) could not observe them: the observer blind spot | a rerun with saved streams, then an `observe()` fix (ADR-0009) |
 | Whether `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` suppress customer OTel export | docs silent | M7 (dead-man edge cases) |
 | Interactive `user_temporary`/`user_reject`/`user_abort` sources | only option 2 was exercised | M3 fixtures (record when needed) |
+
+## A4. Differential run (2026-09-23, Claude Code 2.1.278)
+
+This is the ADR-0008 job, run once with the owner's go-ahead: `CLAUDE_CODE_DIFF_TESTS=1`, haiku,
+23 headless sessions, 98 calls, 218 s, $0.705. Evidence is in
+`fixtures/differential/2026-09-23/report.json` (the raw streams were not kept). Dispositions are
+in ADR-0009. Fixture numbers refer to `fixtures/settings/NN-*.json`.
+
+- **DIVERGED: `:*` before more text.** The docs say the colon is literal in `Bash(x:* push)`.
+  But `Bash(./probe.sh:* push)` did not allow `./probe.sh:x push`; it prompted (06). taper
+  treats such rules as `inert`. Whether Claude Code skips the rule or rewrites `:*` to ` *` is
+  UNVERIFIED. Trailing `:*` works as documented, including the bare command (06).
+- **DIVERGED: a background `&` prompts.** `./probe.sh a 1 & ./probe.sh b 2` prompted even though
+  an allow rule covered each part. The same shape joined by `&&`, `|`, or `2>&1 |` was allowed
+  (07). The docs list `&` as an ordinary separator. A trailing `&` is UNVERIFIED.
+- **NEW: a redirect to a file prompts despite a matching allow.** `ls > out.txt` prompted under
+  `Bash(ls *)` (11). `echo hi > out.txt` with no rule also prompted, so a redirect is not in the
+  read-only set. `2>&1` does not prompt (07). `/dev/null` is UNVERIFIED.
+- **DIVERGED: `WebSearch(anything)`.** The docs say WebSearch takes a bare name only. But with
+  `WebSearch(anything)` as the only WebSearch rule, a WebSearch call ran without a prompt (27).
+  It is UNVERIFIED whether the specifier is ignored or WebSearch needs no permission at all.
+- **NEW: ask reason types are not uniform.** A prompt caused by an ask rule reported
+  `decision_reason_type: rule` in these cases:
+  - single Bash commands (M0 a1/a2),
+  - the tool-name glob `B*` (22),
+  - `WebFetch(domain:*)` (20).
+
+  In these cases the call prompted, but the reason type was **not** `rule`:
+  - a bare `WebFetch` ask (01),
+  - an ask on a command inside a subshell of a compound command (07).
+
+  Which of these asks actually applied is UNVERIFIED. For M6, confirm that bare-name asks in a
+  managed `50-taper.json` take effect.
+- **NEW: Read, Write and Agent denies emit neither signal the observer reads.** These are
+  `tool_result_meta.non_execution_kind` and the `permission_denied` message. Bash and WebFetch
+  denies did emit them (07, 10, 11, 19, 24, 29).
+  - Every path deny (12, 15) and Agent deny (23) came back looking allowed.
+  - Two of those were Writes that no allow rule covered, and uncovered Writes in the same
+    session prompted. So those two Writes were denied some other way, most likely by an input
+    validation error.
+  - The Agent session cost ($0.026) fits no subagent having run.
+  - The exact shape is UNVERIFIED until a run saves its streams.
+- **CONFIRMED by the run (matcher predictions held):**
+  - Bash rule forms:
+    - exact rules, with literal parentheses (03);
+    - the space wildcard with its word boundary, and `*` with no space (04);
+    - middle and leading wildcards, and the two-wildcard bare-form rule (05);
+    - the trailing legacy `:*` (06);
+    - `&&` and `|` needing every part, and deny inside `;`, `$()` and `for` (07);
+    - wrapper stripping: `timeout`, `time`, `nice -n`, `nohup`, `command`, `stdbuf`,
+      `noglob`, nested wrappers; `command -v` is not stripped (08);
+    - `find -delete` needing an exact rule (09);
+    - a safe env var before an allowed command, and deny past any assignment (10);
+    - read-only built-ins, deny beating a built-in, and write-side VCS commands not being
+      built-in (11).
+  - Path rules:
+    - `//abs`, and `/path` anchoring for local and `--settings` (12, 14);
+    - a single-segment dir allow matching only at cwd (12);
+    - a bare filename glob matching at any depth (12);
+    - `*` staying within one segment, and `**` matching zero or more segments (12);
+    - Write using Edit rules, and Read using Read rules (16);
+    - `Write(path)` never being consulted (17).
+  - WebFetch domain rules: a leading `*.` excludes the apex, a middle `*` matches one label,
+    and a domain deny applies (19). A `WebFetch(domain:*)` ask beats a bare allow (20).
+  - Tool-name globs: a `B*` ask covers Bash, and `*` in allow is skipped (22).
+  - Parameter rules: `Agent(model:opus)` ask (23), a `run_in_background` deny, and
+    `Bash(command:…)` being ignored (24).
+  - Malformed rules are skipped (27).
+  - Workspace trust: an untrusted project's allow is ignored, its deny still applies, and a
+    local allow applies (29).
 
 ---
 
@@ -151,9 +222,9 @@ matcher's choice is listed in ADR-0006 as UNVERIFIED until the differential job 
 - **Bash wildcard form.** The current form is `Bash(git *)`. `*` matches any text including spaces and can appear anywhere: `Bash(git * main)`, `Bash(* --version)`. **DIVERGED** from HANDOFF §5.1 wording: the primary form is now space + `*`.
   - A trailing ` *` also matches the bare command: `Bash(ls *)` matches `ls`. That holds only when the trailing `*` is the rule's only wildcard.
   - The space is significant: `Bash(ls *)` doesn't match `lsof`, but `Bash(ls*)` does.
-  - **Legacy `:*`** is equivalent to a trailing ` *`, and only at the end of a pattern. In `Bash(git:* push)` the colon is literal. The permission dialog writes the **space form**.
+  - **Legacy `:*`** is equivalent to a trailing ` *`, and only at the end of a pattern. In `Bash(git:* push)` the colon is literal. The permission dialog writes the **space form**. **DIVERGED (A4):** live, `:*` before more text did not match as a literal colon.
   - Startup warning for an allow rule with `*` before the subcommand.
-- **Compound commands.** Separators are `&&`, `||`, `;`, `|`, `|&`, `&` and newline.
+- **Compound commands.** Separators are `&&`, `||`, `;`, `|`, `|&`, `&` and newline. **DIVERGED (A4):** live, a `&` makes the command prompt even when every part is allowed, and so does an output redirection to a file.
   - **Allow** requires each subcommand to be matched independently.
   - **Deny and ask** apply if *any* subcommand matches, including inside subshells, `$()`, and `for` bodies.
   - A trailing `&&` or `||` with nothing after it is unparseable, so allow rules don't match it.
@@ -206,7 +277,7 @@ matcher's choice is listed in ADR-0006 as UNVERIFIED until the differential job 
   - **CONFIRMED + NEW detail.** https://code.claude.com/docs/en/permissions#webfetch
 - **MCP.** `mcp__server` and `mcp__server__*` match all of a server's tools; `mcp__server__tool` matches one tool. Connector tools appear as `mcp__claude_ai_<server>__<tool>`. Plugin servers appear as `mcp__plugin_<plugin>_<server>__<tool>`. **CONFIRMED + NEW.** https://code.claude.com/docs/en/permissions#mcp, https://code.claude.com/docs/en/hooks#match-mcp-tools
 - **`Agent(...)`.** `Agent(Explore)`, `Agent(my-custom-agent)`. `Task(...)` isn't mentioned in current permission docs; OTel still says "Agent tool or legacy Task tool". The changelog shows `Task(AgentName)` was the earlier syntax. Whether `Task(...)` is still accepted as an alias is **NOT-FOUND**, so probe it. Under auto mode, `Agent` allow rules are dropped. https://code.claude.com/docs/en/permissions#agent-subagents
-- **`WebSearch`.** Bare name only; no specifier. **CONFIRMED.** https://code.claude.com/docs/en/tools-reference#configure-tools-with-permission-rules-and-hooks
+- **`WebSearch`.** Bare name only; no specifier. **CONFIRMED** (docs). **DIVERGED (A4):** live, `WebSearch(anything)` in allow did not stop a WebSearch call from running. https://code.claude.com/docs/en/tools-reference#configure-tools-with-permission-rules-and-hooks
 - **Other specifier tools.** **NEW.**
   - `Skill(name)` is an exact match; `Skill(name *)` is a prefix match. Deny also matches aliases and unqualified nested names.
   - `PowerShell(...)` uses the Bash-like shape, canonicalizes aliases, and matches case-insensitively.

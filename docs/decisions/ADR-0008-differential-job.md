@@ -1,7 +1,9 @@
 # ADR-0008: Differential job against the real binary
 
-Status: accepted (M2, 2026-09-23). **Not yet run: it spends model tokens and needs the owner's
-go-ahead.** Code: `packages/backend-claude-code/test/differential{,-runner}.ts`.
+Status: accepted (M2, 2026-09-23). **Run once, 2026-09-23, with the owner's go-ahead**: 13 of
+98 calls mismatched, 218 s, $0.705. Results and dispositions are in ADR-0009. Each further run
+spends model tokens and needs its own go-ahead. Code:
+`packages/backend-claude-code/test/differential{,-runner}.ts`.
 
 ## Decision
 
@@ -23,6 +25,14 @@ go-ahead.** Code: `packages/backend-claude-code/test/differential{,-runner}.ts`.
   - neither → allowed.
   Headless `-p` turns a prompt into a denial, so the job can tell ask from none but cannot show
   what a human would choose.
+  - **Blind spot (ADR-0009).** Read, Write and Agent denies emit neither signal, so they read as
+    allowed. A compound-command ask, and a bare `WebFetch` ask, came back with a reason type
+    other than `rule`. Cases affected by either gap carry an `unverified` note in their fixture.
+- **Evidence.** `saveReport` and `saveStream` write the report and each session's raw stream
+  under the workdir: `report.json` and `streams/<stem>.stream.jsonl`. Both are sanitized like
+  the M0 probe, and thinking signatures are dropped because they embed the org UUID. Both
+  functions refuse to write unless `CLAUDE_CODE_DIFF_TESTS=1`. Copy a run you want to keep to
+  `fixtures/differential/<date>/`.
 - **Isolation (same as the M0 probe).** Settings files are written only in local, project
   (never trusted, so only deny/ask apply) and `--settings` scope. It never writes user or
   managed settings. Flags: `--setting-sources project,local --strict-mcp-config
@@ -50,9 +60,13 @@ The job makes about 121 requests: 98 calls plus one closing turn per session. Th
 over about 25 minutes. This supersedes the facts doc's "~76k-token cached prefix per session".
 The fixtures show about 27k per two-request session.
 
+**Actual (2026-09-23): $0.705 over 218 s**, $0.022–$0.066 per session and about 9.5 s per
+session. The token estimate was 40% low and the time estimate far too high. Budget a rerun from
+the per-session `cost` in the saved report.
+
 ## Consequences
 
-- Until the job runs, the rule-form matrix stays UNVERIFIED (docs/STATUS.md, M0 flag). Every
-  choice in ADR-0006's open-choices table is a candidate mismatch.
+- The rule-form matrix is verified only where ADR-0006's open-choices table says so. The cases
+  still UNVERIFIED are the ones that carry an `unverified` note.
 - A mismatch means the fixture, the facts doc and possibly the matcher change together. Prefer
   the safe direction (C5) where Claude Code's behavior cannot be pinned down.

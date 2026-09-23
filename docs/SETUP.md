@@ -18,7 +18,7 @@ boundary is implemented against mocks.
 | 2 | Cloudflare Access team domain + an Access application for the dashboard and `/api/*`; record its AUD | M4/M5 deploy |
 | 3 | Optional Access service-token policy (`Action=Service Auth`) for `/ingest/*` and `/otlp/*` | M6 |
 | 4 | GitHub token for `taper recommend --format pr` | M7 stretch |
-| 5 | Go-ahead to run the M2 differential job. It spends model tokens, about $0.50 on haiku (ADR-0008): `CLAUDE_CODE_DIFF_TESTS=1 pnpm --filter @taper/backend-claude-code exec vitest run test/differential.test.ts`. The report is written to `~/.cache/taper-diff/report.json`. | Closes the M2 rule-matrix UNVERIFIED row |
+| 5 | Go-ahead for a confirming rerun of the M2 differential job. The full job ran once on 2026-09-23 and cost $0.705 (ADR-0009). The rerun covers only the eight fixtures with open cases and costs about $0.32: `CLAUDE_CODE_DIFF_TESTS=1 TAPER_DIFF_ONLY=01-bare-tool-names,06-bash-legacy-colon,07-bash-compound,11-bash-read-only-builtins,12-read-edit-paths,15-path-negation,23-agent-task,27-inert-and-malformed pnpm --filter @taper/backend-claude-code exec vitest run test/differential.test.ts`. The sanitized report and streams are written to `~/.cache/taper-diff/`; copy them to `fixtures/differential/<date>/`. | Closes the M2 rule-matrix UNVERIFIED row |
 
 ## Environment variables
 
@@ -33,6 +33,6 @@ boundary is implemented against mocks.
 | `ARGS_HASH_SALT` | control plane (secret) | Salt for `args_hash`. 32+ random bytes, hex. Production: `wrangler secret put ARGS_HASH_SALT`. |
 | `CLAUDE_CODE_DIFF_TESTS` | M2 differential tests | `1` runs matcher predictions against the real `claude` binary (spends tokens). Default off. |
 | `TAPER_DIFF_MODEL` | differential tests | Model alias; default `haiku`. |
-| `TAPER_DIFF_WORKDIR` | differential tests | Scratch repos and `report.json`; default `~/.cache/taper-diff`. |
+| `TAPER_DIFF_WORKDIR` | differential tests | Scratch repos, `report.json` and `streams/`; default `~/.cache/taper-diff`. |
 | `TAPER_DIFF_ONLY` | differential tests | Comma-separated fixture stems (e.g. `07-bash-compound`) to run a subset. |
 | `TAPER_PROBE_MODEL` | `pnpm probe` | Model alias for probes; default `haiku`. |
