@@ -4,21 +4,16 @@
 // SPENDS MODEL TOKENS (metered). Off unless CLAUDE_CODE_DIFF_TESTS=1:
 //   CLAUDE_CODE_DIFF_TESTS=1 pnpm --filter @taper/backend-claude-code exec vitest run test/differential.test.ts
 // Optional: TAPER_DIFF_MODEL (default haiku), TAPER_DIFF_WORKDIR (default ~/.cache/taper-diff),
-// TAPER_DIFF_ONLY=<fixture-stem,...>. A JSON report lands in the workdir.
+// TAPER_DIFF_ONLY=<fixture-stem,...>. The sanitized report (`report.json`) and each session's
+// sanitized stream (`streams/<stem>.stream.jsonl`) land in the workdir; copy them to
+// fixtures/differential/<date>/ to keep them (a rerun overwrites the workdir).
 //
 // The observation parser below is always tested against the recorded M0 streams, so the part
 // that reads Claude Code's decisions is verified without spending tokens.
 
 import { execFileSync } from 'node:child_process';
-import {
-  mkdirSync,
-  mkdtempSync,
-  readdirSync,
-  readFileSync,
-  realpathSync,
-  writeFileSync,
-} from 'node:fs';
-import { homedir, tmpdir } from 'node:os';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, realpathSync } from 'node:fs';
+import { homedir, hostname, tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
@@ -30,6 +25,9 @@ import {
   planCalls,
   prepareSession,
   runSession,
+  sanitizeEvidence,
+  saveReport,
+  saveStream,
 } from './differential-runner.ts';
 import { loadFixtures, UNIT_PATHS } from './fixture-harness.ts';
 
@@ -120,6 +118,56 @@ describe('prepareSession (no model call)', () => {
   });
 });
 
+describe('evidence (no model call)', () => {
+  const ctx = { home: '/Users/someone', workdir: '/Users/someone/.cache/taper-diff', host: 'box7' };
+  const on = { CLAUDE_CODE_DIFF_TESTS: '1' };
+  const stream = [
+    {
+      type: 'system',
+      subtype: 'init',
+      cwd: '/Users/someone/.cache/taper-diff/12-x/repo',
+      memory_paths: {
+        auto: '/Users/someone/.claude/projects/-Users-someone--cache-taper-diff-12-x-repo/memory/',
+      },
+    },
+    {
+      type: 'assistant',
+      message: { content: [{ type: 'thinking', thinking: '', signature: 'RXhhbXBsZQ==' }] },
+    },
+    { type: 'result', result: 'mail someone@corp.example from box7' },
+  ];
+
+  it('scrubs home, workdir, slugs, host, email and thinking signatures', () => {
+    const out = JSON.stringify(sanitizeEvidence(stream, ctx));
+    expect(out).not.toMatch(/someone|box7|RXhhbXBsZQ/);
+    expect(out).toContain('"cwd":"/workdir/12-x/repo"');
+    expect(out).toContain('/home/user/.claude/projects/-workdir-12-x-repo/memory/');
+    expect(out).toContain('"signature":"redacted-signature"');
+    expect(out).toContain('mail user@example.com from probe-host');
+  });
+
+  it('writes streams and the report only when the gate is on', () => {
+    const base = mkdtempSync(join(tmpdir(), 'taper-evidence-'));
+    expect(saveStream({}, base, '12-x', stream, ctx)).toBeNull();
+    expect(saveReport({ CLAUDE_CODE_DIFF_TESTS: 'true' }, base, { a: 1 }, ctx)).toBeNull();
+    expect(readdirSync(base)).toEqual([]);
+
+    const streamFile = saveStream(on, base, '12-x', stream, ctx);
+    const reportFile = saveReport(on, base, { '12-x': { stderr: `${ctx.home}/x` } }, ctx);
+    expect(streamFile).toBe(join(base, 'streams', '12-x.stream.jsonl'));
+    expect(reportFile).toBe(join(base, 'report.json'));
+    const lines = readFileSync(join(base, 'streams', '12-x.stream.jsonl'), 'utf8')
+      .trim()
+      .split('\n');
+    expect(lines).toHaveLength(3);
+    expect(JSON.parse(readFileSync(join(base, 'report.json'), 'utf8'))).toEqual({
+      '12-x': { stderr: '/home/user/x' },
+    });
+    expect(() => saveStream(on, base, '../../escape', stream, ctx)).toThrow(/refusing/);
+    expect(existsSync(join(base, '..', 'escape.stream.jsonl'))).toBe(false);
+  });
+});
+
 describe.skipIf(!ENABLED)('differential: matcher vs claude', () => {
   it('has a claude binary', () => {
     expect(execFileSync('claude', ['--version'], { encoding: 'utf8' })).toMatch(/\d+\.\d+\.\d+/);
@@ -150,8 +198,9 @@ describe.skipIf(!ENABLED)('differential: matcher vs claude', () => {
         timedOut: run.timedOut,
         stderr: run.stderr.slice(0, 2000),
       };
-      mkdirSync(WORKDIR, { recursive: true });
-      writeFileSync(join(WORKDIR, 'report.json'), `${JSON.stringify(report, null, 2)}\n`);
+      const scrub = { home: homedir(), workdir: WORKDIR, host: hostname() };
+      saveStream(process.env, WORKDIR, stem, run.stream, scrub);
+      saveReport(process.env, WORKDIR, report, scrub);
       expect(rows.filter((r) => r.predicted !== r.observed)).toEqual([]);
     },
     SESSION_TIMEOUT_MS + 30_000,

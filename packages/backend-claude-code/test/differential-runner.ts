@@ -5,7 +5,7 @@
 import { execFileSync, spawn } from 'node:child_process';
 import { chmodSync, mkdirSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { dirname, join, sep } from 'node:path';
+import { dirname, join, resolve, sep } from 'node:path';
 import { buildPolicy, canonicalTool, match } from '../src/index.ts';
 import { type Fixture, fillDeep, type Paths, sourcesFor } from './fixture-harness.ts';
 
@@ -20,6 +20,94 @@ export interface DiffCall {
 
 export const diffEnabled = (env: Record<string, string | undefined>): boolean =>
   env.CLAUDE_CODE_DIFF_TESTS === '1';
+
+export interface ScrubContext {
+  readonly home: string;
+  /** The job's workdir (TAPER_DIFF_WORKDIR); scratch repos live under it. */
+  readonly workdir: string;
+  readonly host: string;
+}
+
+// Same redactions as the M0 probe (scripts/probe-claude-code.ts), plus `signature`: thinking
+// signatures are opaque base64 that embeds the account's organization UUID.
+const REDACT_KEYS: Readonly<Record<string, string>> = {
+  'user.email': 'user@example.com',
+  'user.id': 'redacted-user-id',
+  'user.account_uuid': '00000000-0000-0000-0000-000000000001',
+  'user.account_id': 'redacted-account-id',
+  'organization.id': '00000000-0000-0000-0000-000000000002',
+  'host.name': 'probe-host',
+  signature: 'redacted-signature',
+};
+
+// Transcript dirs embed the cwd as a slug (non-alphanumerics → '-').
+const slug = (p: string) => p.replace(/[^A-Za-z0-9]/g, '-');
+
+/** Evidence copy of a report or stream: no home dir, workdir, host name, email or account ids. */
+export function sanitizeEvidence(v: unknown, ctx: ScrubContext): unknown {
+  if (typeof v === 'string')
+    return v
+      .replaceAll(slug(ctx.workdir), '-workdir')
+      .replaceAll(slug(ctx.home), '-home-user')
+      .replaceAll(`/private${ctx.workdir}`, '/workdir')
+      .replaceAll(ctx.workdir, '/workdir')
+      .replaceAll(ctx.home, '/home/user')
+      .replaceAll(ctx.host, 'probe-host')
+      .replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g, 'user@example.com');
+  if (Array.isArray(v)) return v.map((x) => sanitizeEvidence(x, ctx));
+  if (v === null || typeof v !== 'object') return v;
+  const o = v as Record<string, unknown>;
+  // OTLP attribute: { key, value: { stringValue } }
+  if (typeof o.key === 'string' && o.key in REDACT_KEYS && typeof o.value === 'object')
+    return { key: o.key, value: { stringValue: REDACT_KEYS[o.key] } };
+  return Object.fromEntries(
+    Object.entries(o).map(([k, x]) => [
+      k,
+      k in REDACT_KEYS ? REDACT_KEYS[k] : sanitizeEvidence(x, ctx),
+    ]),
+  );
+}
+
+/** `<workdir>/<rel>`, refusing anything that would land outside the workdir. */
+function evidencePath(workdir: string, rel: string): string {
+  const base = resolve(workdir);
+  const target = resolve(base, rel);
+  if (!target.startsWith(base + sep)) throw new Error(`refusing to write ${target}`);
+  return target;
+}
+
+/**
+ * Writes one session's raw stream, sanitized, to `<workdir>/streams/<stem>.stream.jsonl`.
+ * Refuses (returns null, writes nothing) unless the gate is on, so only the gated run saves.
+ */
+export function saveStream(
+  env: Record<string, string | undefined>,
+  workdir: string,
+  stem: string,
+  stream: readonly unknown[],
+  ctx: ScrubContext,
+): string | null {
+  if (!diffEnabled(env)) return null;
+  const file = evidencePath(workdir, join('streams', `${stem}.stream.jsonl`));
+  mkdirSync(dirname(file), { recursive: true });
+  const lines = stream.map((m) => JSON.stringify(sanitizeEvidence(m, ctx)));
+  writeFileSync(file, lines.length ? `${lines.join('\n')}\n` : '');
+  return file;
+}
+
+/** Writes the sanitized report to `<workdir>/report.json`; gated like `saveStream`. */
+export function saveReport(
+  env: Record<string, string | undefined>,
+  workdir: string,
+  report: unknown,
+  ctx: ScrubContext,
+): string | null {
+  if (!diffEnabled(env)) return null;
+  const file = evidencePath(workdir, 'report.json');
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, `${JSON.stringify(sanitizeEvidence(report, ctx), null, 2)}\n`);
+  return file;
+}
 
 /** The input field that identifies a call in the transcript (the model may add others). */
 function keyOf(tool: string, input: Record<string, unknown>): string {

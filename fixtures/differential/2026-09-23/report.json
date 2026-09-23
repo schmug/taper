@@ -1,0 +1,1412 @@
+{
+  "01-bare-tool-names": {
+    "rows": [
+      {
+        "name": "bare Write matches Write calls at tool level",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "bare WebFetch ask covers every URL",
+        "predicted": "ask",
+        "observed": "none"
+      }
+    ],
+    "usage": {
+      "input_tokens": 26,
+      "cache_creation_input_tokens": 11923,
+      "cache_read_input_tokens": 23130,
+      "output_tokens": 435,
+      "output_tokens_details": {
+        "thinking_tokens": 249
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11923,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 69,
+          "cache_read_input_tokens": 11741,
+          "cache_creation_input_tokens": 182,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 182
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.02836,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "02-bash-bare-and-star": {
+    "rows": [
+      {
+        "name": "both match; the cli rule is decisive by scope",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "every subcommand of a compound command matches",
+        "predicted": "allow",
+        "observed": "allow"
+      }
+    ],
+    "usage": {
+      "input_tokens": 26,
+      "cache_creation_input_tokens": 8574,
+      "cache_read_input_tokens": 33317,
+      "output_tokens": 347,
+      "output_tokens_details": {
+        "thinking_tokens": 215
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 8574,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 37,
+          "cache_read_input_tokens": 14009,
+          "cache_creation_input_tokens": 146,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 146
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.022240700000000002,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "03-bash-exact": {
+    "rows": [
+      {
+        "name": "identical command",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "extra argument is not covered",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "shorter command is not covered",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "parentheses in the specifier are literal",
+        "predicted": "allow",
+        "observed": "allow"
+      }
+    ],
+    "usage": {
+      "input_tokens": 42,
+      "cache_creation_input_tokens": 8817,
+      "cache_read_input_tokens": 61687,
+      "output_tokens": 500,
+      "output_tokens_details": {
+        "thinking_tokens": 254
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 8817,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 89,
+          "cache_read_input_tokens": 14260,
+          "cache_creation_input_tokens": 138,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 138
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0263447,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "04-bash-space-wildcard": {
+    "rows": [
+      {
+        "name": "prefix plus arguments",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "trailing ' *' matches the bare command",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "space is significant",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "no space: '*' continues the word",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "no space: '*' matches empty",
+        "predicted": "allow",
+        "observed": "allow"
+      }
+    ],
+    "usage": {
+      "input_tokens": 50,
+      "cache_creation_input_tokens": 9069,
+      "cache_read_input_tokens": 76404,
+      "output_tokens": 628,
+      "output_tokens_details": {
+        "thinking_tokens": 329
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 9069,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 38,
+          "cache_read_input_tokens": 14499,
+          "cache_creation_input_tokens": 151,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 151
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.028968400000000005,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "05-bash-wildcard-anywhere": {
+    "rows": [
+      {
+        "name": "middle wildcard",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "middle wildcard needs both spaces",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "leading wildcard",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "two wildcards: trailing ' *' does not match the bare form",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "two wildcards with a trailing argument",
+        "predicted": "allow",
+        "observed": "allow"
+      }
+    ],
+    "usage": {
+      "input_tokens": 50,
+      "cache_creation_input_tokens": 9126,
+      "cache_read_input_tokens": 76650,
+      "output_tokens": 778,
+      "output_tokens_details": {
+        "thinking_tokens": 472
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 9126,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 138,
+          "cache_read_input_tokens": 14561,
+          "cache_creation_input_tokens": 146,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 146
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.029856999999999998,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "06-bash-legacy-colon": {
+    "rows": [
+      {
+        "name": "legacy prefix with arguments",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "legacy prefix matches the bare command",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "legacy prefix keeps the word boundary",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "':*' before more text is a literal colon plus wildcard",
+        "predicted": "allow",
+        "observed": "none"
+      }
+    ],
+    "usage": {
+      "input_tokens": 42,
+      "cache_creation_input_tokens": 8998,
+      "cache_read_input_tokens": 62035,
+      "output_tokens": 785,
+      "output_tokens_details": {
+        "thinking_tokens": 541
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 8998,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 193,
+          "cache_read_input_tokens": 14383,
+          "cache_creation_input_tokens": 196,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 196
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.028166500000000004,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "07-bash-compound": {
+    "rows": [
+      {
+        "name": "&& with both subcommands allowed yields a decisive set",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "one uncovered subcommand leaves the call unmatched",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "pipe",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "deny on any subcommand",
+        "predicted": "deny",
+        "observed": "deny"
+      },
+      {
+        "name": "ask inside a subshell",
+        "predicted": "ask",
+        "observed": "none"
+      },
+      {
+        "name": "deny inside command substitution",
+        "predicted": "deny",
+        "observed": "deny"
+      },
+      {
+        "name": "deny inside a for body",
+        "predicted": "deny",
+        "observed": "deny"
+      },
+      {
+        "name": "background separator",
+        "predicted": "allow",
+        "observed": "none"
+      },
+      {
+        "name": "2>&1 is a redirection, not a separator",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "quoted separators do not split",
+        "predicted": "allow",
+        "observed": "allow"
+      }
+    ],
+    "usage": {
+      "input_tokens": 90,
+      "cache_creation_input_tokens": 10215,
+      "cache_read_input_tokens": 154041,
+      "output_tokens": 1270,
+      "output_tokens_details": {
+        "thinking_tokens": 562
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10215,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 170,
+          "cache_read_input_tokens": 15628,
+          "cache_creation_input_tokens": 168,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 168
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.042274099999999995,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "08-bash-wrappers": {
+    "rows": [
+      {
+        "name": "timeout with a duration",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "time",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "nice -n",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "nohup",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "command",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "stdbuf with a flag",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "zsh noglob",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "nested wrappers",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "command -v is not stripped",
+        "predicted": "none",
+        "observed": "none"
+      }
+    ],
+    "usage": {
+      "input_tokens": 82,
+      "cache_creation_input_tokens": 9691,
+      "cache_read_input_tokens": 136603,
+      "output_tokens": 889,
+      "output_tokens_details": {
+        "thinking_tokens": 303
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 9691,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 60,
+          "cache_read_input_tokens": 15130,
+          "cache_creation_input_tokens": 142,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 142
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.03756930000000001,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "09-bash-exact-only-runners": {
+    "rows": [
+      {
+        "name": "find -delete: only the exact rule applies",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "find -delete: a prefix rule does not approve",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "plain find is built-in read-only; the prefix rule still matches for attribution",
+        "predicted": "allow",
+        "observed": "allow"
+      }
+    ],
+    "usage": {
+      "input_tokens": 34,
+      "cache_creation_input_tokens": 8760,
+      "cache_read_input_tokens": 47501,
+      "output_tokens": 452,
+      "output_tokens_details": {
+        "thinking_tokens": 263
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 8760,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 50,
+          "cache_read_input_tokens": 14171,
+          "cache_creation_input_tokens": 170,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 170
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0245641,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "10-bash-env-assignments": {
+    "rows": [
+      {
+        "name": "safe variable before an allowed command",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "deny matches past any assignment",
+        "predicted": "deny",
+        "observed": "deny"
+      }
+    ],
+    "usage": {
+      "input_tokens": 26,
+      "cache_creation_input_tokens": 8571,
+      "cache_read_input_tokens": 33287,
+      "output_tokens": 358,
+      "output_tokens_details": {
+        "thinking_tokens": 212
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 8571,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 86,
+          "cache_read_input_tokens": 13969,
+          "cache_creation_input_tokens": 183,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 183
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0222867,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "11-bash-read-only-builtins": {
+    "rows": [
+      {
+        "name": "ls is built-in; the rule matches but is not decisive",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "read-only git",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "no rule needed",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "deny still beats a built-in",
+        "predicted": "deny",
+        "observed": "deny"
+      },
+      {
+        "name": "output redirection is not read-only; the rule decides",
+        "predicted": "allow",
+        "observed": "none"
+      },
+      {
+        "name": "echo with redirection and no rule",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "write-side git is not built-in",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "built-in plus an uncovered subcommand",
+        "predicted": "none",
+        "observed": "none"
+      }
+    ],
+    "usage": {
+      "input_tokens": 74,
+      "cache_creation_input_tokens": 10135,
+      "cache_read_input_tokens": 123847,
+      "output_tokens": 1076,
+      "output_tokens_details": {
+        "thinking_tokens": 607
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10135,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 61,
+          "cache_read_input_tokens": 15508,
+          "cache_creation_input_tokens": 208,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 208
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0381087,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "12-read-edit-paths": {
+    "rows": [
+      {
+        "name": "//absolute",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "outside cwd with no rule",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "/path in local settings anchors at the project root",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "single-segment dir allow at cwd",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "single-segment dir allow does not match deeper",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "bare filename glob at any depth",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "./ with * inside one segment",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "* does not cross a segment",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "** matches zero segments",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "** matches several segments",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "bare filename deny at any depth",
+        "predicted": "deny",
+        "observed": "allow"
+      },
+      {
+        "name": "single-segment dir deny at any depth",
+        "predicted": "deny",
+        "observed": "allow"
+      },
+      {
+        "name": "a Read deny also blocks Write on the same path",
+        "predicted": "deny",
+        "observed": "allow"
+      },
+      {
+        "name": "an Edit allow also matches Read; in-cwd reads are built-in",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "in-cwd read matched by an Edit glob",
+        "predicted": "allow",
+        "observed": "allow"
+      }
+    ],
+    "usage": {
+      "input_tokens": 130,
+      "cache_creation_input_tokens": 15991,
+      "cache_read_input_tokens": 210571,
+      "output_tokens": 2556,
+      "output_tokens_details": {
+        "thinking_tokens": 1137
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15991,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 40,
+          "cache_read_input_tokens": 15795,
+          "cache_creation_input_tokens": 196,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 196
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0659491,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "14-path-anchor-cli-local": {
+    "rows": [
+      {
+        "name": "--settings /path anchors at the file's directory",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "--settings /path does not anchor at cwd",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "local /path anchors at the project root",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "local /path does not anchor at the filesystem root",
+        "predicted": "none",
+        "observed": "none"
+      }
+    ],
+    "usage": {
+      "input_tokens": 42,
+      "cache_creation_input_tokens": 12512,
+      "cache_read_input_tokens": 47953,
+      "output_tokens": 602,
+      "output_tokens_details": {
+        "thinking_tokens": 224
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 12512,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 70,
+          "cache_read_input_tokens": 12293,
+          "cache_creation_input_tokens": 219,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 219
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.03287129999999999,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "15-path-negation": {
+    "rows": [
+      {
+        "name": "denied by the earlier rule",
+        "predicted": "deny",
+        "observed": "allow"
+      },
+      {
+        "name": "carved out by a later negation in the same source",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "a negation does not carve out of another source",
+        "predicted": "deny",
+        "observed": "allow"
+      }
+    ],
+    "usage": {
+      "input_tokens": 34,
+      "cache_creation_input_tokens": 12002,
+      "cache_read_input_tokens": 34735,
+      "output_tokens": 456,
+      "output_tokens_details": {
+        "thinking_tokens": 198
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 12002,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 45,
+          "cache_read_input_tokens": 11795,
+          "cache_creation_input_tokens": 207,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 207
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0297915,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "16-tool-aliases": {
+    "rows": [
+      {
+        "name": "Write uses Edit rules",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "Read uses Read rules",
+        "predicted": "allow",
+        "observed": "allow"
+      }
+    ],
+    "usage": {
+      "input_tokens": 26,
+      "cache_creation_input_tokens": 12048,
+      "cache_read_input_tokens": 23427,
+      "output_tokens": 397,
+      "output_tokens_details": {
+        "thinking_tokens": 213
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 12048,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 58,
+          "cache_read_input_tokens": 11866,
+          "cache_creation_input_tokens": 182,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 182
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.028449699999999998,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "17-inert-path-tools": {
+    "rows": [
+      {
+        "name": "Write(path) does not allow Write",
+        "predicted": "none",
+        "observed": "none"
+      }
+    ],
+    "usage": {
+      "input_tokens": 18,
+      "cache_creation_input_tokens": 11220,
+      "cache_read_input_tokens": 10842,
+      "output_tokens": 370,
+      "output_tokens_details": {
+        "thinking_tokens": 262
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11220,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 93,
+          "cache_read_input_tokens": 10842,
+          "cache_creation_input_tokens": 378,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 378
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0253922,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "19-webfetch-domain": {
+    "rows": [
+      {
+        "name": "leading *. does not match the apex",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "mid-pattern * does not match two labels",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "domain deny",
+        "predicted": "deny",
+        "observed": "deny"
+      }
+    ],
+    "usage": {
+      "input_tokens": 34,
+      "cache_creation_input_tokens": 11742,
+      "cache_read_input_tokens": 34070,
+      "output_tokens": 483,
+      "output_tokens_details": {
+        "thinking_tokens": 234
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11742,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 76,
+          "cache_read_input_tokens": 11577,
+          "cache_creation_input_tokens": 165,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 165
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.02934,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "20-webfetch-domain-star": {
+    "rows": [
+      {
+        "name": "domain:* ask beats the bare allow",
+        "predicted": "ask",
+        "observed": "ask"
+      }
+    ],
+    "usage": {
+      "input_tokens": 18,
+      "cache_creation_input_tokens": 11379,
+      "cache_read_input_tokens": 11067,
+      "output_tokens": 327,
+      "output_tokens_details": {
+        "thinking_tokens": 241
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11379,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 89,
+          "cache_read_input_tokens": 11067,
+          "cache_creation_input_tokens": 312,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 312
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0255177,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "22-tool-name-globs": {
+    "rows": [
+      {
+        "name": "B* ask covers Bash",
+        "predicted": "ask",
+        "observed": "ask"
+      },
+      {
+        "name": "* in allow is skipped",
+        "predicted": "none",
+        "observed": "none"
+      }
+    ],
+    "usage": {
+      "input_tokens": 26,
+      "cache_creation_input_tokens": 8622,
+      "cache_read_input_tokens": 35376,
+      "output_tokens": 348,
+      "output_tokens_details": {
+        "thinking_tokens": 199
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 8622,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 55,
+          "cache_read_input_tokens": 14677,
+          "cache_creation_input_tokens": 214,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 214
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0225476,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "23-agent-task": {
+    "rows": [
+      {
+        "name": "Agent(type) deny",
+        "predicted": "deny",
+        "observed": "allow"
+      },
+      {
+        "name": "Task(type) is an alias of Agent(type)",
+        "predicted": "deny",
+        "observed": "allow"
+      },
+      {
+        "name": "parameter rule on model",
+        "predicted": "ask",
+        "observed": "ask"
+      }
+    ],
+    "usage": {
+      "input_tokens": 34,
+      "cache_creation_input_tokens": 9146,
+      "cache_read_input_tokens": 44826,
+      "output_tokens": 644,
+      "output_tokens_details": {
+        "thinking_tokens": 338
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 9146,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 50,
+          "cache_read_input_tokens": 13646,
+          "cache_creation_input_tokens": 210,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 210
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0260286,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "24-bash-param-rules": {
+    "rows": [
+      {
+        "name": "deny on a scalar parameter",
+        "predicted": "deny",
+        "observed": "deny"
+      },
+      {
+        "name": "parameter absent",
+        "predicted": "allow",
+        "observed": "allow"
+      },
+      {
+        "name": "Bash(command:…) is ignored",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "name:* in allow is the legacy prefix, raw form",
+        "predicted": "allow",
+        "observed": "allow"
+      }
+    ],
+    "usage": {
+      "input_tokens": 42,
+      "cache_creation_input_tokens": 9063,
+      "cache_read_input_tokens": 62116,
+      "output_tokens": 596,
+      "output_tokens_details": {
+        "thinking_tokens": 324
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 9063,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 41,
+          "cache_read_input_tokens": 14464,
+          "cache_creation_input_tokens": 180,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 180
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0273596,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "27-inert-and-malformed": {
+    "rows": [
+      {
+        "name": "WebSearch with a specifier is skipped",
+        "predicted": "none",
+        "observed": "allow"
+      },
+      {
+        "name": "specifier without a tool name is skipped",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "negation in an allow array is skipped",
+        "predicted": "none",
+        "observed": "none"
+      }
+    ],
+    "usage": {
+      "input_tokens": 34,
+      "cache_creation_input_tokens": 15719,
+      "cache_read_input_tokens": 45794,
+      "output_tokens": 525,
+      "output_tokens_details": {
+        "thinking_tokens": 320
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15719,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 52,
+          "cache_read_input_tokens": 15505,
+          "cache_creation_input_tokens": 214,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 214
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.0386764,
+    "timedOut": false,
+    "stderr": ""
+  },
+  "29-workspace-untrusted": {
+    "rows": [
+      {
+        "name": "project allow is ignored",
+        "predicted": "none",
+        "observed": "none"
+      },
+      {
+        "name": "project deny still applies",
+        "predicted": "deny",
+        "observed": "deny"
+      },
+      {
+        "name": "local allow applies without trust",
+        "predicted": "allow",
+        "observed": "allow"
+      }
+    ],
+    "usage": {
+      "input_tokens": 34,
+      "cache_creation_input_tokens": 8727,
+      "cache_read_input_tokens": 47467,
+      "output_tokens": 421,
+      "output_tokens_details": {
+        "thinking_tokens": 237
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 8727,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "not_available",
+      "iterations": [
+        {
+          "input_tokens": 8,
+          "output_tokens": 42,
+          "cache_read_input_tokens": 14158,
+          "cache_creation_input_tokens": 150,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 150
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "cost": 0.024339700000000006,
+    "timedOut": false,
+    "stderr": "Ignoring 1 permissions.allow entry from .claude/settings.json: this workspace has not been trusted. Run Claude Code interactively here once and accept the trust dialog, or set projects[\"/workdir/29-workspace-untrusted/repo\"].hasTrustDialogAccepted: true in /home/user/.claude.json.\n"
+  }
+}
