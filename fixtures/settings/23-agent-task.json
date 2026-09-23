@@ -14,14 +14,16 @@
       "tool": "Agent",
       "input": { "subagent_type": "Explore", "description": "d", "prompt": "Reply OK." },
       "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
-      "diff": true
+      "diff": true,
+      "unverified": "2026-09-23 observed allow with no permission signal (ADR-0009). An Agent(type) deny probably removes the type from the tool, the way a bare-name deny removes a tool, so the call fails validation and emits no permission event. The session cost ($0.026) fits no subagent having run. The next run's saved stream (result.subagent_stats) settles it"
     },
     {
       "name": "Task(type) is an alias of Agent(type)",
       "tool": "Agent",
       "input": { "subagent_type": "Plan", "description": "d", "prompt": "Reply OK." },
       "expect": { "outcome": "deny", "decisive": ["local.deny[1]"] },
-      "diff": true
+      "diff": true,
+      "unverified": "2026-09-23 observed allow with no permission signal (ADR-0009). An Agent(type) deny probably removes the type from the tool, the way a bare-name deny removes a tool, so the call fails validation and emits no permission event. The session cost ($0.026) fits no subagent having run. The next run's saved stream (result.subagent_stats) settles it. If the deny had not applied, Plan would have run"
     },
     {
       "name": "legacy Task call name uses Agent rules",
