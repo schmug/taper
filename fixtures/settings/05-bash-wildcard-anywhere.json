@@ -1,0 +1,44 @@
+{
+  "form": "Bash wildcard in the middle or at the start",
+  "source": "facts B2 'Bash wildcard form': '*' can appear anywhere; the bare-command rule holds only for a single trailing wildcard",
+  "settings": {
+    "local": { "allow": ["Bash(./probe.sh * end)", "Bash(* --version)", "Bash(./probe.sh * mid *)"] }
+  },
+  "cases": [
+    {
+      "name": "middle wildcard",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh x y end" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "middle wildcard needs both spaces",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh end" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "leading wildcard",
+      "tool": "Bash",
+      "input": { "command": "node --version" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diff": true
+    },
+    {
+      "name": "two wildcards: trailing ' *' does not match the bare form",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh x mid" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "two wildcards with a trailing argument",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh x mid y" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[2]"], "allowMatches": ["local.allow[2]"] },
+      "diff": true
+    }
+  ]
+}

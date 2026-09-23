@@ -1,0 +1,61 @@
+{
+  "form": "WebFetch(domain:...)",
+  "source": "facts B2 'WebFetch(domain:…)': hostname, case-insensitive, trailing dot ignored; *.x matches any subdomain depth but not the apex; a mid-pattern * matches one label",
+  "settings": {
+    "local": {
+      "allow": ["WebFetch(domain:Example.com.)", "WebFetch(domain:*.example.org)", "WebFetch(domain:api.*.example.net)"],
+      "deny": ["WebFetch(domain:evil.test)"]
+    }
+  },
+  "cases": [
+    {
+      "name": "case-insensitive host",
+      "tool": "WebFetch",
+      "input": { "url": "https://EXAMPLE.com/path", "prompt": "p" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diffNote": "an allowed fetch reaches the network"
+    },
+    {
+      "name": "trailing dot ignored",
+      "tool": "WebFetch",
+      "input": { "url": "https://example.com./", "prompt": "p" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diffNote": "an allowed fetch reaches the network"
+    },
+    {
+      "name": "leading *. matches any subdomain depth",
+      "tool": "WebFetch",
+      "input": { "url": "https://a.b.example.org/", "prompt": "p" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diffNote": "an allowed fetch reaches the network"
+    },
+    {
+      "name": "leading *. does not match the apex",
+      "tool": "WebFetch",
+      "input": { "url": "https://example.org/", "prompt": "p" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "mid-pattern * matches one label",
+      "tool": "WebFetch",
+      "input": { "url": "https://api.v1.example.net/x", "prompt": "p" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[2]"], "allowMatches": ["local.allow[2]"] },
+      "diffNote": "an allowed fetch reaches the network"
+    },
+    {
+      "name": "mid-pattern * does not match two labels",
+      "tool": "WebFetch",
+      "input": { "url": "https://api.a.b.example.net/", "prompt": "p" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "domain deny",
+      "tool": "WebFetch",
+      "input": { "url": "https://evil.test/x", "prompt": "p" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
+      "diff": true
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "form": "precedence across scopes and the decisive tie-break",
+  "source": "facts B1 'Evaluation order' and 'Arrays merge across scopes'; ADR-0006 tie-break: managed > cli > local > project > user, then array index",
+  "settings": {
+    "managed": { "allow": ["Bash(./probe.sh s *)"] },
+    "cli": { "allow": ["Bash(./probe.sh s *)"] },
+    "local": {
+      "allow": ["Bash(./probe.sh s 1)", "Bash(./probe.sh t *)", "Bash(./probe.sh t 1)"],
+      "ask": ["Bash(./probe.sh s 2)"]
+    },
+    "project": { "allow": ["Bash(./probe.sh s *)"], "deny": ["Bash(./probe.sh s 3)"] },
+    "user": { "allow": ["Bash(./probe.sh s *)"], "deny": ["Bash(./probe.sh s 3)"] }
+  },
+  "cases": [
+    {
+      "name": "all allows match; managed is decisive; all are refreshed",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh s 1" },
+      "expect": {
+        "outcome": "allow",
+        "decisive": ["managed.allow[0]"],
+        "allowMatches": ["managed.allow[0]", "cli.allow[0]", "local.allow[0]", "project.allow[0]", "user.allow[0]"]
+      }
+    },
+    {
+      "name": "a local ask beats a managed allow",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh s 2" },
+      "expect": {
+        "outcome": "ask",
+        "decisive": ["local.ask[0]"],
+        "allowMatches": ["managed.allow[0]", "cli.allow[0]", "project.allow[0]", "user.allow[0]"]
+      }
+    },
+    {
+      "name": "deny beats everything; project outranks user",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh s 3" },
+      "expect": {
+        "outcome": "deny",
+        "decisive": ["project.deny[0]"],
+        "allowMatches": ["managed.allow[0]", "cli.allow[0]", "project.allow[0]", "user.allow[0]"]
+      }
+    },
+    {
+      "name": "same file: lower array index is decisive",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh t 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]", "local.allow[2]"] }
+    }
+  ]
+}

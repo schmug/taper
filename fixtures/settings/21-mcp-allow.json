@@ -1,0 +1,80 @@
+{
+  "form": "mcp__server and mcp__server__tool",
+  "diffNote": "the differential job configures no MCP servers",
+  "source": "facts B2 'MCP' and 'Tool-name globs': mcp__server and mcp__server__* match a server's tools; allow globs only after a literal mcp__<server>__; mcp__ rules with parentheses are skipped in settings files",
+  "settings": {
+    "local": {
+      "allow": [
+        "mcp__github",
+        "mcp__jira__get_*",
+        "mcp__slack__post_message",
+        "mcp__linear__*",
+        "mcp__*",
+        "mcp__bad(x)",
+        "mcp__claude_ai_Drive"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "name": "server rule covers every tool of the server",
+      "tool": "mcp__github__create_issue",
+      "input": {},
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] }
+    },
+    {
+      "name": "glob after a literal server prefix",
+      "tool": "mcp__jira__get_issue",
+      "input": {},
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] }
+    },
+    {
+      "name": "glob does not match other tools of the server",
+      "tool": "mcp__jira__create_issue",
+      "input": {},
+      "expect": { "outcome": "none" }
+    },
+    {
+      "name": "exact tool",
+      "tool": "mcp__slack__post_message",
+      "input": {},
+      "expect": { "outcome": "allow", "decisive": ["local.allow[2]"], "allowMatches": ["local.allow[2]"] }
+    },
+    {
+      "name": "exact tool is not a prefix",
+      "tool": "mcp__slack__post_message_v2",
+      "input": {},
+      "expect": { "outcome": "none" }
+    },
+    {
+      "name": "mcp__server__*",
+      "tool": "mcp__linear__list_issues",
+      "input": {},
+      "expect": { "outcome": "allow", "decisive": ["local.allow[3]"], "allowMatches": ["local.allow[3]"] }
+    },
+    {
+      "name": "server name boundary",
+      "tool": "mcp__githubx__create_issue",
+      "input": {},
+      "expect": { "outcome": "none" }
+    },
+    {
+      "name": "connector server name",
+      "tool": "mcp__claude_ai_Drive__search",
+      "input": {},
+      "expect": { "outcome": "allow", "decisive": ["local.allow[6]"], "allowMatches": ["local.allow[6]"] }
+    },
+    {
+      "name": "mcp__* in allow is skipped",
+      "tool": "mcp__plugin_acme_db__query",
+      "input": {},
+      "expect": { "outcome": "none" }
+    },
+    {
+      "name": "mcp rule with parentheses is skipped",
+      "tool": "mcp__bad__x",
+      "input": {},
+      "expect": { "outcome": "none" }
+    }
+  ]
+}

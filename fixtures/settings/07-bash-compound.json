@@ -1,0 +1,97 @@
+{
+  "form": "compound shell commands",
+  "source": "facts B2 'Compound commands': allow needs every subcommand; deny/ask apply if any subcommand matches, including subshells, $() and for bodies; a trailing && or || is unparseable",
+  "settings": {
+    "local": {
+      "allow": ["Bash(./probe.sh a *)", "Bash(./probe.sh b *)"],
+      "ask": ["Bash(./probe.sh q *)"],
+      "deny": ["Bash(./probe.sh d *)"]
+    }
+  },
+  "cases": [
+    {
+      "name": "&& with both subcommands allowed yields a decisive set",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a 1 && ./probe.sh b 2" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]", "local.allow[1]"], "allowMatches": ["local.allow[0]", "local.allow[1]"] },
+      "diff": true
+    },
+    {
+      "name": "one uncovered subcommand leaves the call unmatched",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a 1 && ./probe.sh c 2" },
+      "expect": { "outcome": "none", "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "pipe",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a 1 | ./probe.sh b 2" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]", "local.allow[1]"], "allowMatches": ["local.allow[0]", "local.allow[1]"] },
+      "diff": true
+    },
+    {
+      "name": "deny on any subcommand",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a 1; ./probe.sh d 2" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "ask inside a subshell",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a 1 || (./probe.sh q 2)" },
+      "expect": { "outcome": "ask", "decisive": ["local.ask[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "deny inside command substitution",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a $(./probe.sh d x)" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "deny inside a for body",
+      "tool": "Bash",
+      "input": { "command": "for i in 1 2; do ./probe.sh d $i; done" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
+      "diff": true
+    },
+    {
+      "name": "trailing && is unparseable, so no allow rule applies",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a 1 &&" },
+      "expect": { "outcome": "none", "basis": "unparseable", "allowMatches": ["local.allow[0]"] },
+      "diffNote": "the model tends to repair the command before calling the tool"
+    },
+    {
+      "name": "background separator",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a 1 & ./probe.sh b 2" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]", "local.allow[1]"], "allowMatches": ["local.allow[0]", "local.allow[1]"] },
+      "diff": true
+    },
+    {
+      "name": "2>&1 is a redirection, not a separator",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a 1 2>&1 | ./probe.sh b 2" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]", "local.allow[1]"], "allowMatches": ["local.allow[0]", "local.allow[1]"] },
+      "diff": true
+    },
+    {
+      "name": "newline separates commands",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a 1\n./probe.sh c 2" },
+      "expect": { "outcome": "none", "allowMatches": ["local.allow[0]"] },
+      "diffNote": "multi-line commands are unreliable to transcribe through the model"
+    },
+    {
+      "name": "quoted separators do not split",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a \"x && ./probe.sh c\"" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    }
+  ]
+}

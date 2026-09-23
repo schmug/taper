@@ -1,0 +1,38 @@
+{
+  "form": "/path in --settings and local settings",
+  "source": "facts B2 'Read/Edit path specifiers': --settings anchors at the file's directory; project/local at the primary working dir",
+  "settings": {
+    "cli": { "allow": ["Read(/shared/**)"] },
+    "local": { "allow": ["Edit(/out/**)"] }
+  },
+  "cases": [
+    {
+      "name": "--settings /path anchors at the file's directory",
+      "tool": "Read",
+      "input": { "file_path": "{{root}}/cli/shared/x.txt" },
+      "expect": { "outcome": "allow", "decisive": ["cli.allow[0]"], "allowMatches": ["cli.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "--settings /path does not anchor at cwd",
+      "tool": "Read",
+      "input": { "file_path": "{{cwd}}/shared/x.txt" },
+      "expect": { "outcome": "allow", "basis": "builtin" },
+      "diff": true
+    },
+    {
+      "name": "local /path anchors at the project root",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/out/x.txt", "content": "x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "local /path does not anchor at the filesystem root",
+      "tool": "Write",
+      "input": { "file_path": "{{root}}/out/x.txt", "content": "x" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    }
+  ]
+}

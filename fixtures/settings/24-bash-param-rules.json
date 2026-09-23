@@ -1,0 +1,41 @@
+{
+  "form": "Bash parameter rules",
+  "source": "facts B2 'Parameter rules': deny/ask only, one top-level scalar parameter; Bash(command:…) is ignored; ADR-0006: name:* in an allow array is the legacy prefix",
+  "settings": {
+    "local": {
+      "allow": ["Bash(./probe.sh p *)", "Bash(timeout:*)"],
+      "ask": ["Bash(command:rm *)"],
+      "deny": ["Bash(run_in_background:true)"]
+    }
+  },
+  "cases": [
+    {
+      "name": "deny on a scalar parameter",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh p 1", "run_in_background": true },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "parameter absent",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh p 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "Bash(command:…) is ignored",
+      "tool": "Bash",
+      "input": { "command": "rm ./nothing.txt" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "name:* in allow is the legacy prefix, raw form",
+      "tool": "Bash",
+      "input": { "command": "timeout 5 ./probe.sh p 2" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]", "local.allow[1]"] },
+      "diff": true
+    }
+  ]
+}

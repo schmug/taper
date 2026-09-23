@@ -1,0 +1,55 @@
+{
+  "form": "Agent(type), Task alias, parameter rule",
+  "source": "facts B2 'Agent(...)' (Task alias NOT-FOUND in docs, UNVERIFIED) and 'Parameter rules' (Agent(model:opus))",
+  "settings": {
+    "local": {
+      "allow": ["Agent(feature-dev:code-reviewer)"],
+      "ask": ["Agent(model:opus)"],
+      "deny": ["Agent(Explore)", "Task(Plan)"]
+    }
+  },
+  "cases": [
+    {
+      "name": "Agent(type) deny",
+      "tool": "Agent",
+      "input": { "subagent_type": "Explore", "description": "d", "prompt": "Reply OK." },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
+      "diff": true
+    },
+    {
+      "name": "Task(type) is an alias of Agent(type)",
+      "tool": "Agent",
+      "input": { "subagent_type": "Plan", "description": "d", "prompt": "Reply OK." },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[1]"] },
+      "diff": true
+    },
+    {
+      "name": "legacy Task call name uses Agent rules",
+      "tool": "Task",
+      "input": { "subagent_type": "Explore", "description": "d", "prompt": "Reply OK." },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
+      "diffNote": "the model can only call the tool by its current name"
+    },
+    {
+      "name": "parameter rule on model",
+      "tool": "Agent",
+      "input": { "subagent_type": "general-purpose", "model": "opus", "description": "d", "prompt": "Reply OK." },
+      "expect": { "outcome": "ask", "decisive": ["local.ask[0]"] },
+      "diff": true
+    },
+    {
+      "name": "plugin agent type with a colon",
+      "tool": "Agent",
+      "input": { "subagent_type": "feature-dev:code-reviewer", "description": "d", "prompt": "Reply OK." },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diffNote": "would spawn a subagent"
+    },
+    {
+      "name": "other agent types are unmatched",
+      "tool": "Agent",
+      "input": { "subagent_type": "general-purpose", "description": "d", "prompt": "Reply OK." },
+      "expect": { "outcome": "none" },
+      "diffNote": "may spawn a subagent if Agent needs no permission"
+    }
+  ]
+}

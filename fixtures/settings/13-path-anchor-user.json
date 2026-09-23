@@ -1,0 +1,21 @@
+{
+  "form": "/path in user settings anchors at ~/.claude",
+  "source": "facts B2 'Read/Edit path specifiers': /path is relative to the settings source; user settings anchor at ~/.claude",
+  "settings": {
+    "user": { "allow": ["Read(/agents/**)"] }
+  },
+  "cases": [
+    {
+      "name": "anchored at ~/.claude",
+      "tool": "Read",
+      "input": { "file_path": "{{home}}/.claude/agents/a.md" },
+      "expect": { "outcome": "allow", "decisive": ["user.allow[0]"], "allowMatches": ["user.allow[0]"] }
+    },
+    {
+      "name": "not anchored at the project",
+      "tool": "Read",
+      "input": { "file_path": "{{root}}/agents/a.md" },
+      "expect": { "outcome": "none" }
+    }
+  ]
+}

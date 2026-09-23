@@ -1,0 +1,16 @@
+{
+  "form": "workspace trust unknown keeps project allow rules",
+  "source": "ADR-0002 row 1: unknown keeps project allows (over-refresh is the safe direction, C5)",
+  "workspaceTrusted": "unknown",
+  "settings": {
+    "project": { "allow": ["Bash(./probe.sh u)"] }
+  },
+  "cases": [
+    {
+      "name": "project allow is kept",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh u" },
+      "expect": { "outcome": "allow", "decisive": ["project.allow[0]"], "allowMatches": ["project.allow[0]"] }
+    }
+  ]
+}

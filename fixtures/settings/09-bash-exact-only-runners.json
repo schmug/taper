@@ -1,0 +1,51 @@
+{
+  "form": "runners that prefix rules cannot approve",
+  "source": "facts B2 'Wrapper stripping': watch, setsid, ionice, flock and find -exec/-delete need exact matches",
+  "settings": {
+    "local": {
+      "allow": [
+        "Bash(watch *)",
+        "Bash(watch -n 1 ./probe.sh)",
+        "Bash(find . -name x -delete)",
+        "Bash(find *)"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "name": "watch: only the exact rule applies",
+      "tool": "Bash",
+      "input": { "command": "watch -n 1 ./probe.sh" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diffNote": "watch never exits if it is installed"
+    },
+    {
+      "name": "watch: a prefix rule does not approve",
+      "tool": "Bash",
+      "input": { "command": "watch -n 2 ./probe.sh" },
+      "expect": { "outcome": "none" },
+      "diffNote": "watch never exits if it is installed"
+    },
+    {
+      "name": "find -delete: only the exact rule applies",
+      "tool": "Bash",
+      "input": { "command": "find . -name x -delete" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[2]"], "allowMatches": ["local.allow[2]"] },
+      "diff": true
+    },
+    {
+      "name": "find -delete: a prefix rule does not approve",
+      "tool": "Bash",
+      "input": { "command": "find . -name y -delete" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "plain find is built-in read-only; the prefix rule still matches for attribution",
+      "tool": "Bash",
+      "input": { "command": "find . -name y" },
+      "expect": { "outcome": "allow", "basis": "builtin", "allowMatches": ["local.allow[3]"] },
+      "diff": true
+    }
+  ]
+}

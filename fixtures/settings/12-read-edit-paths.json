@@ -1,0 +1,132 @@
+{
+  "form": "Read/Edit gitignore-style path specifiers",
+  "source": "facts B2 'Read/Edit path specifiers': //abs, ~/home, /source-relative, ./cwd-relative, bare name at any depth, * one segment, ** across; single-segment dir is anchored for allow and any-depth for deny/ask; a Read deny also blocks Edit/Write; an Edit allow also grants Read",
+  "settings": {
+    "local": {
+      "allow": [
+        "Read(/{{root}}/outside/**)",
+        "Read(~/notes/**)",
+        "Edit(/docs/**)",
+        "Edit(src/**)",
+        "Edit(*.md)",
+        "Edit(./lib/*.ts)",
+        "Edit(pkg/**/gen/*.ts)"
+      ],
+      "deny": ["Read(.env)", "Edit(build/**)"]
+    }
+  },
+  "cases": [
+    {
+      "name": "//absolute",
+      "tool": "Read",
+      "input": { "file_path": "{{root}}/outside/a/b.txt" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "outside cwd with no rule",
+      "tool": "Read",
+      "input": { "file_path": "{{root}}/elsewhere/x.txt" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "~/ is the home directory",
+      "tool": "Read",
+      "input": { "file_path": "{{home}}/notes/today.md" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diffNote": "would touch the real home directory"
+    },
+    {
+      "name": "/path in local settings anchors at the project root",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/docs/guide/x.txt", "content": "x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[2]"], "allowMatches": ["local.allow[2]"] },
+      "diff": true
+    },
+    {
+      "name": "single-segment dir allow at cwd",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/src/a/b.ts", "content": "x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[3]"], "allowMatches": ["local.allow[3]"] },
+      "diff": true
+    },
+    {
+      "name": "single-segment dir allow does not match deeper",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/pkg/src/a.ts", "content": "x" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "bare filename glob at any depth",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/deep/README.md", "content": "x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[4]"], "allowMatches": ["local.allow[4]"] },
+      "diff": true
+    },
+    {
+      "name": "./ with * inside one segment",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/lib/a.ts", "content": "x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[5]"], "allowMatches": ["local.allow[5]"] },
+      "diff": true
+    },
+    {
+      "name": "* does not cross a segment",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/lib/sub/a.ts", "content": "x" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "** matches zero segments",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/pkg/gen/a.ts", "content": "x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[6]"], "allowMatches": ["local.allow[6]"] },
+      "diff": true
+    },
+    {
+      "name": "** matches several segments",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/pkg/x/y/gen/a.ts", "content": "x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[6]"], "allowMatches": ["local.allow[6]"] },
+      "diff": true
+    },
+    {
+      "name": "bare filename deny at any depth",
+      "tool": "Read",
+      "input": { "file_path": "{{cwd}}/sub/.env" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
+      "diff": true
+    },
+    {
+      "name": "single-segment dir deny at any depth",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/pkg/build/out.js", "content": "x" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[1]"] },
+      "diff": true
+    },
+    {
+      "name": "a Read deny also blocks Write on the same path",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/.env", "content": "x" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
+      "diff": true
+    },
+    {
+      "name": "an Edit allow also matches Read; in-cwd reads are built-in",
+      "tool": "Read",
+      "input": { "file_path": "{{cwd}}/docs/guide/x.txt" },
+      "expect": { "outcome": "allow", "basis": "builtin", "allowMatches": ["local.allow[2]"] },
+      "diff": true
+    },
+    {
+      "name": "in-cwd read matched by an Edit glob",
+      "tool": "Read",
+      "input": { "file_path": "{{cwd}}/notes.md" },
+      "expect": { "outcome": "allow", "basis": "builtin", "allowMatches": ["local.allow[4]"] },
+      "diff": true
+    }
+  ]
+}

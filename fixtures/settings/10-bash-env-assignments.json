@@ -1,0 +1,33 @@
+{
+  "form": "leading environment assignments",
+  "source": "facts B2 'Wrapper stripping': allow strips known-safe env assignments; deny/ask match past any leading assignment. ADR-0006: taper strips every assignment for allow (over-match is the safe direction, C5)",
+  "settings": {
+    "local": {
+      "allow": ["Bash(./probe.sh e *)"],
+      "deny": ["Bash(./probe.sh d *)"]
+    }
+  },
+  "cases": [
+    {
+      "name": "safe variable before an allowed command",
+      "tool": "Bash",
+      "input": { "command": "NODE_ENV=test ./probe.sh e 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "deny matches past any assignment",
+      "tool": "Bash",
+      "input": { "command": "FOO=1 BAR=\"a b\" ./probe.sh d 1" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
+      "diff": true
+    },
+    {
+      "name": "unsafe variable: taper over-matches on purpose",
+      "tool": "Bash",
+      "input": { "command": "LD_PRELOAD=x ./probe.sh e 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diffNote": "intentional divergence (ADR-0006): Claude Code likely prompts here"
+    }
+  ]
+}

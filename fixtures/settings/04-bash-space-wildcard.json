@@ -1,0 +1,44 @@
+{
+  "form": "Bash space-wildcard prefix (primary form)",
+  "source": "facts B2 'Bash wildcard form': trailing ' *' also matches the bare command; the space is significant",
+  "settings": {
+    "local": { "allow": ["Bash(./probe.sh a *)", "Bash(./probe.sh b*)"] }
+  },
+  "cases": [
+    {
+      "name": "prefix plus arguments",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a x y" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "trailing ' *' matches the bare command",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "space is significant",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh ab" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "no space: '*' continues the word",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh bc" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diff": true
+    },
+    {
+      "name": "no space: '*' matches empty",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh b" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diff": true
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "form": "tool-name aliasing for file tools",
+  "source": "facts B2: Edit rules cover Edit, Write and NotebookEdit; Read rules cover Read, Grep, Glob and LSP",
+  "settings": {
+    "local": { "allow": ["Edit(notes/**)", "Read(/{{root}}/data/**)"] }
+  },
+  "cases": [
+    {
+      "name": "Write uses Edit rules",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/notes/a.md", "content": "x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "NotebookEdit uses Edit rules",
+      "tool": "NotebookEdit",
+      "input": { "notebook_path": "{{cwd}}/notes/n.ipynb", "new_source": "x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diffNote": "NotebookEdit input validation can mask the permission check"
+    },
+    {
+      "name": "Grep uses Read rules; a dir/** rule covers the directory itself",
+      "tool": "Grep",
+      "input": { "pattern": "x", "path": "{{root}}/data" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diffNote": "Grep is absent by default on macOS and Linux"
+    },
+    {
+      "name": "Glob uses Read rules",
+      "tool": "Glob",
+      "input": { "pattern": "*.txt", "path": "{{root}}/data/sub" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diffNote": "Glob is absent by default on macOS and Linux"
+    },
+    {
+      "name": "LSP uses Read rules",
+      "tool": "LSP",
+      "input": { "operation": "hover", "file_path": "{{root}}/data/a.ts", "line": 1, "character": 1 },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diffNote": "needs a language server"
+    },
+    {
+      "name": "Read uses Read rules",
+      "tool": "Read",
+      "input": { "file_path": "{{root}}/data/x.txt" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diff": true
+    }
+  ]
+}

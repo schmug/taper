@@ -1,0 +1,32 @@
+{
+  "form": "workspace trust: project allow rules dropped when untrusted",
+  "source": "facts A1 u0-u2, B1 'Workspace trust gates project allow rules'; ADR-0002 row 1",
+  "workspaceTrusted": false,
+  "settings": {
+    "project": { "allow": ["Bash(./probe.sh u)"], "deny": ["Bash(./probe.sh v)"] },
+    "local": { "allow": ["Bash(./probe.sh w)"] }
+  },
+  "cases": [
+    {
+      "name": "project allow is ignored",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh u" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "project deny still applies",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh v" },
+      "expect": { "outcome": "deny", "decisive": ["project.deny[0]"] },
+      "diff": true
+    },
+    {
+      "name": "local allow applies without trust",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh w" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    }
+  ]
+}

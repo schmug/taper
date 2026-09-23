@@ -1,0 +1,68 @@
+{
+  "form": "built-in read-only Bash commands",
+  "source": "facts B2 'Built-in read-only Bash set': runs without a rule; an allow rule for these is never decisive",
+  "settings": {
+    "local": {
+      "allow": ["Bash(ls *)", "Bash(git status)"],
+      "deny": ["Bash(cat ./secret.txt)"]
+    }
+  },
+  "cases": [
+    {
+      "name": "ls is built-in; the rule matches but is not decisive",
+      "tool": "Bash",
+      "input": { "command": "ls -la" },
+      "expect": { "outcome": "allow", "basis": "builtin", "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "read-only git",
+      "tool": "Bash",
+      "input": { "command": "git status" },
+      "expect": { "outcome": "allow", "basis": "builtin", "allowMatches": ["local.allow[1]"] },
+      "diff": true
+    },
+    {
+      "name": "no rule needed",
+      "tool": "Bash",
+      "input": { "command": "pwd" },
+      "expect": { "outcome": "allow", "basis": "builtin" },
+      "diff": true
+    },
+    {
+      "name": "deny still beats a built-in",
+      "tool": "Bash",
+      "input": { "command": "cat ./secret.txt" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
+      "diff": true
+    },
+    {
+      "name": "output redirection is not read-only; the rule decides",
+      "tool": "Bash",
+      "input": { "command": "ls > out.txt" },
+      "expect": { "outcome": "allow", "basis": "rule", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "echo with redirection and no rule",
+      "tool": "Bash",
+      "input": { "command": "echo hi > out.txt" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "write-side git is not built-in",
+      "tool": "Bash",
+      "input": { "command": "git push" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "built-in plus an uncovered subcommand",
+      "tool": "Bash",
+      "input": { "command": "ls && ./probe.sh r" },
+      "expect": { "outcome": "none", "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    }
+  ]
+}
