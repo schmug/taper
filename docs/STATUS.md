@@ -123,4 +123,5 @@ and have not run. No C1–C5 contradiction was found.
 **Next.** Get the owner's go-ahead for a rerun of fixtures 01, 06, 07, 11, 12, 15, 23 and 27
 (about $0.32), then teach `observe()` the denial shapes from the saved streams. Separately:
 the committed M0 streams in `fixtures/headless/` embed the org UUID inside thinking signatures.
-That is reported for a follow-up, not changed here.
+The owner chose to scrub HEAD only, with no history rewrite, in a separate change. This change
+does not touch `fixtures/headless/`.
