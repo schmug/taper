@@ -31,3 +31,27 @@ CI workflow (ADR-0001).
 Prior art to consult (from `~/librarian`): `perplexityai-numbat` (hook+OTLP ingest → one event
 model, shadow/enforce split), `netflix-repokid`/`aardvark` (unused-permission removal), and
 `schmug-tdi-check` (Worker + D1 + fail-closed Access) for M4.
+
+## M1 — Core engine (2026-09-22)
+
+**Done.** `@taper/core` is a pure library: state machine `active → stale_candidate →
+pending_removal → removed` plus ledger-only `restored` and snapshot-driven `retired`; guards
+(protected, dead-man freeze, cooldown, ledger maturity, last-member, shadow) in one `assess()`
+shared by `evaluate()` and `explain()`; `wall` and `active_days` clocks behind `Clock`;
+`evaluate`, `applyTransitions` (idempotent), `applyUsage`, `regrant`, `applySnapshot`,
+`enforcement`, `explain`, `simulate`. Semantics in ADR-0004, coverage/dead-man in ADR-0005.
+`pnpm test` in core: 128 passing, 0 failing; coverage 100% statements/branches/functions/lines
+over `packages/core/src` (194/194 branches), enforced by vitest thresholds. Nine fast-check
+properties run 10,000 cases each (monotone tightening, guards total, cooldown, instant restore,
+determinism under clone/freeze/permutation, shadow never enforces, idempotency,
+explain/evaluate agreement, no skipped states over simulated time). Purity is enforced by
+`test/boundary.test.ts` and `types: []`.
+**Deferred.** HANDOFF §11 item 2 (`active_days` default for `local` knobs) until replay data
+exists (M3/M4); §11 item 5 (`cli` dead-man window) to M7; §11 item 6 (`retired` history
+retention) to M4; whether `taper protect` on a decayed member also re-grants it, to M3.
+**Unverified.** Nothing in M1 depends on Claude Code facts. How Claude Code events map onto
+core's `heartbeat`/`session`/`decision` signals is an M2/M4 question. A one-off mutation check
+(11 guard mutants, each killed by a property) was run locally and not committed. fast-check
+seeds vary per run; a failure prints its seed.
+**Next.** M2: Claude Code rule matcher and settings loader (§5.1–5.2), fixtures per rule form,
+differential job behind `CLAUDE_CODE_DIFF_TESTS=1`.
