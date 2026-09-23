@@ -1,0 +1,41 @@
+{
+  "form": "specifier-only, malformed, and unsupported rules never match",
+  "source": "facts B1 'Invalid entries' (skipped with a warning); B2 'WebSearch' (bare only), 'Cd(...) governs /cd only'. PowerShell rules are not modeled (ADR-0006)",
+  "settings": {
+    "local": {
+      "allow": [
+        "WebSearch(anything)",
+        "(git status)",
+        "Bash(",
+        "Bash()",
+        "git status",
+        "Cd(/tmp)",
+        "PowerShell(Get-ChildItem *)",
+        "Read(!x/**)"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "name": "WebSearch with a specifier is skipped",
+      "tool": "WebSearch",
+      "input": { "query": "x" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "specifier without a tool name is skipped",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh z" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "negation in an allow array is skipped",
+      "tool": "Read",
+      "input": { "file_path": "{{root}}/x/y.txt" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    }
+  ]
+}

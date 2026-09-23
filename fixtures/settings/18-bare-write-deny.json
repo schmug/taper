@@ -1,0 +1,30 @@
+{
+  "form": "bare Write deny against a bare Edit allow",
+  "source": "facts B2: a bare Write deny still matches at tool level; Edit rules cover Write",
+  "settings": {
+    "local": { "allow": ["Edit"], "deny": ["Write"] }
+  },
+  "cases": [
+    {
+      "name": "bare Write deny beats the Edit allow",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/a.txt", "content": "x" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"], "allowMatches": ["local.allow[0]"] },
+      "diffNote": "a bare-name deny removes the tool from the model's context"
+    },
+    {
+      "name": "Edit is still allowed",
+      "tool": "Edit",
+      "input": { "file_path": "{{cwd}}/a.txt", "old_string": "a", "new_string": "b" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diffNote": "Edit validates read-before-edit"
+    },
+    {
+      "name": "NotebookEdit is covered by bare Edit",
+      "tool": "NotebookEdit",
+      "input": { "notebook_path": "{{cwd}}/n.ipynb", "new_source": "x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diffNote": "NotebookEdit input validation can mask the permission check"
+    }
+  ]
+}

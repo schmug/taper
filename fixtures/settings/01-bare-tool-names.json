@@ -1,0 +1,55 @@
+{
+  "form": "bare tool names",
+  "source": "facts B2 'Bare names'; B2 'A bare Write deny still matches at tool level'",
+  "settings": {
+    "local": {
+      "allow": ["WebSearch", "Agent", "Write"],
+      "ask": ["WebFetch"],
+      "deny": ["NotebookEdit"]
+    }
+  },
+  "cases": [
+    {
+      "name": "bare WebSearch allows every search",
+      "tool": "WebSearch",
+      "input": { "query": "taper" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diffNote": "would run a real web search"
+    },
+    {
+      "name": "bare Agent allows every subagent",
+      "tool": "Agent",
+      "input": { "subagent_type": "Explore", "description": "d", "prompt": "Reply OK." },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diffNote": "would spawn a subagent"
+    },
+    {
+      "name": "bare Write matches Write calls at tool level",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/w.txt", "content": "x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[2]"], "allowMatches": ["local.allow[2]"] },
+      "diff": true
+    },
+    {
+      "name": "bare WebFetch ask covers every URL",
+      "tool": "WebFetch",
+      "input": { "url": "https://example.com/", "prompt": "Summarize." },
+      "expect": { "outcome": "ask", "decisive": ["local.ask[0]"] },
+      "diff": true
+    },
+    {
+      "name": "bare NotebookEdit deny",
+      "tool": "NotebookEdit",
+      "input": { "notebook_path": "{{cwd}}/n.ipynb", "new_source": "x" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
+      "diffNote": "a bare-name deny removes the tool from the model's context"
+    },
+    {
+      "name": "bare Write does not cover Edit",
+      "tool": "Edit",
+      "input": { "file_path": "{{cwd}}/w.txt", "old_string": "a", "new_string": "b" },
+      "expect": { "outcome": "none" },
+      "diffNote": "Edit validates read-before-edit, which can mask the permission check"
+    }
+  ]
+}

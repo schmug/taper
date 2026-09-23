@@ -1,0 +1,40 @@
+{
+  "form": "Skill(name) and Skill(name *)",
+  "diffNote": "the differential job installs no skills",
+  "source":"facts B2 'Other specifier tools': Skill(name) is exact, Skill(name *) is a prefix",
+  "settings": {
+    "local": { "allow": ["Skill(commit)", "Skill(review *)"], "deny": ["Skill(deploy)"] }
+  },
+  "cases": [
+    {
+      "name": "exact skill",
+      "tool": "Skill",
+      "input": { "skill": "commit" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] }
+    },
+    {
+      "name": "exact is not a prefix",
+      "tool": "Skill",
+      "input": { "skill": "commit-all" },
+      "expect": { "outcome": "none" }
+    },
+    {
+      "name": "prefix with arguments",
+      "tool": "Skill",
+      "input": { "skill": "review", "args": "pr 12" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] }
+    },
+    {
+      "name": "prefix matches the bare skill",
+      "tool": "Skill",
+      "input": { "skill": "review" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] }
+    },
+    {
+      "name": "skill deny",
+      "tool": "Skill",
+      "input": { "skill": "deploy" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] }
+    }
+  ]
+}

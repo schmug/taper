@@ -1,7 +1,7 @@
 {
   "name": "@taper/backend-claude-code",
   "version": "0.0.0",
-  "description": "Claude Code rule parser/matcher, settings loader, event normalizer, enforcement writers.",
+  "description": "Claude Code rule parser/matcher, settings loader, event schema, knob mapping.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -11,10 +11,15 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./loader": "./src/loader.ts"
   },
   "scripts": {
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@taper/core": "workspace:*",
+    "zod": "4.6.5"
   }
 }

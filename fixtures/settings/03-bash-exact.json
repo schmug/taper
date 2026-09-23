@@ -1,0 +1,37 @@
+{
+  "form": "Bash exact command",
+  "source": "facts B2 'Rule format' (parentheses inside a specifier are literal)",
+  "settings": {
+    "local": { "allow": ["Bash(./probe.sh exact)", "Bash(./probe.sh \"(x)\")"] }
+  },
+  "cases": [
+    {
+      "name": "identical command",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh exact" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "extra argument is not covered",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh exact more" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "shorter command is not covered",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "parentheses in the specifier are literal",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh \"(x)\"" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diff": true
+    }
+  ]
+}

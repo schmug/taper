@@ -1,0 +1,37 @@
+{
+  "form": "Bash legacy ':*' prefix",
+  "source": "facts B2 'Legacy :*' (equivalent to trailing ' *', only at the end); A1 b0 (live match of Bash(./probe.sh:*))",
+  "settings": {
+    "local": { "allow": ["Bash(./probe.sh:*)", "Bash(./probe.sh:* push)"] }
+  },
+  "cases": [
+    {
+      "name": "legacy prefix with arguments",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh x" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "legacy prefix matches the bare command",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "legacy prefix keeps the word boundary",
+      "tool": "Bash",
+      "input": { "command": "./probe.shx" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "':*' before more text is a literal colon plus wildcard",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh:x push" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[1]"], "allowMatches": ["local.allow[1]"] },
+      "diff": true
+    }
+  ]
+}

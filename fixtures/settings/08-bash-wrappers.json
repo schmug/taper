@@ -1,0 +1,93 @@
+{
+  "form": "process wrapper stripping",
+  "source": "facts B2 'Wrapper stripping': timeout, time, nice, nohup, stdbuf, command, builtin, noglob, bare xargs are stripped; command -v, npx, docker exec are not",
+  "settings": {
+    "local": { "allow": ["Bash(./probe.sh w *)"] }
+  },
+  "cases": [
+    {
+      "name": "timeout with a duration",
+      "tool": "Bash",
+      "input": { "command": "timeout 5 ./probe.sh w 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "time",
+      "tool": "Bash",
+      "input": { "command": "time ./probe.sh w 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "nice -n",
+      "tool": "Bash",
+      "input": { "command": "nice -n 5 ./probe.sh w 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "nohup",
+      "tool": "Bash",
+      "input": { "command": "nohup ./probe.sh w 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "command",
+      "tool": "Bash",
+      "input": { "command": "command ./probe.sh w 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "stdbuf with a flag",
+      "tool": "Bash",
+      "input": { "command": "stdbuf -oL ./probe.sh w 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "zsh noglob",
+      "tool": "Bash",
+      "input": { "command": "noglob ./probe.sh w 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "nested wrappers",
+      "tool": "Bash",
+      "input": { "command": "timeout 5 nice ./probe.sh w 1" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "bare xargs",
+      "tool": "Bash",
+      "input": { "command": "xargs ./probe.sh w" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] },
+      "diffNote": "xargs reads stdin"
+    },
+    {
+      "name": "xargs with flags is not stripped",
+      "tool": "Bash",
+      "input": { "command": "xargs -n1 ./probe.sh w" },
+      "expect": { "outcome": "none" },
+      "diffNote": "xargs reads stdin"
+    },
+    {
+      "name": "command -v is not stripped",
+      "tool": "Bash",
+      "input": { "command": "command -v ./probe.sh" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "npx is not stripped",
+      "tool": "Bash",
+      "input": { "command": "npx ./probe.sh w 1" },
+      "expect": { "outcome": "none" },
+      "diffNote": "npx may reach the network if the prediction is wrong"
+    }
+  ]
+}

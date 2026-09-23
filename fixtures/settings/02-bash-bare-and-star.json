@@ -1,0 +1,24 @@
+{
+  "form": "Bash bare name and Bash(*)",
+  "source": "facts B2 'Bare names': Bash(*) equals Bash",
+  "settings": {
+    "cli": { "allow": ["Bash(*)"] },
+    "local": { "allow": ["Bash"] }
+  },
+  "cases": [
+    {
+      "name": "both match; the cli rule is decisive by scope",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh x" },
+      "expect": { "outcome": "allow", "decisive": ["cli.allow[0]"], "allowMatches": ["cli.allow[0]", "local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "every subcommand of a compound command matches",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh a && ./probe.sh b" },
+      "expect": { "outcome": "allow", "decisive": ["cli.allow[0]"], "allowMatches": ["cli.allow[0]", "local.allow[0]"] },
+      "diff": true
+    }
+  ]
+}

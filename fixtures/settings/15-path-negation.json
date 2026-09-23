@@ -1,0 +1,32 @@
+{
+  "form": "! negation in deny/ask path rules",
+  "source": "facts B2 'Read/Edit path specifiers': ! negation in deny/ask carves out only from earlier rules in the same source",
+  "workspaceTrusted": false,
+  "settings": {
+    "project": { "deny": ["Read(vault/**)"] },
+    "local": { "deny": ["Read(secrets/**)", "Read(!secrets/public/**)", "Read(!vault/open/**)"] }
+  },
+  "cases": [
+    {
+      "name": "denied by the earlier rule",
+      "tool": "Read",
+      "input": { "file_path": "{{cwd}}/secrets/key.txt" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
+      "diff": true
+    },
+    {
+      "name": "carved out by a later negation in the same source",
+      "tool": "Read",
+      "input": { "file_path": "{{cwd}}/secrets/public/readme.txt" },
+      "expect": { "outcome": "allow", "basis": "builtin" },
+      "diff": true
+    },
+    {
+      "name": "a negation does not carve out of another source",
+      "tool": "Read",
+      "input": { "file_path": "{{cwd}}/vault/open/x.txt" },
+      "expect": { "outcome": "deny", "decisive": ["project.deny[0]"] },
+      "diff": true
+    }
+  ]
+}

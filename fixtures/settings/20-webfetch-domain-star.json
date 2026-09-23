@@ -1,0 +1,16 @@
+{
+  "form": "WebFetch(domain:*) is not the bare tool",
+  "source": "facts B2 'WebFetch(domain:…)': WebFetch(domain:*) differs from bare WebFetch but matches every host",
+  "settings": {
+    "local": { "allow": ["WebFetch"], "ask": ["WebFetch(domain:*)"] }
+  },
+  "cases": [
+    {
+      "name": "domain:* ask beats the bare allow",
+      "tool": "WebFetch",
+      "input": { "url": "https://x.test/", "prompt": "p" },
+      "expect": { "outcome": "ask", "decisive": ["local.ask[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    }
+  ]
+}

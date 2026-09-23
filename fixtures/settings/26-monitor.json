@@ -1,0 +1,28 @@
+{
+  "form": "Monitor uses Bash rules",
+  "diffNote": "Monitor availability under -p is unverified",
+  "source":"facts B2 'Other specifier tools': Monitor uses Bash(...) rules",
+  "settings": {
+    "local": { "allow": ["Bash(./probe.sh m *)"], "deny": ["Bash(./probe.sh x *)"] }
+  },
+  "cases": [
+    {
+      "name": "Bash allow covers Monitor",
+      "tool": "Monitor",
+      "input": { "command": "./probe.sh m 1", "description": "d" },
+      "expect": { "outcome": "allow", "decisive": ["local.allow[0]"], "allowMatches": ["local.allow[0]"] }
+    },
+    {
+      "name": "Bash deny covers Monitor",
+      "tool": "Monitor",
+      "input": { "command": "./probe.sh x 1", "description": "d" },
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] }
+    },
+    {
+      "name": "unmatched Monitor command",
+      "tool": "Monitor",
+      "input": { "command": "./probe.sh z", "description": "d" },
+      "expect": { "outcome": "none" }
+    }
+  ]
+}

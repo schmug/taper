@@ -1,0 +1,25 @@
+{
+  "form": "path rules on Write/NotebookEdit/Glob/MultiEdit/Grep are never consulted",
+  "source": "facts B2: file permission checks use only Edit(path) and Read(path)",
+  "settings": {
+    "local": {
+      "allow": ["Write(out/**)", "NotebookEdit(out/**)", "Glob(/{{root}}/src/**)", "MultiEdit(out/**)", "Grep(/{{root}}/src/**)"]
+    }
+  },
+  "cases": [
+    {
+      "name": "Write(path) does not allow Write",
+      "tool": "Write",
+      "input": { "file_path": "{{cwd}}/out/a.txt", "content": "x" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    },
+    {
+      "name": "Glob(path) does not allow Glob outside cwd",
+      "tool": "Glob",
+      "input": { "pattern": "*", "path": "{{root}}/src" },
+      "expect": { "outcome": "none" },
+      "diffNote": "Glob is absent by default on macOS and Linux"
+    }
+  ]
+}

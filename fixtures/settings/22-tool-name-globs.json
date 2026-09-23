@@ -1,0 +1,34 @@
+{
+  "form": "tool-name globs",
+  "source": "facts B2 'Tool-name globs': deny/ask accept globs such as * and mcp__*; *, B* and mcp__* in allow are skipped",
+  "settings": {
+    "local": {
+      "allow": ["Bash(./probe.sh g *)", "*", "B*"],
+      "ask": ["B*"],
+      "deny": ["mcp__*"]
+    }
+  },
+  "cases": [
+    {
+      "name": "mcp__* deny covers every MCP tool",
+      "tool": "mcp__x__y",
+      "input": {},
+      "expect": { "outcome": "deny", "decisive": ["local.deny[0]"] },
+      "diffNote": "the differential job configures no MCP servers"
+    },
+    {
+      "name": "B* ask covers Bash",
+      "tool": "Bash",
+      "input": { "command": "./probe.sh g 1" },
+      "expect": { "outcome": "ask", "decisive": ["local.ask[0]"], "allowMatches": ["local.allow[0]"] },
+      "diff": true
+    },
+    {
+      "name": "* in allow is skipped",
+      "tool": "Read",
+      "input": { "file_path": "{{root}}/o.txt" },
+      "expect": { "outcome": "none" },
+      "diff": true
+    }
+  ]
+}
