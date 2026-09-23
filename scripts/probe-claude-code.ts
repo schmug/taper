@@ -16,7 +16,7 @@
 // repo-local script (./probe.sh) so no built-in read-only auto-approval can mask a rule.
 // Telemetry goes to an in-process OTLP/HTTP JSON receiver. OTEL_LOG_USER_PROMPTS is never set.
 //
-// Outputs (sanitized: home dir, temp dir, email, account/org ids, host name):
+// Outputs (sanitized: home dir, temp dir, email, account/org ids, host name, thinking signatures):
 //   fixtures/headless/<scenario>.stream.jsonl   --output-format stream-json transcript
 //   fixtures/hooks/<scenario>/<n>-<Event>.json   hook stdin; *.out.json = what the hook printed
 //   fixtures/otel/<scenario>.jsonl               one OTLP request body per line
@@ -477,6 +477,8 @@ const REDACT_KEYS: Record<string, string> = {
   'user.account_id': 'redacted-account-id',
   'organization.id': '00000000-0000-0000-0000-000000000002',
   'host.name': 'probe-host',
+  // Thinking-block signatures are base64 that decodes to text containing the org UUID.
+  signature: 'redacted-signature',
 };
 
 // Transcript dirs embed the cwd as a slug (non-alphanumerics → '-').
