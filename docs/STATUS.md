@@ -40,8 +40,8 @@ pending_removal → removed` plus ledger-only `restored` and snapshot-driven `re
 shared by `evaluate()` and `explain()`; `wall` and `active_days` clocks behind `Clock`;
 `evaluate`, `applyTransitions` (idempotent), `applyUsage`, `regrant`, `applySnapshot`,
 `enforcement`, `explain`, `simulate`. Semantics in ADR-0004, coverage/dead-man in ADR-0005.
-`pnpm test` in core: 128 passing, 0 failing; coverage 100% statements/branches/functions/lines
-over `packages/core/src` (194/194 branches), enforced by vitest thresholds. Nine fast-check
+`pnpm test` in core: 129 passing, 0 failing; coverage 100% statements/branches/functions/lines
+over `packages/core/src` (196/196 branches), enforced by vitest thresholds. Nine fast-check
 properties run 10,000 cases each (monotone tightening, guards total, cooldown, instant restore,
 determinism under clone/freeze/permutation, shadow never enforces, idempotency,
 explain/evaluate agreement, no skipped states over simulated time). Purity is enforced by

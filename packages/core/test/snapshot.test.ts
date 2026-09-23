@@ -85,6 +85,20 @@ describe('applySnapshot', () => {
     expect(out.transitions.map((t) => [t.from, t.to])).toEqual([['retired', 'removed']]);
   });
 
+  it('treats every member sharing a declared rule as present, whatever their order', () => {
+    const a = member({ id: 'mA', rule: 'same' });
+    const b = member({ id: 'mB', rule: 'same' });
+    for (const members of [
+      [a, b],
+      [b, a],
+    ]) {
+      expect(applySnapshot(members, snap(d(70), 'same'), opts)).toEqual({
+        members,
+        transitions: [],
+      });
+    }
+  });
+
   it('keeps a retired member retired while its rule stays absent', () => {
     const m = member({ state: 'retired', retiredFrom: 'active' });
     const out = applySnapshot([m], snap(d(70)), opts);

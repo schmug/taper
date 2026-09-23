@@ -29,6 +29,7 @@ export function applySnapshot(
 ): { members: Member[]; transitions: Transition[] } {
   const { knobId, takenAt } = snapshot;
   const declared = new Set(snapshot.rules);
+  const known = new Set(members.filter((m) => m.knobId === knobId).map((m) => m.rule));
   const transitions: Transition[] = [];
   const record = (m: Member, from: Transition['from'], to: Member['state'], at: number) => {
     const reason = from === null ? 'declared' : from === 'retired' ? 'redeclared' : 'vanished';
@@ -49,7 +50,6 @@ export function applySnapshot(
   const out = members.map((m): Member => {
     if (m.knobId !== knobId) return m;
     const present = declared.has(m.rule);
-    declared.delete(m.rule);
     const at = Math.max(takenAt, m.stateSince);
     if (m.state === 'retired') {
       if (!present) return m;
@@ -64,6 +64,7 @@ export function applySnapshot(
   });
 
   for (const rule of declared) {
+    if (known.has(rule)) continue;
     const m: Member = {
       id: memberIdFor(knobId, rule),
       knobId,
