@@ -1,3 +1,10 @@
 packages:
   - packages/*
   - apps/*
+
+# No dependency install scripts run (ADR-0010, ADR-0012). better-sqlite3 ships N-API prebuilds
+# for every supported platform and loads them without a build; esbuild finds its platform binary
+# through its optional dependencies.
+ignoredBuiltDependencies:
+  - better-sqlite3
+  - esbuild

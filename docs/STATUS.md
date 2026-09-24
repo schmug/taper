@@ -12,6 +12,9 @@ Part A, `fixtures/`). Still unverified:
 | `source` for auto-mode classifier approvals; PermissionRequest under auto | M6 (M2 attribution counts any `accept`, whatever the source: ADR-0007) | Probe with `--permission-mode auto`. |
 | Rule-form matrix, remainder: path-rule and Agent denies, the `Task(...)` alias, asks inside compound commands, a bare `WebFetch` ask, and four cases added after the run. The 2026-09-23 run confirmed the rest (ADR-0006 table, ADR-0009) | M6: `50-taper.json` copies path, Agent and bare-name members into `ask`/`deny`, and needs them to take effect | Owner go-ahead for a rerun of fixtures 01, 06, 07, 11, 12, 15, 23, 27 (about $0.32). Then fix `observe()` from the saved streams. Every open case carries an `unverified` note. |
 | `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` effect on customer OTel export | M7 | One probe each. |
+| Whether a tool hook's `cwd` follows a Bash `cd`; the project root when Claude Code starts in a repo subdirectory; `.claude.json` under `CLAUDE_CONFIG_DIR` | Nothing (M3 handles each conservatively: ADR-0010, ADR-0011) | One interactive probe session with `cd` and a subdirectory start. |
+| Whether a prompt raised by taper's hook `ask` offers "Yes, and don't ask again" (it would write a new local allow rule that allows the call without the removed member; ADR-0011) | Nothing | One interactive session with an automatic knob holding a pending and a removed member. |
+| taper's hooks installed in a live Claude Code session (M3 ran the recorded payloads and the built binary through `sh -c`, not a live `claude`) | Dogfooding | `TAPER_DOGFOOD=1 taper init` in a scratch repo, one interactive session. |
 
 ## M0 — Verify and scaffold (2026-09-22)
 
@@ -125,3 +128,83 @@ and have not run. No C1–C5 contradiction was found.
 the committed M0 streams in `fixtures/headless/` embed the org UUID inside thinking signatures.
 The owner chose to scrub HEAD only, with no history rewrite, in a separate change. This change
 does not touch `fixtures/headless/`.
+
+## M3 — Solo mode end to end (2026-09-23)
+
+**Done.** `taperd` (`packages/agent`) is the offline `taper` CLI. State lives in
+`~/.taper/state.db` (better-sqlite3 13.0.3, versioned migrations) and `~/.taper/config.json`.
+- Commands: `init`, `status [--json]`, `explain`, `regrant` (SelfApprove), `protect`/`unprotect`,
+  `mode` (C3 opt-in for `cli` knobs, and an enforcement preview that needs `--yes`),
+  `recommend [--format text|diff]`, `simulate --days N`, `hook <Event>`, `snapshot`,
+  `uninstall [--purge]`.
+- Hook path: stdin → session (start directory) → signal → usage or decision. PreToolUse asks for
+  a matched `pending_removal` member and denies a matched `removed` member the call needs, in
+  automatic knobs only (ADR-0011). The hook always exits 0 and fails open.
+- `init` writes only the `hooks` key of the user settings file, after confirmation (`--yes`),
+  idempotently, and replaces handlers left by an older binary path. `TAPER_DOGFOOD=1` targets the
+  project file instead. `uninstall` removes exactly the recorded handlers.
+- Backend additions (pure): `hookDecision` (§5.4A), `normalizeOtlpLogs` (OTLP/HTTP JSON →
+  observations), `HookSessionInputSchema`.
+- Carried items: workspace trust from `~/.claude.json` (only `hasTrustDialogAccepted`);
+  re-snapshot on `user_permanent` keyed on the local file's content hash, and after
+  PermissionRequest→PostToolUse; `cli` knobs retire when their workflow drops `--settings`;
+  `protect` re-grants a decayed member first (ADR-0013); packaging is one esbuild bundle
+  (ADR-0012); `active_days` stays off (ADR-0014, demo evidence 46.2 wall vs 29 session days).
+- Demo: `pnpm demo:solo` (`scripts/demo.ts --solo`) enrolls a temp `$HOME`, replays all 13
+  `fixtures/otel/*.jsonl` streams and the `c0`/`b0` hook payloads over 47 compressed days. The
+  day-0 "don't ask again" rule walks `active → stale_candidate` (day 30) `→ pending_removal`
+  (day 46). On day 47 the hook asks; the approval restores it with a cooldown to day 61.5.
+  `packages/agent/test/demo.test.ts` asserts all of it and that two runs are identical.
+- Hook latency (`pnpm bench:hook`, bundle, Node 22.22.3, darwin-arm64): PreToolUse median
+  44.2 ms (p90 45.7), with an evaluate tick 46.0 ms, PostToolUse 45.3 ms. `node -e 0` is 17.0 ms;
+  running from TypeScript source is 92.5 ms.
+- Review: an independent read-only reviewer checked invariants 3, 5, 6, 7, 8 and the hook
+  decision. It found no blocker and five should-fix items, each now fixed with a failing test
+  first:
+  - CI `--settings` rules leaked into the local session policy;
+  - a switch to shadow let an enforced removal end without a re-grant (ADR-0013);
+  - PreToolUse counted as a `decision` signal, which hid a broken usage path from the dead-man
+    guard (ADR-0010);
+  - the hook ignored `permission_mode` (ADR-0011);
+  - `init` replaced a symlinked settings file with a copy.
+
+  Also fixed: a ledger-close error could exit 1; the suggested commands are now shell-safe; a
+  test no longer edits a human array. The rest is recorded in ADR-0011.
+
+  A second reviewer confirmed items 1, 3 and 5 and found two more, also fixed test-first:
+  - a switch to shadow while a removed rule sat `retired` could still lift that removal, so it is
+    now refused (ADR-0013);
+  - acceptEdits approvals were missing from the "with the rule" side of the check.
+
+  Nits fixed: `knob_changes` is migration 2; symlink chains and loops; exact file modes.
+
+  A third reviewer confirmed both. Its three low findings (all fail-closed) are also fixed
+  test-first:
+  - the switch to `automatic` previews rules retired while removed;
+  - `protect` refuses them (ADR-0013);
+  - the acceptEdits comment and ADR-0011 now describe the ignored working-directory limit.
+
+  `taper mode` is now one transaction.
+
+  Recorded, not fixed: if a removed rule is deleted from one settings file and added to another,
+  it becomes a new active member in a different knob. Members are keyed by knob and rule
+  string; this is a design limit, not a regression.
+- Tests (`pnpm test`): core 129 passing; backend 660 passing, 24 skipped (the gated differential
+  sessions); agent 87 passing. 0 failing. `pnpm lint` and `pnpm typecheck` are clean.
+
+**Deferred.**
+- `enroll`, `sync`, `agent run`, `otel serve` (M6+); `recommend --format pr` (M7); the
+  redundancy report (M7).
+- Signal and event retention (never pruned yet; ADR-0010).
+- Worktrees: Claude Code writes the local file at the main checkout's root; taper reads the
+  worktree's (ADR-0010).
+- Filing re-grant requests from a hook `deny` (ADR-0002 row 4) is M6.
+
+**Unverified.** No live `claude` ran in M3. The hook I/O shapes come from the M0 recordings and
+the built binary was run through `sh -c` as Claude Code runs hooks. Hook `cwd` after `cd`, the
+project root when started in a subdirectory, and `.claude.json` under `CLAUDE_CONFIG_DIR` are
+handled conservatively and listed in the table above.
+
+**Next.** M4: the control plane (Hono on Workers, D1, the OTLP ingest path reusing
+`normalizeOtlpLogs`), with a cross-check that replaying the fixtures through `/otlp/v1/logs`
+yields the same transitions as the M3 local run.

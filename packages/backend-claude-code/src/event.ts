@@ -67,6 +67,15 @@ export const HookToolInputSchema = z.looseObject({
 });
 export type HookToolInput = z.infer<typeof HookToolInputSchema>;
 
+/** Hook stdin for session events (facts doc A2, B4): SessionStart/SessionEnd carry no mode. */
+export const HookSessionInputSchema = z.looseObject({
+  session_id: z.string().min(1),
+  cwd: z.string().min(1),
+  hook_event_name: z.enum(['SessionStart', 'Stop', 'SessionEnd']),
+  permission_mode: z.string().optional(),
+});
+export type HookSessionInput = z.infer<typeof HookSessionInputSchema>;
+
 export function permissionModeOf(raw: unknown): PermissionMode {
   if (raw === 'manual') return 'default';
   const parsed = PermissionModeSchema.safeParse(raw);

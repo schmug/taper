@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import {
   type Event,
   EventSchema,
+  HookSessionInputSchema,
   HookToolInputSchema,
   permissionModeOf,
   toolCallFromHook,
@@ -91,6 +92,25 @@ describe('HookToolInputSchema + toolCallFromHook', () => {
     const [p] = hookFiles('PreToolUse');
     const { tool_input: _, ...rest } = p as Record<string, unknown>;
     expect(HookToolInputSchema.safeParse(rest).success).toBe(false);
+  });
+});
+
+describe('HookSessionInputSchema', () => {
+  it.each(['SessionStart', 'Stop', 'SessionEnd'])('parses every recorded %s payload', (name) => {
+    const payloads = hookFiles(name);
+    expect(payloads.length).toBeGreaterThan(0);
+    for (const p of payloads) {
+      const input = HookSessionInputSchema.parse(p);
+      expect(input).toMatchObject({ session_id: p.session_id, cwd: p.cwd, hook_event_name: name });
+    }
+  });
+
+  it('rejects a payload without cwd or session_id', () => {
+    const [p] = hookFiles('SessionStart');
+    const { cwd: _, ...noCwd } = p as Record<string, unknown>;
+    const { session_id: __, ...noSession } = p as Record<string, unknown>;
+    expect(HookSessionInputSchema.safeParse(noCwd).success).toBe(false);
+    expect(HookSessionInputSchema.safeParse(noSession).success).toBe(false);
   });
 });
 

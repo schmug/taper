@@ -3,6 +3,8 @@
 export {
   type Event,
   EventSchema,
+  type HookSessionInput,
+  HookSessionInputSchema,
   type HookToolInput,
   HookToolInputSchema,
   type PermissionMode,
@@ -12,6 +14,14 @@ export {
   toSignal,
   toUsageEvent,
 } from './event.ts';
+export {
+  askReason,
+  denyReason,
+  type HookDecision,
+  type HookDecisionInput,
+  hookDecision,
+  hookOutput,
+} from './hook-decision.ts';
 export {
   type Attribution,
   applySettingsSnapshots,
@@ -32,6 +42,12 @@ export {
   match,
   type ToolCall,
 } from './match.ts';
+export {
+  type DecisionSource,
+  normalizeOtlpLogs,
+  type Observation,
+  type ObservationKind,
+} from './otel.ts';
 export {
   buildPolicy,
   type EffectivePolicy,

@@ -1,0 +1,45 @@
+# ADR-0013: `taper protect` on a member that already decayed
+
+Status: accepted (M3, 2026-09-23). Resolves the ADR-0004 deferral. Code:
+`packages/agent/src/cli.ts` (`cmdProtect`), core `regrant()`.
+
+## Context
+
+In core, `protected` only stops tightening. A member that is already `pending_removal` or
+`removed` stays there when it is protected: the hook keeps asking, or keeps denying, forever.
+The user said "never decay this", and the result is a rule that is still blocked.
+
+## Decision
+
+- **Solo mode:** `taper protect <rule|knob>` first re-grants every decayed member it covers
+  (`stale_candidate`, `pending_removal` or `removed` → `active`, with a cooldown), through core
+  `regrant()` with actor `user` and request id `selfapprove:<time>`, and then sets `protected`.
+  The ledger shows the re-grant rows before the member is protected.
+- Invariant 5 holds: the only way out of `removed` is still an approved re-grant. In solo mode
+  the approver is the user (`SelfApprove`, HANDOFF §5.5), the same level `taper regrant` uses.
+- **Org mode (M6):** protecting a decayed member must pass the org's verifier level
+  (`AdminOnly` by default). A user who may not re-grant may not protect-to-restore either.
+- **`unprotect`** is refused for `deny`/`ask` knobs and their members, managed knobs, and rules
+  the matcher treats as `inert`. Only allow rules may decay (C1, invariant 4), and taper never
+  decays what it cannot match (ADR-0006). A `Read(...)` rule may be unprotected, which is the
+  C2 opt-in, and the CLI says that its evidence is low-confidence.
+
+- **`taper mode <knob> shadow`** on an automatic knob re-grants its `removed` members first,
+  after a preview and only with `--yes`. In shadow, usage withdraws a removal (ADR-0004), so
+  without this a switch to shadow and back would let an enforced removal end without a re-grant
+  (invariant 5; found in the M3 review). Mode changes are recorded in `knob_changes`. M6 must not
+  carry this path into `AdminOnly`: there a mode change that lifts a removal needs the verifier.
+- The same switch is **refused**, with or without `--yes`, while the knob has a member that is
+  `retired` from `removed`. The human deleted a removed rule, and core returns it to `removed`
+  if it comes back. In a shadow knob, usage would then lift that removal. Core cannot re-grant a
+  retired member. To switch, the user re-adds the rule, runs `taper regrant`, and deletes it
+  again. This is found in the second review; core is unchanged.
+- For the same reason, `protect` is refused for a member retired from `removed`, and for a knob
+  that holds one: after a re-add it would be `removed`, protected, and still denied. Switching a
+  knob to `automatic` lists such members ("deny if re-added") behind the `--yes` preview.
+- `taper mode` reads, checks, re-grants and switches in one transaction.
+
+## Consequences
+
+- `protect` never leaves a member enforced. `unprotect` changes no state; decay resumes on the
+  next tick, subject to every guard.

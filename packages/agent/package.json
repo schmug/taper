@@ -9,11 +9,32 @@
     "directory": "packages/agent"
   },
   "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "bin": {
+    "taper": "./dist/taper.mjs"
+  },
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": "./src/index.ts"
   },
   "scripts": {
-    "test": "vitest run --passWithNoTests",
+    "build": "esbuild src/bin.ts --bundle --platform=node --format=esm --target=node22 --external:better-sqlite3 --outfile=dist/taper.mjs --log-level=warning",
+    "prepack": "pnpm run build",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@taper/backend-claude-code": "workspace:*",
+    "@taper/core": "workspace:*",
+    "better-sqlite3": "13.0.3",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "9.6.0",
+    "esbuild": "0.28.2"
   }
 }
