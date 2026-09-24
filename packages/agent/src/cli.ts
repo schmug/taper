@@ -20,6 +20,7 @@ import {
   resolveThresholds,
   type Signal,
   simulate,
+  type Transition,
 } from '@taper/core';
 import { Agent, NotInitialized } from './agent.ts';
 import { readConfig, writeConfig } from './config.ts';
@@ -449,6 +450,9 @@ function cmdExplain(agent: Agent, rest: readonly string[]): number {
   return 0;
 }
 
+/** Retired while `removed`: core brings it back `removed` if the rule returns (ADR-0004). */
+const retiredRemoved = (m: Member) => m.state === 'retired' && m.retiredFrom === 'removed';
+
 const decayed = (m: Member) =>
   m.state === 'stale_candidate' || m.state === 'pending_removal' || m.state === 'removed';
 
@@ -534,6 +538,21 @@ function cmdProtect(agent: Agent, rest: readonly string[], on: boolean): number 
       return 1;
     }
   }
+  if (on) {
+    // A rule retired while removed comes back `removed` if re-added, and core cannot re-grant a
+    // retired member, so protecting it (or its knob) would still leave it enforced (ADR-0013).
+    const pool =
+      knob !== null ? agent.store.members().filter((m) => m.knobId === knob.id) : targets;
+    const stuck = pool.filter(retiredRemoved);
+    if (stuck.length > 0) {
+      agent.deps.err(
+        `Refusing: ${stuck.map((m) => JSON.stringify(m.rule)).join(', ')} was removed and then ` +
+          'deleted from the file, and comes back removed if re-added. To keep it, re-add it, run ' +
+          '`taper regrant`, then protect it.',
+      );
+      return 1;
+    }
+  }
   // ADR-0013: protecting a decayed member re-grants it first (SelfApprove), so "keep this"
   // never leaves it blocked or prompting.
   const restores = on ? agent.regrant(targets.filter(decayed), now) : [];
@@ -597,71 +616,80 @@ function cmdMode(agent: Agent, rest: readonly string[]): number {
       return 1;
     }
   }
-  if (mode === 'automatic' && knob.mode !== 'automatic') {
-    const members = agent.store.members().filter((m) => m.knobId === knob.id);
-    const preview = enforcement([{ ...knob, mode: 'automatic' }], members);
-    if (preview.length > 0) {
-      agent.deps.out('Switching enforces the states shadow mode already reached:');
-      for (const p of preview)
-        agent.deps.out(
-          `  ${p.action === 'prompt' ? 'ask before use' : 'deny'}: ${JSON.stringify(p.rule)}`,
-        );
-      if (!values.yes) {
-        agent.deps.out('Re-run with --yes to switch.');
-        return 1;
-      }
-    }
-  }
   const now = agent.deps.now();
-  if (mode === 'shadow' && knob.mode === 'automatic') {
-    // A rule retired while removed comes back `removed` if the human re-adds it (ADR-0004). In a
-    // shadow knob, usage would then lift that removal with no re-grant (invariant 5), and core
-    // cannot re-grant a retired member. So refuse, whatever the flags.
-    const retired = agent.store
-      .members()
-      .filter((m) => m.knobId === knob.id && m.state === 'retired' && m.retiredFrom === 'removed');
-    if (retired.length > 0) {
-      agent.deps.err(
-        `Refusing: ${retired.map((m) => JSON.stringify(m.rule)).join(', ')} ${retired.length === 1 ? 'was' : 'were'} ` +
-          'removed and then deleted from the file; taper keeps such a rule removed if it returns. ' +
-          'To switch, re-add it, run `taper regrant`, and delete it again, or keep the knob automatic.',
-      );
-      return 1;
+  // One transaction with fresh reads: nothing changes between the check and the switch.
+  type Outcome = { code: number; out: string[]; err: string[]; restores: Transition[] };
+  const r = agent.store.tx((): Outcome => {
+    const out: string[] = [];
+    const err: string[] = [];
+    const k = agent.store.knobs().find((x) => x.id === knob.id) as StoredKnob;
+    const members = agent.store.members().filter((m) => m.knobId === k.id);
+    const stop = (code: number): Outcome => ({ code, out, err, restores: [] });
+    if (k.mode === mode) {
+      out.push(`${k.id} is already ${mode}.`);
+      return stop(0);
     }
-    // In shadow, usage withdraws a removal (ADR-0004). Without this step, switching to shadow
-    // and back would let an enforced `removed` member leave without a re-grant (invariant 5).
-    const removed = agent.store
-      .members()
-      .filter((m) => m.knobId === knob.id && m.state === 'removed');
-    if (removed.length > 0) {
-      agent.deps.out('Switching to shadow stops enforcement. Removed rules are re-granted first:');
-      for (const m of removed) agent.deps.out(`  re-granted first: ${JSON.stringify(m.rule)}`);
-      if (!values.yes) {
-        agent.deps.out('Re-run with --yes to re-grant them and switch.');
-        return 1;
+    let restores: Transition[] = [];
+    if (mode === 'automatic') {
+      const preview = enforcement([{ ...k, mode: 'automatic' }], members);
+      // Retired while removed: denied again the moment the human re-adds it (ADR-0004).
+      const dormant = members.filter(retiredRemoved);
+      if (preview.length + dormant.length > 0) {
+        out.push('Switching enforces the states shadow mode already reached:');
+        for (const p of preview)
+          out.push(
+            `  ${p.action === 'prompt' ? 'ask before use' : 'deny'}: ${JSON.stringify(p.rule)}`,
+          );
+        for (const m of dormant) out.push(`  deny if re-added: ${JSON.stringify(m.rule)}`);
+        if (!values.yes) {
+          out.push('Re-run with --yes to switch.');
+          return stop(1);
+        }
       }
-      printRestores(agent, agent.regrant(removed, now), now);
+    } else {
+      // A rule retired while removed comes back `removed` if re-added. In a shadow knob usage
+      // would then lift that removal with no re-grant (invariant 5), and core cannot re-grant a
+      // retired member. So refuse, whatever the flags (ADR-0013).
+      const retired = members.filter(retiredRemoved);
+      if (retired.length > 0) {
+        err.push(
+          `Refusing: ${retired.map((m) => JSON.stringify(m.rule)).join(', ')} ${retired.length === 1 ? 'was' : 'were'} ` +
+            'removed and then deleted from the file; taper keeps such a rule removed if it returns. ' +
+            'To switch, re-add it, run `taper regrant`, and delete it again, or keep the knob automatic.',
+        );
+        return stop(1);
+      }
+      // In shadow, usage withdraws a removal (ADR-0004). Without this step, switching to shadow
+      // and back would let an enforced `removed` member leave without a re-grant (invariant 5).
+      const removed = members.filter((m) => m.state === 'removed');
+      if (removed.length > 0) {
+        out.push('Switching to shadow stops enforcement. Removed rules are re-granted first:');
+        for (const m of removed) out.push(`  re-granted first: ${JSON.stringify(m.rule)}`);
+        if (!values.yes) {
+          out.push('Re-run with --yes to re-grant them and switch.');
+          return stop(1);
+        }
+        restores = agent.regrant(removed, now);
+      }
     }
-  }
-  if (knob.mode === mode) {
-    agent.deps.out(`${knob.id} is already ${mode}.`);
-    return 0;
-  }
-  agent.store.tx(() => {
-    agent.store.updateKnob({ ...knob, mode });
+    agent.store.updateKnob({ ...k, mode });
     agent.store.addKnobChange({
-      knobId: knob.id,
+      knobId: k.id,
       memberId: null,
       field: 'mode',
-      from: knob.mode,
+      from: k.mode,
       to: mode,
       at: now,
       actor: 'user',
     });
+    out.push(`${k.id} is now ${mode}.`);
+    if (k.protected) out.push('It is protected, so its members never decay.');
+    return { code: 0, out, err, restores };
   });
-  agent.deps.out(`${knob.id} is now ${mode}.`);
-  if (knob.protected) agent.deps.out('It is protected, so its members never decay.');
-  return 0;
+  for (const line of r.err) agent.deps.err(line);
+  for (const line of r.out) agent.deps.out(line);
+  printRestores(agent, r.restores, now);
+  return r.code;
 }
 
 // ---------- recommend ----------

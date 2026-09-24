@@ -34,6 +34,10 @@ The user said "never decay this", and the result is a rule that is still blocked
   if it comes back. In a shadow knob, usage would then lift that removal. Core cannot re-grant a
   retired member. To switch, the user re-adds the rule, runs `taper regrant`, and deletes it
   again. This is found in the second review; core is unchanged.
+- For the same reason, `protect` is refused for a member retired from `removed`, and for a knob
+  that holds one: after a re-add it would be `removed`, protected, and still denied. Switching a
+  knob to `automatic` lists such members ("deny if re-added") behind the `--yes` preview.
+- `taper mode` reads, checks, re-grants and switches in one transaction.
 
 ## Consequences
 

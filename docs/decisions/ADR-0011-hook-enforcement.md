@@ -24,7 +24,10 @@ Status: accepted (M3, 2026-09-23). Code: `packages/backend-claude-code/src/hook-
   - `acceptEdits` approves file edits and `mkdir/touch/mv/cp/rm/sed` with no rule (research doc;
     UNVERIFIED, and its working-directory limit is ignored, the lenient side). Those calls get no
     decision. For a compound command, those commands count as covered on both sides of the
-    "does the call need the removed rule" check.
+    "does the call need the removed rule" check. Because the working-directory limit is
+    ignored, a compound with an out-of-directory filesystem command can be denied where Claude
+    Code would only have prompted. That is an exception to "stays out of the way" above, but
+    deleting the rule would not allow the call either.
   - `auto`, or a missing mode: without the rule the classifier would review the call, which it
     may allow. A removed rule therefore asks instead of denying, with the reason
     `taper: "<rule>" removed after N days unused; approving allows this call only. Re-grant: …`.

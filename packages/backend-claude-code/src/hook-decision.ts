@@ -97,8 +97,12 @@ export function hookOutput(d: HookDecision) {
 
 /**
  * What acceptEdits approves with no rule, as allow rules that belong to no knob: file edits and
- * `mkdir/touch/mv/cp/rm/sed` (research doc 'Modes'; the command list and its working-directory
- * limit are UNVERIFIED, so the limit is ignored: the lenient side).
+ * `mkdir/touch/mv/cp/rm/sed` (research doc 'Modes'; the list is UNVERIFIED). Claude Code limits
+ * this to the working directory; taper ignores the limit. On the "without the rule" side that
+ * only removes denies. On the "with the rule" side it can treat a compound as allowed when
+ * Claude Code would prompt anyway (`mkdir /opt/x && curl …` with `Bash(curl *)` removed →
+ * deny instead of a prompt). That is stricter than "stay out of the way", but it still never
+ * denies what deleting the rule would allow (ADR-0011).
  */
 const ACCEPT_EDITS: readonly PolicyRule[] = buildPolicy({
   home: '/',

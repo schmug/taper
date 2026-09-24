@@ -177,8 +177,20 @@ does not touch `fixtures/headless/`.
   - acceptEdits approvals were missing from the "with the rule" side of the check.
 
   Nits fixed: `knob_changes` is migration 2; symlink chains and loops; exact file modes.
+
+  A third reviewer confirmed both. Its three low findings (all fail-closed) are also fixed
+  test-first:
+  - the switch to `automatic` previews rules retired while removed;
+  - `protect` refuses them (ADR-0013);
+  - the acceptEdits comment and ADR-0011 now describe the ignored working-directory limit.
+
+  `taper mode` is now one transaction.
+
+  Recorded, not fixed: if a removed rule is deleted from one settings file and added to another,
+  it becomes a new active member in a different knob. Members are keyed by knob and rule
+  string; this is a design limit, not a regression.
 - Tests (`pnpm test`): core 129 passing; backend 660 passing, 24 skipped (the gated differential
-  sessions); agent 85 passing. 0 failing. `pnpm lint` and `pnpm typecheck` are clean.
+  sessions); agent 87 passing. 0 failing. `pnpm lint` and `pnpm typecheck` are clean.
 
 **Deferred.**
 - `enroll`, `sync`, `agent run`, `otel serve` (M6+); `recommend --format pr` (M7); the

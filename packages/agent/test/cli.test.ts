@@ -314,6 +314,41 @@ describe('taper mode', () => {
     a.close();
   });
 
+  it('previews a retired removed rule when switching to automatic: it would be denied if re-added', () => {
+    const s = setup();
+    cli(s, ['init', '--yes']);
+    setState(s, PROJECT, 'Bash(git push *)', 'removed'); // reached removed in shadow
+    writeJson(join(s.repo, '.claude', 'settings.json'), {
+      permissions: { allow: ['Bash(npm run lint)', 'Read(./docs/**)'], deny: ['Read(./.env)'] },
+    });
+    cli(s, ['snapshot'], { now: () => T0 + 1000 });
+    const refused = cli(s, ['mode', 'project', 'automatic'], { now: () => T0 + 2000 });
+    expect(refused.code).toBe(1);
+    expect(text(refused)).toContain('deny if re-added: "Bash(git push *)"');
+    expect(cli(s, ['mode', 'project', 'automatic', '--yes']).code).toBe(0);
+  });
+
+  it('refuses to protect a rule retired while removed, or its knob (ADR-0013)', () => {
+    const s = setup();
+    cli(s, ['init', '--yes']);
+    setState(s, PROJECT, 'Bash(git push *)', 'removed');
+    writeJson(join(s.repo, '.claude', 'settings.json'), {
+      permissions: { allow: ['Bash(npm run lint)', 'Read(./docs/**)'], deny: ['Read(./.env)'] },
+    });
+    cli(s, ['snapshot'], { now: () => T0 + 1000 });
+    for (const target of ['Bash(git push *)', 'project']) {
+      const r = cli(s, ['protect', target]);
+      expect(r.code).toBe(1);
+      expect(r.errors.join('\n')).toContain('re-add it, run `taper regrant`');
+    }
+    const a = Agent.open(s.deps());
+    expect(a.store.knobs().find((k) => k.id === PROJECT)?.protected).toBe(false);
+    expect(a.store.members({ ids: [memberIdFor(PROJECT, 'Bash(git push *)')] })[0]?.protected).toBe(
+      false,
+    );
+    a.close();
+  });
+
   it('records protect changes and shows them in explain (invariant 9)', () => {
     const s = setup();
     cli(s, ['init', '--yes']);
