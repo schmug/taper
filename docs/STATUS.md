@@ -12,6 +12,8 @@ Part A, `fixtures/`). Still unverified:
 | `source` for auto-mode classifier approvals; PermissionRequest under auto | M6 (M2 attribution counts any `accept`, whatever the source: ADR-0007) | Probe with `--permission-mode auto`. |
 | Rule-form matrix, remainder: path-rule and Agent denies, the `Task(...)` alias, asks inside compound commands, a bare `WebFetch` ask, and four cases added after the run. The 2026-09-23 run confirmed the rest (ADR-0006 table, ADR-0009) | M6: `50-taper.json` copies path, Agent and bare-name members into `ask`/`deny`, and needs them to take effect | Owner go-ahead for a rerun of fixtures 01, 06, 07, 11, 12, 15, 23, 27 (about $0.32). Then fix `observe()` from the saved streams. Every open case carries an `unverified` note. |
 | `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` effect on customer OTel export | M7 | One probe each. |
+| Whether a tool hook's `cwd` follows a Bash `cd`; the project root when Claude Code starts in a repo subdirectory; `.claude.json` under `CLAUDE_CONFIG_DIR` | Nothing (M3 handles each conservatively: ADR-0010, ADR-0011) | One interactive probe session with `cd` and a subdirectory start. |
+| taper's hooks installed in a live Claude Code session (M3 ran the recorded payloads and the built binary through `sh -c`, not a live `claude`) | Dogfooding | `TAPER_DOGFOOD=1 taper init` in a scratch repo, one interactive session. |
 
 ## M0 — Verify and scaffold (2026-09-22)
 

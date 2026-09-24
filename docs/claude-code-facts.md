@@ -105,6 +105,10 @@ lines in `fixtures/headless/`). An earlier "~76k-token prefix" figure is wrong; 
 | `Task(...)` as alias of `Agent(...)`; path-rule and Agent denies; asks inside compound commands | The 2026-09-23 differential run (A4) could not observe them: the observer blind spot | a rerun with saved streams, then an `observe()` fix (ADR-0009) |
 | Whether `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` suppress customer OTel export | docs silent | M7 (dead-man edge cases) |
 | Interactive `user_temporary`/`user_reject`/`user_abort` sources | only option 2 was exercised | M3 fixtures (record when needed) |
+| Whether a tool hook's `cwd` follows a Bash `cd` | every M0 call ran in the start directory | M3 matches under both and takes the least restrictive decision (ADR-0011) |
+| Which directory is the project root when Claude Code starts in a subdirectory of a repo | not probed | M3 uses the git top-level (ADR-0010) |
+| Whether `.claude.json` moves into `CLAUDE_CONFIG_DIR` | not probed | M3 assumes it does (ADR-0010); trust falls back to `unknown` if absent |
+| Whether hook stdout with a trailing newline still parses as JSON | the probe hook wrote none | M3 writes none (ADR-0011) |
 
 ## A4. Differential run (2026-09-23, Claude Code 2.1.278)
 

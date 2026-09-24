@@ -85,6 +85,21 @@ describe('taper init', () => {
     expect(text(again)).toContain('Hooks already installed');
   });
 
+  it('replaces hooks installed from an older binary path instead of adding a second set', () => {
+    const s = setup();
+    cli(s, ['init', '--yes'], { entry: ['/old/node', '/old/taper.mjs'] });
+    cli(s, ['init', '--yes'], { entry: ['/new/node', '/new/taper.mjs'] });
+    const user = JSON.parse(readFileSync(join(s.home, '.claude', 'settings.json'), 'utf8'));
+    const commands = (user.hooks.PreToolUse as { hooks: { command: string }[] }[]).flatMap((e) =>
+      e.hooks.map((h) => h.command),
+    );
+    expect(commands).toEqual([`'/new/node' '/new/taper.mjs' hook PreToolUse`]);
+    expect(cli(s, ['uninstall'], { entry: ['/other/node', '/other/taper.mjs'] }).code).toBe(0);
+    expect(JSON.parse(readFileSync(join(s.home, '.claude', 'settings.json'), 'utf8')).hooks).toBe(
+      undefined,
+    );
+  });
+
   it('asks before installing hooks, and never installs without a yes', () => {
     const s = setup();
     const user = join(s.home, '.claude', 'settings.json');

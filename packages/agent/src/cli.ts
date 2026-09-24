@@ -215,9 +215,8 @@ function cmdInit(rest: readonly string[], deps: Deps): number {
       ? join(project?.root as string, '.claude', 'settings.json')
       : agent.paths.userSettings;
     const prefix = commandPrefix(deps.entry);
-    if (!withHooks(readText(target), prefix).changed) {
-      deps.out(`\nHooks already installed in ${target}.`);
-    } else {
+    const needed = withHooks(readText(target), prefix).changed;
+    if (needed) {
       deps.out(
         `\ntaper will add hooks for ${HOOK_EVENTS.join(', ')} to ${target}.` +
           '\nIt edits the "hooks" key only; permissions are never touched.',
@@ -227,9 +226,18 @@ function cmdInit(rest: readonly string[], deps: Deps): number {
         deps.out('Hooks not installed. Re-run `taper init --yes` to install them.');
         return 0;
       }
+    }
+    // The binary moved (upgrade, new Node): drop the old handlers rather than keep a second set.
+    const old = agent.config.hooks?.command_prefix;
+    if (old !== undefined && old !== prefix)
+      for (const f of agent.config.hooks?.files ?? []) {
+        const n = removeHooks(f, [old]);
+        if (n > 0) deps.out(`Removed ${n} hook handler(s) of an older taper from ${f}.`);
+      }
+    if (needed) {
       installHooks(target, prefix);
       deps.out(`Installed hooks in ${target}.`);
-    }
+    } else deps.out(`\nHooks already installed in ${target}.`);
     const files = [...new Set([...(agent.config.hooks?.files ?? []), target])];
     agent.saveConfig({ ...agent.config, hooks: { command_prefix: prefix, files } });
     return 0;
