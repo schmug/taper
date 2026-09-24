@@ -72,6 +72,7 @@ export function sandbox(opts: { remote?: string; git?: boolean } = {}): Sandbox 
         randomHex: (bytes: number) => (++ids).toString(16).padStart(bytes * 2, '0'),
         stdin: () => '',
         out: (s: string) => output.push(s),
+        write: (s: string) => output.push(s),
         err: (s: string) => errors.push(s),
         isTTY: false,
         confirm: () => false,

@@ -194,6 +194,18 @@ describe('taper hook', () => {
     });
   });
 
+  it('does not attribute project allow rules in a workspace marked untrusted (ADR-0002 row 1)', () => {
+    const s = setup({ local: ['Bash(./probe.sh b-pass)'] });
+    writeJson(join(s.home, '.claude.json'), {
+      projects: { [s.repo]: { hasTrustDialogAccepted: false } },
+    });
+    hook(s, 'SessionStart', payload('b0-hook-passthrough', 'SessionStart', s.repo));
+    hook(s, 'PostToolUse', payload('b0-hook-passthrough', 'PostToolUse', s.repo), T0 + 1000);
+    const local = 'local:0000000000000000000000000000000' + '1:github.com%2Fexample%2Fdemo:allow';
+    expect(member(s, 'Bash(./probe.sh b-pass)', local)?.lastSeenAt).toBe(T0 + 1000);
+    expect(member(s, 'Bash(./probe.sh b-pass)')?.lastSeenAt).toBeNull();
+  });
+
   it('anchors matching at the session start directory, least restrictive when cwd moved', () => {
     const s = setup();
     hook(s, 'SessionStart', payload('b0-hook-passthrough', 'SessionStart', s.repo));

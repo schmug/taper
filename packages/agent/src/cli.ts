@@ -140,7 +140,7 @@ function cmdHook(rest: readonly string[], deps: Deps): number {
     if (!existsSync(resolvePaths(deps.env).config)) return 0;
     agent = Agent.open(deps);
     const out = handleHook(agent, event, deps.stdin(), deps.now());
-    if (out !== null) deps.out(out);
+    if (out !== null) deps.write(out);
   } catch (e) {
     logHookError(deps, event, e);
   } finally {
@@ -311,9 +311,15 @@ function explanations(
   return out;
 }
 
-/** ETA assumes the clock keeps running: wall clock only, and not while protected or frozen. */
+/**
+ * ETA assumes the clock keeps running: wall clock only. None while a guard holds the member
+ * indefinitely (protected, frozen, last member); cooldown and maturity only delay it.
+ */
 function eta(e: Explanation, member: Member, now: number): number | null {
-  if (e.next === null || e.clock.kind !== 'wall' || e.protected || e.clock.frozen) return null;
+  const indefinitely = e.blockedBy.some(
+    (g) => g === 'protected' || g === 'frozen' || g === 'last_member',
+  );
+  if (e.next === null || e.clock.kind !== 'wall' || indefinitely) return null;
   return Math.max(now + e.next.remainingDays * DAY_MS, member.cooldownUntil ?? 0);
 }
 
@@ -651,24 +657,25 @@ function cmdSimulate(agent: Agent, rest: readonly string[]): number {
   const now = agent.deps.now();
   const knobs = agent.store.knobs();
   const members = agent.store.members();
-  // Assumption printed with the result: a session with at least one tool call every day, and
-  // no use of any tracked rule. Nothing is persisted.
+  // Assumption printed with the result: a session with a tool call every day in this project,
+  // and no use of any tracked rule. Nothing is persisted.
   const future: Signal[] = [];
-  for (let d = 1; d <= days; d++) {
+  for (let d = 0; d <= days; d++)
     future.push(
-      { at: now + d * DAY_MS - 1, kind: 'session' },
+      { at: now + d * DAY_MS, kind: 'session' },
       { at: now + d * DAY_MS, kind: 'decision' },
     );
-  }
+  const project = agent.projectAt(agent.deps.cwd);
+  const coverage = agent.coverage(knobs, { repoId: project?.repoId ?? null, signals: future });
   const tl = simulate(
-    { knobs, members, coverage: agent.coverage(knobs, future), config: agent.core },
+    { knobs, members, coverage, config: agent.core },
     [],
     now,
     now + days * DAY_MS,
     DAY_MS,
   );
   agent.deps.out(
-    `Simulating ${days} day(s) from ${fmtTime(now)}, assuming daily sessions and no use of any tracked rule. Nothing is saved.`,
+    `Simulating ${days} day(s) from ${fmtTime(now)}, assuming a daily session here and no use of any tracked rule. Nothing is saved.`,
   );
   const rules = new Map(members.map((m) => [m.id, m]));
   let any = false;

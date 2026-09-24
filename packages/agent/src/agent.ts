@@ -310,9 +310,16 @@ export class Agent {
   /**
    * Coverage per knob (ADR-0005, ADR-0010): user and managed knobs see every signal of this
    * device since enrollment; project and local knobs see only signals from sessions in their
-   * repo; cli knobs are never observed locally, so they stay frozen.
+   * repo; cli knobs are never observed locally, so they stay frozen. `extra` adds assumed future
+   * signals (simulate) to the device and to one repo.
    */
-  coverage(knobs: readonly StoredKnob[], extra: readonly Signal[] = []): KnobCoverage[] {
+  coverage(
+    knobs: readonly StoredKnob[],
+    extra: { readonly repoId: string | null; readonly signals: readonly Signal[] } = {
+      repoId: null,
+      signals: [],
+    },
+  ): KnobCoverage[] {
     const rows = this.store.signals(this.deviceId);
     const byRepo = new Map<string, Signal[]>();
     for (const r of rows) {
@@ -321,22 +328,26 @@ export class Agent {
       list.push({ at: r.at, kind: r.kind });
       byRepo.set(r.repoId, list);
     }
-    const all: Signal[] = [...rows.map((r) => ({ at: r.at, kind: r.kind })), ...extra];
+    const all: Signal[] = [...rows.map((r) => ({ at: r.at, kind: r.kind })), ...extra.signals];
     return knobs.map((k) => {
       if (k.kind === 'user' || k.kind === 'managed')
         return {
           knobId: k.id,
           sources: [{ sourceId: this.deviceId, since: this.config.enrolled_at, signals: all }],
         };
-      const repo = k.kind === 'cli' || k.repoId === null ? [] : (byRepo.get(k.repoId) ?? []);
+      if (k.kind === 'cli' || k.repoId === null) return { knobId: k.id, sources: [] };
+      const repo = [
+        ...(byRepo.get(k.repoId) ?? []),
+        ...(extra.repoId === k.repoId ? extra.signals : []),
+      ];
       if (repo.length === 0) return { knobId: k.id, sources: [] };
       return {
         knobId: k.id,
         sources: [
           {
             sourceId: `${this.deviceId}:${k.repoId}`,
-            since: (repo[0] as Signal).at,
-            signals: [...repo, ...extra],
+            since: Math.min(...repo.map((x) => x.at)),
+            signals: repo,
           },
         ],
       };

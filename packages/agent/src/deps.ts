@@ -11,7 +11,10 @@ export interface Deps {
   readonly randomHex: (bytes: number) => string;
   /** Whole of stdin (hook payloads). */
   readonly stdin: () => string;
+  /** One line of human output (a newline is added). */
   readonly out: (line: string) => void;
+  /** Exact stdout, no newline added: hook decisions (facts doc B4, JSON must end with `}`). */
+  readonly write: (text: string) => void;
   readonly err: (line: string) => void;
   readonly isTTY: boolean;
   /** Interactive yes/no; called only when `isTTY`. */
