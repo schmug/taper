@@ -362,7 +362,8 @@ describe('cli knobs (ADR-0007 deferral)', () => {
     writeJson(join(s.repo, 'ci', 'claude.json'), { permissions: { allow: ['Bash(make test)'] } });
     workflow(s, '--settings ci/claude.json');
     cli(s, ['init', '--yes']);
-    workflow(s, '--settings ${{ inputs.settings }}');
+    // A GitHub expression taper cannot resolve (literal `$` + `{{`, not a JS template).
+    workflow(s, `--settings $${'{{'} inputs.settings }}`);
     cli(s, ['snapshot'], { now: () => T0 + DAY });
     expect(state(s)).toBe('active');
   });

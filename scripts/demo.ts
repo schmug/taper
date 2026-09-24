@@ -189,6 +189,8 @@ export function runSoloDemo(root: string, log: (line: string) => void = () => {}
   taper('init', '--yes');
   say('# day 0: Claude Code asks to run ./probe.sh c; the user picks "Yes, and don\'t ask again".');
   hooks('c0-dont-ask-again', DEMO_T0 + 9 * HOUR, '-d0', undefined, (event) => {
+    // The demo plays Claude Code here: Claude Code itself writes this rule when the user picks
+    // option 2, before the tool runs (facts doc A1 c0). taper never writes a permissions array.
     if (event === 'PostToolUse')
       json(join(repo, '.claude', 'settings.local.json'), { permissions: { allow: [DEMO_RULE] } });
   });
