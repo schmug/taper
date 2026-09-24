@@ -35,15 +35,24 @@ Resolves ADR-0002 rows 1 and 2 and the ADR-0007 `cli` retirement deferral.
   lower-cased, userinfo, port and `.git` dropped), else `path:<root>`. Read from `.git` files,
   not by spawning git.
 - **Coverage (ADR-0005 inputs).** Signals are deduplicated per device, repo, kind and hour.
-  SessionStart → `session`; PreToolUse, PostToolUse(Failure) and OTel decisions → `decision`;
-  Stop, SessionEnd, PermissionRequest, `hook_registered` → `heartbeat`; OTel
-  `managed_settings_resolved` at startup → `session`. User and managed knobs see every signal of
+  SessionStart and OTel `managed_settings_resolved` at startup → `session`. A `decision` means
+  usage is observable, so only observations that carry arguments count: PostToolUse(Failure),
+  and OTel tool events with tool details. PreToolUse, an OTel tool event without arguments,
+  Stop, SessionEnd, PermissionRequest and `hook_registered` → `heartbeat`. If PostToolUse stops
+  arriving, sessions without decisions freeze the knob (the review of this change showed that
+  counting PreToolUse let a rule decay while its usage path was broken). User and managed knobs see every signal of
   the device since enrollment. Project and local knobs see only signals from sessions in their
   repo, so their wall clock freezes after `deadmanWindowDays` away from the repo. `cli` knobs
   see nothing locally and stay frozen.
 - **Tick.** `evaluate()` with tick id `tick:<ISO minute>`, claimed in a `ticks` row inside the
   same transaction: at most one evaluation per minute however many hooks fire. It runs on every
   hook invocation and on `status`/`recommend`.
+- **Local policy.** A session's effective policy is managed, user, project and local sources.
+  `cli` sources (CI `--settings` files) are left out: they load only in that workflow's runs.
+- **Knob changes.** Mode and protection changes are rows in `knob_changes` (who, when, from,
+  to), and `explain` lists them with the ledger (invariant 9).
+- **Symlinked settings.** Atomic writes follow a symlink and replace its target, so a dotfiles
+  link survives `taper init`.
 - **Solo self-approval.** `regrant`, `protect` (ADR-0013) and a switch back to `shadow` (which
   lets usage withdraw a removal, ADR-0004) are user actions at the `SelfApprove` level.
 

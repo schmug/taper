@@ -47,9 +47,12 @@ export function handleHook(agent: Agent, event: string, text: string, now: numbe
       const p = HookToolInputSchema.parse(raw);
       if (p.hook_event_name !== event) return null;
       const session = agent.session(p.session_id, p.cwd, 'first_event', now);
-      agent.signal(session, 'decision', now);
+      // Not a `decision` signal: usage is only observed at PostToolUse. If PostToolUse stops
+      // arriving, the knob must look degraded and freeze (ADR-0005, ADR-0010).
+      agent.signal(session, 'heartbeat', now);
       agent.tick(now);
-      const d = agent.decide(session, p.tool_name, p.tool_input, now, p.cwd);
+      const mode = permissionModeOf(p.permission_mode);
+      const d = agent.decide(session, p.tool_name, p.tool_input, now, mode, p.cwd);
       return d === null ? null : JSON.stringify(hookOutput(d));
     }
     case 'PostToolUse':

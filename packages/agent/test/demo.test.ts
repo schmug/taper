@@ -28,7 +28,7 @@ describe('solo demo', () => {
       hookSpecificOutput: {
         hookEventName: 'PreToolUse',
         permissionDecision: 'ask',
-        permissionDecisionReason: `taper: ${JSON.stringify(DEMO_RULE)} unused for 47 days; approving restores it (cooldown 14d). Run \`taper explain ${JSON.stringify(DEMO_RULE)}\` for details.`,
+        permissionDecisionReason: `taper: ${JSON.stringify(DEMO_RULE)} unused for 47 days; approving restores it (cooldown 14d). Run \`taper explain '${DEMO_RULE}'\` for details.`,
       },
     });
   });

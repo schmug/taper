@@ -1,7 +1,7 @@
 // Installing taper's hooks is the one write taper makes to a settings file: under `hooks` only,
 // idempotent, removable, and never touching a `permissions` array (invariant 3).
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { lstatSync, mkdirSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
@@ -122,6 +122,22 @@ describe('installHooks / removeHooks (files)', () => {
     expect(installHooks(file, PREFIX)).toBe(false);
     expect(removeHooks(file, [PREFIX])).toBe(HOOK_EVENTS.length);
     expect(JSON.parse(readFileSync(file, 'utf8'))).toEqual({});
+  });
+
+  it('writes through a symlinked settings file instead of replacing the link', () => {
+    const dir = tempDir();
+    const target = join(dir, 'dotfiles', 'settings.json');
+    mkdirSync(join(dir, 'dotfiles'));
+    writeFileSync(target, humanText);
+    mkdirSync(join(dir, '.claude'));
+    const link = join(dir, '.claude', 'settings.json');
+    symlinkSync(target, link);
+    expect(installHooks(link, PREFIX)).toBe(true);
+    expect(lstatSync(link).isSymbolicLink()).toBe(true);
+    expect(JSON.parse(readFileSync(target, 'utf8')).hooks.SessionStart).toHaveLength(1);
+    expect(removeHooks(link, [PREFIX])).toBe(HOOK_EVENTS.length);
+    expect(lstatSync(link).isSymbolicLink()).toBe(true);
+    expect(readFileSync(target, 'utf8')).toBe(humanText);
   });
 
   it('leaves an unparseable file untouched', () => {

@@ -155,10 +155,22 @@ does not touch `fixtures/headless/`.
   (day 46). On day 47 the hook asks; the approval restores it with a cooldown to day 61.5.
   `packages/agent/test/demo.test.ts` asserts all of it and that two runs are identical.
 - Hook latency (`pnpm bench:hook`, bundle, Node 22.22.3, darwin-arm64): PreToolUse median
-  44.5 ms (p90 46.8), with an evaluate tick 45.9 ms, PostToolUse 45.4 ms. `node -e 0` is 16.8 ms;
-  running from TypeScript source is 93.2 ms.
-- Tests (`pnpm test`): core 129 passing; backend 656 passing, 24 skipped (the gated differential
-  sessions); agent 73 passing. 0 failing. `pnpm lint` and `pnpm typecheck` are clean.
+  44.2 ms (p90 45.7), with an evaluate tick 46.0 ms, PostToolUse 45.3 ms. `node -e 0` is 17.0 ms;
+  running from TypeScript source is 92.5 ms.
+- Review: an independent read-only reviewer checked invariants 3, 5, 6, 7, 8 and the hook
+  decision. It found no blocker and five should-fix items, each now fixed with a failing test
+  first:
+  - CI `--settings` rules leaked into the local session policy;
+  - a switch to shadow let an enforced removal end without a re-grant (ADR-0013);
+  - PreToolUse counted as a `decision` signal, which hid a broken usage path from the dead-man
+    guard (ADR-0010);
+  - the hook ignored `permission_mode` (ADR-0011);
+  - `init` replaced a symlinked settings file with a copy.
+
+  Also fixed: a ledger-close error could exit 1; the suggested commands are now shell-safe; a
+  test no longer edits a human array. The rest is recorded in ADR-0011.
+- Tests (`pnpm test`): core 129 passing; backend 660 passing, 24 skipped (the gated differential
+  sessions); agent 80 passing. 0 failing. `pnpm lint` and `pnpm typecheck` are clean.
 
 **Deferred.**
 - `enroll`, `sync`, `agent run`, `otel serve` (M6+); `recommend --format pr` (M7); the

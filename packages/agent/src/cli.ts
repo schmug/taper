@@ -143,8 +143,11 @@ function cmdHook(rest: readonly string[], deps: Deps): number {
     if (out !== null) deps.write(out);
   } catch (e) {
     logHookError(deps, event, e);
-  } finally {
+  }
+  try {
     agent?.close();
+  } catch (e) {
+    logHookError(deps, event, e);
   }
   return 0;
 }
@@ -437,6 +440,9 @@ function cmdExplain(agent: Agent, rest: readonly string[]): number {
     narrative.explain(ex.get(m.id) as Explanation, {
       knob: knobs.find((k) => k.id === m.knobId) as StoredKnob,
       counts: agent.store.eventCounts(m.id),
+      changes: agent.store
+        .knobChanges(m.knobId)
+        .filter((c) => c.memberId === null || c.memberId === m.id),
     }),
   );
   agent.deps.out(parts.join('\n\n'));
@@ -532,10 +538,25 @@ function cmdProtect(agent: Agent, rest: readonly string[], on: boolean): number 
   // never leaves it blocked or prompting.
   const restores = on ? agent.regrant(targets.filter(decayed), now) : [];
   agent.store.tx(() => {
-    if (knob !== null) agent.store.updateKnob({ ...knob, protected: on });
-    else {
+    const change = (knobId: string, memberId: string | null, from: boolean) => {
+      if (from !== on)
+        agent.store.addKnobChange({
+          knobId,
+          memberId,
+          field: 'protected',
+          from: String(from),
+          to: String(on),
+          at: now,
+          actor: 'user',
+        });
+    };
+    if (knob !== null) {
+      agent.store.updateKnob({ ...knob, protected: on });
+      change(knob.id, null, knob.protected);
+    } else {
       const fresh = agent.store.members({ ids: targets.map((m) => m.id) });
       agent.store.saveMembers(fresh.map((m) => ({ ...m, protected: on })));
+      for (const m of fresh) change(m.knobId, m.id, m.protected);
     }
   });
   printRestores(agent, restores, now);
@@ -591,7 +612,39 @@ function cmdMode(agent: Agent, rest: readonly string[]): number {
       }
     }
   }
-  agent.store.updateKnob({ ...knob, mode });
+  const now = agent.deps.now();
+  if (mode === 'shadow' && knob.mode === 'automatic') {
+    // In shadow, usage withdraws a removal (ADR-0004). Without this step, switching to shadow
+    // and back would let an enforced `removed` member leave without a re-grant (invariant 5).
+    const removed = agent.store
+      .members()
+      .filter((m) => m.knobId === knob.id && m.state === 'removed');
+    if (removed.length > 0) {
+      agent.deps.out('Switching to shadow stops enforcement. Removed rules are re-granted first:');
+      for (const m of removed) agent.deps.out(`  re-granted first: ${JSON.stringify(m.rule)}`);
+      if (!values.yes) {
+        agent.deps.out('Re-run with --yes to re-grant them and switch.');
+        return 1;
+      }
+      printRestores(agent, agent.regrant(removed, now), now);
+    }
+  }
+  if (knob.mode === mode) {
+    agent.deps.out(`${knob.id} is already ${mode}.`);
+    return 0;
+  }
+  agent.store.tx(() => {
+    agent.store.updateKnob({ ...knob, mode });
+    agent.store.addKnobChange({
+      knobId: knob.id,
+      memberId: null,
+      field: 'mode',
+      from: knob.mode,
+      to: mode,
+      at: now,
+      actor: 'user',
+    });
+  });
   agent.deps.out(`${knob.id} is now ${mode}.`);
   if (knob.protected) agent.deps.out('It is protected, so its members never decay.');
   return 0;

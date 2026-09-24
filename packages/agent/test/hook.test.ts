@@ -1,10 +1,10 @@
 // `taper hook <event>` end to end, in process, with the recorded hook payloads re-pointed at a temp
 // repo (HANDOFF §5.3, §5.4A). Covers invariants 3, 5, 7 and 8 on the hook path.
 
-import { readdirSync, readFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { memberIdFor } from '@taper/core';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Agent } from '../src/agent.ts';
 import { run } from '../src/cli.ts';
 import { DAY, type Sandbox, sandbox, T0, writeJson } from './helpers.ts';
@@ -133,7 +133,7 @@ describe('taper hook', () => {
         permissionDecision: 'ask',
         permissionDecisionReason:
           'taper: "Bash(./probe.sh b-pass)" unused for 50 days; approving restores it ' +
-          '(cooldown 14d). Run `taper explain "Bash(./probe.sh b-pass)"` for details.',
+          "(cooldown 14d). Run `taper explain 'Bash(./probe.sh b-pass)'` for details.",
       },
     });
     hook(s, 'PostToolUse', payload('b0-hook-passthrough', 'PostToolUse', s.repo), T0 + 5000);
@@ -154,7 +154,7 @@ describe('taper hook', () => {
     expect(out.hookSpecificOutput.permissionDecision).toBe('deny');
     expect(out.hookSpecificOutput.permissionDecisionReason).toBe(
       'taper: "Bash(./probe.sh b-pass)" removed after 60 days unused. ' +
-        'Re-grant: `taper regrant "Bash(./probe.sh b-pass)"` or the dashboard.',
+        "Re-grant: `taper regrant 'Bash(./probe.sh b-pass)'` or the dashboard.",
     );
     hook(s, 'PostToolUse', payload('b0-hook-passthrough', 'PostToolUse', s.repo), T0 + 5000);
     expect(member(s, 'Bash(./probe.sh b-pass)')?.state).toBe('removed');
@@ -217,6 +217,74 @@ describe('taper hook', () => {
     );
     // Bash rules do not depend on cwd, so both readings agree on deny.
     expect(moved.out).toContain('"deny"');
+  });
+
+  it('leaves CI --settings rules out of a local session (Claude Code loads them only in CI)', () => {
+    // A CI allow must not stand in for the removed project rule; a CI deny must not hide it.
+    for (const ci of [{ allow: ['Bash(./probe.sh b-pass)'] }, { deny: ['Bash(./probe.sh *)'] }]) {
+      const s = setup();
+      writeJson(join(s.repo, 'ci', 'claude.json'), { permissions: ci });
+      mkdirSync(join(s.repo, '.github', 'workflows'), { recursive: true });
+      writeFileSync(
+        join(s.repo, '.github', 'workflows', 'claude.yml'),
+        'jobs:\n  a:\n    steps:\n      - run: claude -p "x" --settings ci/claude.json\n',
+      );
+      hook(s, 'SessionStart', payload('b0-hook-passthrough', 'SessionStart', s.repo));
+      force(s, 'Bash(./probe.sh b-pass)', 'removed');
+      const pre = hook(s, 'PreToolUse', payload('b0-hook-passthrough', 'PreToolUse', s.repo));
+      expect(pre.out).toContain('"permissionDecision":"deny"');
+    }
+  });
+
+  it('passes the payload permission mode to the decision (bypassPermissions: none)', () => {
+    const s = setup();
+    hook(s, 'SessionStart', payload('b0-hook-passthrough', 'SessionStart', s.repo));
+    force(s, 'Bash(./probe.sh b-pass)', 'removed');
+    const bypass = payload('b0-hook-passthrough', 'PreToolUse', s.repo, {
+      permission_mode: 'bypassPermissions',
+    });
+    expect(hook(s, 'PreToolUse', bypass).out).toBe('');
+    const auto = payload('b0-hook-passthrough', 'PreToolUse', s.repo, { permission_mode: 'auto' });
+    expect(hook(s, 'PreToolUse', auto).out).toContain('"permissionDecision":"ask"');
+  });
+
+  it('counts only observable usage as a decision signal: PreToolUse alone freezes the knob (invariant 6)', () => {
+    const s = setup();
+    for (let d = 0; d < 62; d++) {
+      const t = T0 + d * DAY + 1000;
+      const session = { session_id: `s${d}` };
+      hook(s, 'SessionStart', payload('b0-hook-passthrough', 'SessionStart', s.repo, session), t);
+      hook(
+        s,
+        'PreToolUse',
+        payload('b0-hook-passthrough', 'PreToolUse', s.repo, {
+          ...session,
+          tool_input: { command: 'npm run lint' },
+        }),
+        t + 1000,
+      );
+      hook(s, 'Stop', payload('b0-hook-passthrough', 'Stop', s.repo, session), t + 3000);
+    }
+    const d = s.deps({ now: () => T0 + 62 * DAY });
+    run(['status', '--json'], d);
+    const knob = (
+      JSON.parse(d.output.join('')) as { knobs: { id: string; frozen: boolean }[] }
+    ).knobs.find((k) => k.id === projectKnob);
+    expect(knob?.frozen).toBe(true);
+    expect(member(s, 'Bash(npm run lint)')?.state).toBe('active');
+  });
+
+  it('exits 0 even when closing the ledger fails (ADR-0011: the hook always passes)', () => {
+    const s = setup();
+    const spy = vi.spyOn(Agent.prototype, 'close').mockImplementationOnce(() => {
+      throw new Error('close failed');
+    });
+    try {
+      const r = hook(s, 'PreToolUse', payload('b0-hook-passthrough', 'PreToolUse', s.repo));
+      expect(r.code).toBe(0);
+    } finally {
+      spy.mockRestore();
+    }
   });
 
   it('fails open on a malformed payload and logs no payload text', () => {

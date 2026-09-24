@@ -15,7 +15,7 @@ const PROJECT = 'project:github.com%2Fexample%2Fdemo:allow';
 const DEVICE = '00000000000000000000000000000001';
 const LOCAL = `local:${DEVICE}:github.com%2Fexample%2Fdemo:allow`;
 
-function setup(): Sandbox {
+function setup(opts: { local?: boolean } = {}): Sandbox {
   const s = sandbox();
   writeJson(join(s.repo, '.claude', 'settings.json'), {
     permissions: {
@@ -23,9 +23,10 @@ function setup(): Sandbox {
       deny: ['Read(./.env)'],
     },
   });
-  writeJson(join(s.repo, '.claude', 'settings.local.json'), {
-    permissions: { allow: ['Bash(./probe.sh c *)'] },
-  });
+  if (opts.local !== false)
+    writeJson(join(s.repo, '.claude', 'settings.local.json'), {
+      permissions: { allow: ['Bash(./probe.sh c *)'] },
+    });
   writeJson(join(s.home, '.claude', 'settings.json'), {
     permissions: { allow: ['WebFetch(domain:docs.example.com)'] },
     model: 'opus',
@@ -256,7 +257,48 @@ describe('taper mode', () => {
     expect(refused.code).toBe(1);
     expect(text(refused)).toContain('deny: "Bash(git push *)"');
     expect(cli(s, ['mode', 'project', 'automatic', '--yes']).code).toBe(0);
-    expect(text(cli(s, ['mode', PROJECT, 'shadow']))).toContain('is now shadow');
+  });
+
+  it('re-grants removed members before an automatic knob goes shadow (invariant 5)', () => {
+    const s = setup();
+    cli(s, ['init', '--yes']);
+    expect(cli(s, ['mode', 'project', 'automatic']).code).toBe(0);
+    setState(s, PROJECT, 'Bash(git push *)', 'removed');
+    const refused = cli(s, ['mode', 'project', 'shadow'], { now: () => T0 + 1000 });
+    expect(refused.code).toBe(1);
+    expect(text(refused)).toContain('re-granted first: "Bash(git push *)"');
+    const id = memberIdFor(PROJECT, 'Bash(git push *)');
+    const look = () => {
+      const a = Agent.open(s.deps());
+      const r = {
+        mode: a.store.knobs().find((k) => k.id === PROJECT)?.mode,
+        state: a.store.members({ ids: [id] })[0]?.state,
+        ledger: a.store.ledger([id]).map((t) => `${t.from}>${t.to}:${t.reason}:${t.actor}`),
+        changes: a.store.knobChanges(PROJECT).map((c) => `${c.field}:${c.from}>${c.to}:${c.actor}`),
+      };
+      a.close();
+      return r;
+    };
+    expect(look()).toMatchObject({ mode: 'automatic', state: 'removed' });
+    expect(cli(s, ['mode', 'project', 'shadow', '--yes'], { now: () => T0 + 2000 }).code).toBe(0);
+    const after = look();
+    expect(after).toMatchObject({ mode: 'shadow', state: 'active' });
+    expect(after.ledger.slice(-2)).toEqual([
+      'removed>restored:regrant:user',
+      'restored>active:restored:user',
+    ]);
+    expect(after.changes).toEqual(['mode:shadow>automatic:user', 'mode:automatic>shadow:user']);
+  });
+
+  it('records protect changes and shows them in explain (invariant 9)', () => {
+    const s = setup();
+    cli(s, ['init', '--yes']);
+    cli(s, ['protect', 'Bash(npm run lint)'], { now: () => T0 + 1000 });
+    cli(s, ['mode', 'project', 'automatic'], { now: () => T0 + 2000 });
+    const out = text(cli(s, ['explain', 'Bash(npm run lint)']));
+    expect(out).toContain('knob and protection changes:');
+    expect(out).toContain('2026-09-23T12:00Z  "Bash(npm run lint)" protected false → true by user');
+    expect(out).toContain('2026-09-23T12:00Z  knob mode shadow → automatic by user');
   });
 
   it('requires the C3 opt-in for cli knobs', () => {
@@ -320,10 +362,12 @@ describe('taper simulate / snapshot', () => {
   });
 
   it('declares a rule added since the last snapshot', () => {
-    const s = setup();
+    // Claude Code creates the local file on a "don't ask again" (facts doc A1 c0); the test plays
+    // that write into a fresh file instead of editing an existing human array.
+    const s = setup({ local: false });
     cli(s, ['init', '--yes']);
     writeJson(join(s.repo, '.claude', 'settings.local.json'), {
-      permissions: { allow: ['Bash(./probe.sh c *)', 'Bash(make *)'] },
+      permissions: { allow: ['Bash(make *)'] },
     });
     const out = text(cli(s, ['snapshot'], { now: () => T0 + DAY }));
     expect(out).toContain('1 rule(s) declared, 0 retired.');

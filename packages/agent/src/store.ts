@@ -34,6 +34,17 @@ export interface SessionRow {
   readonly permissionRequest: boolean;
 }
 
+/** A mode or protection change (member-level when `memberId` is set). */
+export interface KnobChange {
+  readonly knobId: string;
+  readonly memberId: string | null;
+  readonly field: 'mode' | 'protected';
+  readonly from: string;
+  readonly to: string;
+  readonly at: number;
+  readonly actor: 'system' | 'user' | 'admin';
+}
+
 export interface SignalRow extends Signal {
   readonly repoId: string | null;
 }
@@ -396,6 +407,32 @@ export class Store {
 
   deleteSnapshot(key: string): void {
     this.db.prepare('DELETE FROM snapshots WHERE source_key = ?').run(key);
+  }
+
+  addKnobChange(c: KnobChange): void {
+    this.db
+      .prepare(
+        `INSERT INTO knob_changes (knob_id, member_id, field, from_value, to_value, at, actor)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .run(c.knobId, c.memberId, c.field, c.from, c.to, c.at, c.actor);
+  }
+
+  /** Changes to a knob and to its members' protection, in order. */
+  knobChanges(knobId: string): KnobChange[] {
+    return (
+      this.db
+        .prepare('SELECT * FROM knob_changes WHERE knob_id = ? ORDER BY seq')
+        .all(knobId) as Row[]
+    ).map((r) => ({
+      knobId: String(r.knob_id),
+      memberId: r.member_id === null ? null : String(r.member_id),
+      field: r.field as KnobChange['field'],
+      from: String(r.from_value),
+      to: String(r.to_value),
+      at: Number(r.at),
+      actor: r.actor as KnobChange['actor'],
+    }));
   }
 
   /** Claims `tickId`; false if that tick already ran (HANDOFF §7 idempotent ticks). */

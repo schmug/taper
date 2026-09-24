@@ -45,6 +45,7 @@ describe('openDb', () => {
     expect(tables).toEqual(
       expect.arrayContaining([
         'events',
+        'knob_changes',
         'knobs',
         'members',
         'sessions',

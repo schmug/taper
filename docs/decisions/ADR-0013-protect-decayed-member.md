@@ -24,6 +24,12 @@ The user said "never decay this", and the result is a rule that is still blocked
   decays what it cannot match (ADR-0006). A `Read(...)` rule may be unprotected, which is the
   C2 opt-in, and the CLI says that its evidence is low-confidence.
 
+- **`taper mode <knob> shadow`** on an automatic knob re-grants its `removed` members first,
+  after a preview and only with `--yes`. In shadow, usage withdraws a removal (ADR-0004), so
+  without this a switch to shadow and back would let an enforced removal end without a re-grant
+  (invariant 5; found in the M3 review). Mode changes are recorded in `knob_changes`. M6 must not
+  carry this path into `AdminOnly`: there a mode change that lifts a removal needs the verifier.
+
 ## Consequences
 
 - `protect` never leaves a member enforced. `unprotect` changes no state; decay resumes on the

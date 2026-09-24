@@ -3,12 +3,14 @@
 // decision. An LLM provider would plug in here, off by default (not built; invariant 2).
 
 import type { Explanation, Guard, Transition } from '@taper/core';
-import type { StoredKnob } from './store.ts';
+import type { KnobChange, StoredKnob } from './store.ts';
 
 export interface ExplainContext {
   readonly knob: StoredKnob;
   /** Events that matched this member, and in how many it was decisive. Counts only. */
   readonly counts: { readonly matched: number; readonly decisive: number };
+  /** Mode changes of the knob and protection changes of the knob or this member. */
+  readonly changes: readonly KnobChange[];
 }
 
 export interface AdviceItem {
@@ -67,7 +69,7 @@ function historyLine(t: Transition): string {
 export const templateNarrative: NarrativeProvider = {
   name: 'template',
 
-  explain(e, { knob, counts }) {
+  explain(e, { knob, counts, changes }) {
     const anchor =
       e.anchor.basis === 'last_seen'
         ? `last used ${fmtTime(e.anchor.at)}`
@@ -97,6 +99,15 @@ export const templateNarrative: NarrativeProvider = {
       `  evidence: matched ${counts.matched} observed call(s), decisive in ${counts.decisive}`,
       '  history:',
       ...(e.history.length === 0 ? ['    (none)'] : e.history.map(historyLine)),
+      ...(changes.length === 0
+        ? []
+        : [
+            '  knob and protection changes:',
+            ...changes.map(
+              (c) =>
+                `    ${fmtTime(c.at)}  ${c.memberId === null ? 'knob' : JSON.stringify(e.rule)} ${c.field} ${c.from} → ${c.to} by ${c.actor}`,
+            ),
+          ]),
     ].join('\n');
   },
 

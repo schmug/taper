@@ -9,6 +9,12 @@
 // That covers compound commands, where another member can match one part only, and the
 // read-only built-ins, which need no rule. When Claude Code would prompt or deny anyway, the
 // removed rule is not what allows the call, so taper stays out of the way.
+//
+// Permission modes: taper never blocks what deleting the rule would allow. bypassPermissions
+// runs everything without a rule, so taper decides nothing there. acceptEdits approves edits and
+// a few filesystem commands on its own; those calls get no decision. Under auto (and an unknown
+// mode) the classifier would review a call without the rule, so a removed rule asks instead of
+// denying.
 
 import {
   type Config,
@@ -21,8 +27,9 @@ import {
   memberIdFor,
   resolveThresholds,
 } from '@taper/core';
+import type { PermissionMode } from './event.ts';
 import { match, type ToolCall } from './match.ts';
-import type { EffectivePolicy, PolicyRule } from './policy.ts';
+import { buildPolicy, type EffectivePolicy, type PolicyRule } from './policy.ts';
 
 export interface HookDecisionInput {
   readonly policy: EffectivePolicy;
@@ -37,6 +44,8 @@ export interface HookDecisionInput {
   readonly members: readonly Member[];
   readonly config: Config;
   readonly now: number;
+  /** From the PreToolUse payload (facts doc B4); `unknown` when absent. */
+  readonly permissionMode: PermissionMode;
 }
 
 export interface HookDecision {
@@ -46,13 +55,16 @@ export interface HookDecision {
   readonly memberIds: readonly MemberId[];
 }
 
+/** For display. */
 const quote = (rule: string): string => JSON.stringify(rule);
+/** For a command the user may paste: single quotes, so nothing in the rule expands. */
+const shellArg = (rule: string): string => `'${rule.replace(/'/g, `'\\''`)}'`;
 
 /** HANDOFF §5.4A reason for a `pending_removal` member. */
 export function askReason(rule: string, unusedDays: number, cooldownDays: number): string {
   return (
     `taper: ${quote(rule)} unused for ${unusedDays} days; approving restores it ` +
-    `(cooldown ${cooldownDays}d). Run \`taper explain ${quote(rule)}\` for details.`
+    `(cooldown ${cooldownDays}d). Run \`taper explain ${shellArg(rule)}\` for details.`
   );
 }
 
@@ -60,7 +72,15 @@ export function askReason(rule: string, unusedDays: number, cooldownDays: number
 export function denyReason(rule: string, unusedDays: number): string {
   return (
     `taper: ${quote(rule)} removed after ${unusedDays} days unused. ` +
-    `Re-grant: \`taper regrant ${quote(rule)}\` or the dashboard.`
+    `Re-grant: \`taper regrant ${shellArg(rule)}\` or the dashboard.`
+  );
+}
+
+/** A `removed` member under auto or an unknown mode: a prompt, not a block (ADR-0011). */
+export function removedAskReason(rule: string, unusedDays: number): string {
+  return (
+    `taper: ${quote(rule)} removed after ${unusedDays} days unused; approving allows this call ` +
+    `only. Re-grant: \`taper regrant ${shellArg(rule)}\`.`
   );
 }
 
@@ -75,6 +95,27 @@ export function hookOutput(d: HookDecision) {
   };
 }
 
+/**
+ * What acceptEdits approves with no rule, as allow rules that belong to no knob: file edits and
+ * `mkdir/touch/mv/cp/rm/sed` (research doc 'Modes'; the command list and its working-directory
+ * limit are UNVERIFIED, so the limit is ignored: the lenient side).
+ */
+const ACCEPT_EDITS: readonly PolicyRule[] = buildPolicy({
+  home: '/',
+  workspaceTrusted: true,
+  sources: [
+    {
+      scope: 'user',
+      path: '/<acceptEdits>/settings.json',
+      arrays: {
+        allow: ['Edit', ...['mkdir', 'touch', 'mv', 'cp', 'rm', 'sed'].map((c) => `Bash(${c} *)`)],
+        ask: [],
+        deny: [],
+      },
+    },
+  ],
+}).rules;
+
 const anchorOf = (m: Member): number =>
   Math.max(
     m.declaredAt,
@@ -87,6 +128,15 @@ const memberOf = (r: PolicyRule): MemberId | null =>
   r.polarity === 'allow' && r.knobId !== undefined ? memberIdFor(r.knobId, r.rule) : null;
 
 function decideOne(input: HookDecisionInput, call: ToolCall): HookDecision | null {
+  const mode = input.permissionMode;
+  if (mode === 'bypassPermissions') return null;
+  const modeRules = mode === 'acceptEdits' ? ACCEPT_EDITS : [];
+  if (
+    modeRules.length > 0 &&
+    match({ ...input.policy, rules: modeRules }, call).outcome === 'allow'
+  )
+    return null;
+
   const full = match(input.policy, call);
   const matched = new Set(full.allMatchingAllowRules.map(memberOf));
   const actions = enforcement(
@@ -101,13 +151,15 @@ function decideOne(input: HookDecisionInput, call: ToolCall): HookDecision | nul
     const blocked = new Set(blocks.map((b) => b.memberId));
     const without: EffectivePolicy = {
       ...input.policy,
-      rules: input.policy.rules.filter((r) => !blocked.has(memberOf(r) ?? '')),
+      rules: [...input.policy.rules.filter((r) => !blocked.has(memberOf(r) ?? '')), ...modeRules],
     };
     if (match(without, call).outcome !== 'allow') {
       const first = byId.get(blocks[0]?.memberId ?? '') as Member;
+      const days = wholeDays(first.stateSince - anchorOf(first));
+      const classifier = mode === 'auto' || mode === 'unknown';
       return {
-        permissionDecision: 'deny',
-        reason: denyReason(first.rule, wholeDays(first.stateSince - anchorOf(first))),
+        permissionDecision: classifier ? 'ask' : 'deny',
+        reason: classifier ? removedAskReason(first.rule, days) : denyReason(first.rule, days),
         memberIds: blocks.map((b) => b.memberId),
       };
     }

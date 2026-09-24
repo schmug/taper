@@ -18,12 +18,25 @@ Status: accepted (M3, 2026-09-23). Code: `packages/backend-claude-code/src/hook-
   - This is gentler than M6's managed `deny`, which blocks every call the rule matches.
 - **Ask** when a matched member is `pending_removal`, as §5.4A says. Deny wins when both apply,
   so a tier-1 prompt cannot approve a part that needs a removed rule.
+- **Permission modes.** taper never blocks what deleting the rule would allow (from the
+  M3 review). From the PreToolUse `permission_mode`:
+  - `bypassPermissions` runs every call without a rule, so taper returns no decision.
+  - `acceptEdits` approves file edits and `mkdir/touch/mv/cp/rm/sed` with no rule (research doc;
+    UNVERIFIED, and its working-directory limit is ignored, the lenient side). Those calls get no
+    decision, and those commands count as covered when a compound command is checked.
+  - `auto`, or a missing mode: without the rule the classifier would review the call, which it
+    may allow. A removed rule therefore asks instead of denying, with the reason
+    `taper: "<rule>" removed after N days unused; approving allows this call only. Re-grant: …`.
+    Approving does not restore it (invariant 5).
+  - `default`, `plan` and `dontAsk` follow §5.4A as written.
 - **Approval is usage.** The approved call runs, so PostToolUse attributes it to every matching
   allow member (C5) and core `applyUsage` restores a pending member with a cooldown (P4). A
   `removed` member is never restored by usage (invariant 5).
-- **Reasons** are §5.4A's texts. N is whole calendar days: for `ask`, since the staleness anchor;
-  for `deny`, from the anchor to the removal. The rule is JSON-quoted, so the suggested command
-  stays copyable. "or the dashboard" stays in solo mode until M6.
+- **Reasons** are §5.4A's texts, with one change: the suggested `taper explain`/`taper regrant`
+  argument is single-quoted for the shell, so `$(…)`, backticks, `$VAR` and `!` in a rule never
+  expand when it is pasted (§5.4A shows double quotes). N is whole calendar days: for `ask`, since
+  the staleness anchor; for `deny`, from the anchor to the removal. "or the dashboard" stays in
+  solo mode until M6.
 - **Working directory.** Matching is anchored at the directory the session started in
   (SessionStart `cwd`, ADR-0006). Whether a tool event's `cwd` follows a Bash `cd` is UNVERIFIED,
   so when it differs taper matches under both: attribution takes the union (over-refresh is the
@@ -42,8 +55,17 @@ Status: accepted (M3, 2026-09-23). Code: `packages/backend-claude-code/src/hook-
 
 ## Consequences
 
+- Known imprecision, recorded rather than fixed:
+  - PreToolUse reads the stored snapshots. A rule the human deleted mid-session, or a project
+    allow that an untrusted workspace ignores (`unknown` trust keeps it), can yield a deny where
+    Claude Code would prompt, until the next Stop, SessionEnd or SessionStart re-snapshots.
+  - A pending member asks even when another live rule allows the call, as §5.4A reads. Approval
+    or plain use restores it either way.
+  - Installing hooks re-serializes the settings file with its detected indent. Every value is
+    unchanged (checked), but hand formatting can change.
+
 - Hook enforcement is lower assurance (HANDOFF §5.4A, ADR-0002 row 10): `bypassPermissions` and
   auto mode can edit `.claude/`, a project can set `disableAllHooks`, and `--bare` skips hooks.
   The dead-man guard freezes knobs whose hooks stop reporting; it cannot stop a bypass.
 - Measured latency (`pnpm bench:hook`, Node 22.22.3, darwin-arm64, bundle): PreToolUse median
-  43.9 ms (p90 45.2), with an evaluate tick 45.6 ms, PostToolUse 44.9 ms; bare `node -e 0` 17 ms.
+  44.2 ms (p90 45.7), with an evaluate tick 46.0 ms, PostToolUse 45.3 ms; bare `node -e 0` 17 ms.

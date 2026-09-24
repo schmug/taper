@@ -12,7 +12,14 @@ import {
   memberIdFor,
 } from '@taper/core';
 import { describe, expect, it } from 'vitest';
-import { askReason, denyReason, hookDecision, hookOutput } from '../src/hook-decision.ts';
+import type { PermissionMode } from '../src/event.ts';
+import {
+  askReason,
+  denyReason,
+  hookDecision,
+  hookOutput,
+  removedAskReason,
+} from '../src/hook-decision.ts';
 import type { ToolCall } from '../src/match.ts';
 import { buildPolicy } from '../src/policy.ts';
 
@@ -69,7 +76,7 @@ const decide = (
   allow: string[],
   members: Member[],
   calls: ToolCall[],
-  opts: { knobs?: Knob[]; deny?: string[] } = {},
+  opts: { knobs?: Knob[]; deny?: string[]; mode?: PermissionMode } = {},
 ) =>
   hookDecision({
     policy: policy(allow, opts.deny ? { deny: opts.deny } : {}),
@@ -78,6 +85,7 @@ const decide = (
     members,
     config,
     now: NOW,
+    permissionMode: opts.mode ?? 'default',
   });
 
 describe('hookDecision', () => {
@@ -88,7 +96,7 @@ describe('hookDecision', () => {
       permissionDecision: 'ask',
       reason:
         'taper: "Bash(npm run lint)" unused for 90 days; approving restores it (cooldown 14d). ' +
-        'Run `taper explain "Bash(npm run lint)"` for details.',
+        "Run `taper explain 'Bash(npm run lint)'` for details.",
       memberIds: [m.id],
     });
   });
@@ -100,7 +108,7 @@ describe('hookDecision', () => {
       permissionDecision: 'deny',
       reason:
         'taper: "Bash(npm run lint)" removed after 60 days unused. ' +
-        'Re-grant: `taper regrant "Bash(npm run lint)"` or the dashboard.',
+        "Re-grant: `taper regrant 'Bash(npm run lint)'` or the dashboard.",
       memberIds: [m.id],
     });
   });
@@ -202,10 +210,77 @@ describe('hookDecision', () => {
     });
   });
 
-  it('quotes rules with embedded quotes so the suggested command stays copyable', () => {
-    expect(askReason('Bash(echo "hi")', 3, 14)).toContain('`taper explain "Bash(echo \\"hi\\")"`');
-    expect(denyReason('Bash(x)', 61)).toBe(
-      'taper: "Bash(x)" removed after 61 days unused. Re-grant: `taper regrant "Bash(x)"` or the dashboard.',
+  it('single-quotes the suggested command so a rule never expands in the shell', () => {
+    expect(askReason('Bash(echo "hi")', 3, 14)).toContain('`taper explain \'Bash(echo "hi")\'`');
+    expect(askReason("Bash(echo 'x' $(id) `w` $HOME !1)", 3, 14)).toContain(
+      "`taper explain 'Bash(echo '\\''x'\\'' $(id) `w` $HOME !1)'`",
     );
+    expect(denyReason('Bash(x)', 61)).toBe(
+      'taper: "Bash(x)" removed after 61 days unused. Re-grant: `taper regrant \'Bash(x)\'` or the dashboard.',
+    );
+  });
+
+  describe('permission modes (ADR-0011): never block what deleting the rule would allow', () => {
+    const removed = member('Bash(npm test)', 'removed');
+    const pending = member('Bash(npm test)', 'pending_removal');
+
+    it('bypassPermissions: no decision, the rule changes nothing there', () => {
+      for (const m of [removed, pending])
+        expect(
+          decide(['Bash(npm test)'], [m], [bash('npm test')], { mode: 'bypassPermissions' }),
+        ).toBeNull();
+    });
+
+    it('acceptEdits: no decision for what the mode approves on its own', () => {
+      const edit = member('Edit(src/**)', 'removed');
+      const call: ToolCall = { tool: 'Edit', input: { file_path: '/repo/src/a.ts' }, cwd: '/repo' };
+      expect(decide(['Edit(src/**)'], [edit], [call], { mode: 'acceptEdits' })).toBeNull();
+      expect(decide(['Edit(src/**)'], [edit], [call])?.permissionDecision).toBe('deny');
+      const mkdir = member('Bash(mkdir *)', 'removed');
+      expect(
+        decide(['Bash(mkdir *)'], [mkdir], [bash('mkdir -p out')], { mode: 'acceptEdits' }),
+      ).toBeNull();
+      // A compound whose other part is allowed by a live rule: mkdir needs no rule in acceptEdits.
+      const test = member('Bash(npm test)', 'active');
+      expect(
+        decide(
+          ['Bash(mkdir *)', 'Bash(npm test)'],
+          [mkdir, test],
+          [bash('mkdir out && npm test')],
+          {
+            mode: 'acceptEdits',
+          },
+        ),
+      ).toBeNull();
+      // Commands acceptEdits does not approve still need the rule.
+      expect(
+        decide(['Bash(npm test)'], [removed], [bash('npm test')], { mode: 'acceptEdits' })
+          ?.permissionDecision,
+      ).toBe('deny');
+    });
+
+    it('auto and unknown: a removed rule asks instead of denying (the classifier might allow it)', () => {
+      for (const mode of ['auto', 'unknown'] as const) {
+        const d = decide(['Bash(npm test)'], [removed], [bash('npm test')], { mode });
+        expect(d).toEqual({
+          permissionDecision: 'ask',
+          reason: removedAskReason('Bash(npm test)', 60),
+          memberIds: [removed.id],
+        });
+        expect(
+          decide(['Bash(npm test)'], [pending], [bash('npm test')], { mode })?.permissionDecision,
+        ).toBe('ask');
+      }
+      expect(removedAskReason('Bash(x)', 60)).toBe(
+        'taper: "Bash(x)" removed after 60 days unused; approving allows this call only. Re-grant: `taper regrant \'Bash(x)\'`.',
+      );
+    });
+
+    it('default, plan and dontAsk keep §5.4A as is', () => {
+      for (const mode of ['default', 'plan', 'dontAsk'] as const)
+        expect(
+          decide(['Bash(npm test)'], [removed], [bash('npm test')], { mode })?.permissionDecision,
+        ).toBe('deny');
+    });
   });
 });

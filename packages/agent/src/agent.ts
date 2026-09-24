@@ -295,8 +295,15 @@ export class Agent {
       : { root: session.repoRoot, repoId: session.repoId };
   }
 
+  /**
+   * The policy Claude Code applies in this device's sessions. `cli` sources are left out: a CI
+   * workflow's `--settings` file loads only in that workflow's runs, never in a local session.
+   */
   policy(session: SessionRow): EffectivePolicy {
-    return policyFromSnapshots(this.store.snapshots(this.deviceId, session.repoId), {
+    const local = this.store
+      .snapshots(this.deviceId, session.repoId)
+      .filter((s) => s.scope !== 'cli');
+    return policyFromSnapshots(local, {
       managedSubject: this.deviceId,
       home: this.paths.home,
       workspaceTrusted: session.trust,
@@ -429,7 +436,10 @@ export class Agent {
         this.store.saveMembers(changed(members, out.members));
         this.store.appendTransitions(out.transitions);
       }
-      this.store.addSignal(this.deviceId, session.repoId, toSignal(event).kind, event.at);
+      // A `decision` signal tells the dead-man guard that usage is observable (ADR-0005). Only an
+      // observation with arguments can be attributed, so one without them is a heartbeat.
+      const kind = obs.input === undefined ? 'heartbeat' : toSignal(event).kind;
+      this.store.addSignal(this.deviceId, session.repoId, kind, event.at);
     });
     return event;
   }
@@ -440,6 +450,7 @@ export class Agent {
     toolName: string,
     input: Readonly<Record<string, unknown>>,
     now: number,
+    permissionMode: PermissionMode,
     eventCwd?: string,
   ): HookDecision | null {
     const policy = this.policy(session);
@@ -453,6 +464,7 @@ export class Agent {
       members: this.store.members({ ids: [...ids] }),
       config: this.core,
       now,
+      permissionMode,
     });
   }
 

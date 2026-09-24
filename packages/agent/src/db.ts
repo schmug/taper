@@ -107,6 +107,18 @@ export const MIGRATIONS: readonly string[] = [
     tick_id TEXT PRIMARY KEY,
     at INTEGER NOT NULL
   );
+  -- Mode and protection changes, so every state shown is explainable (invariant 9).
+  CREATE TABLE knob_changes (
+    seq INTEGER PRIMARY KEY AUTOINCREMENT,
+    knob_id TEXT NOT NULL,
+    member_id TEXT,
+    field TEXT NOT NULL CHECK (field IN ('mode', 'protected')),
+    from_value TEXT NOT NULL,
+    to_value TEXT NOT NULL,
+    at INTEGER NOT NULL,
+    actor TEXT NOT NULL CHECK (actor IN ('system', 'user', 'admin'))
+  );
+  CREATE INDEX knob_changes_knob ON knob_changes (knob_id);
   `,
 ];
 
