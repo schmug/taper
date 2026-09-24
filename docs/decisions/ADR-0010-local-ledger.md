@@ -50,9 +50,10 @@ Resolves ADR-0002 rows 1 and 2 and the ADR-0007 `cli` retirement deferral.
 - **Local policy.** A session's effective policy is managed, user, project and local sources.
   `cli` sources (CI `--settings` files) are left out: they load only in that workflow's runs.
 - **Knob changes.** Mode and protection changes are rows in `knob_changes` (who, when, from,
-  to), and `explain` lists them with the ledger (invariant 9).
-- **Symlinked settings.** Atomic writes follow a symlink and replace its target, so a dotfiles
-  link survives `taper init`.
+  to), added by migration 2, and `explain` lists them with the ledger (invariant 9).
+- **Symlinked settings.** Atomic writes follow every symlink hop (a dangling target is
+  created), refuse a loop, and replace only the final file, so a dotfiles link survives
+  `taper init`. The file keeps its exact permission bits (chmod after write, past the umask).
 - **Solo self-approval.** `regrant`, `protect` (ADR-0013) and a switch back to `shadow` (which
   lets usage withdraw a removal, ADR-0004) are user actions at the `SelfApprove` level.
 
@@ -63,5 +64,8 @@ Resolves ADR-0002 rows 1 and 2 and the ADR-0007 `cli` retirement deferral.
 - Worktrees: the project root is the worktree's checkout, but Claude Code writes the local file
   at the main checkout's root (facts doc B6). New local rules there are not seen (never decay).
 - `CLAUDE_CONFIG_DIR`: taper assumes `.claude.json` moves into it. UNVERIFIED.
+- A changed origin URL gives the repo a new `repo_id`, and with it new project and local knobs.
+  The new members start with fresh grace; the old ones keep their state and stop receiving
+  signals, so they freeze. Nothing tightens.
 - Which directory Claude Code treats as the project root when started in a subdirectory of a
   repo. taper uses the git top-level. UNVERIFIED.

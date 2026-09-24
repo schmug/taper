@@ -23,7 +23,8 @@ Status: accepted (M3, 2026-09-23). Code: `packages/backend-claude-code/src/hook-
   - `bypassPermissions` runs every call without a rule, so taper returns no decision.
   - `acceptEdits` approves file edits and `mkdir/touch/mv/cp/rm/sed` with no rule (research doc;
     UNVERIFIED, and its working-directory limit is ignored, the lenient side). Those calls get no
-    decision, and those commands count as covered when a compound command is checked.
+    decision. For a compound command, those commands count as covered on both sides of the
+    "does the call need the removed rule" check.
   - `auto`, or a missing mode: without the rule the classifier would review the call, which it
     may allow. A removed rule therefore asks instead of denying, with the reason
     `taper: "<rule>" removed after N days unused; approving allows this call only. Re-grant: …`.
@@ -61,6 +62,12 @@ Status: accepted (M3, 2026-09-23). Code: `packages/backend-claude-code/src/hook-
     Claude Code would prompt, until the next Stop, SessionEnd or SessionStart re-snapshots.
   - A pending member asks even when another live rule allows the call, as §5.4A reads. Approval
     or plain use restores it either way.
+  - In `dontAsk`, a hook `ask` becomes a denial (facts doc B0), so a pending member cannot be
+    approved in context there. Deleting the rule would also deny, so this is not stricter.
+  - Whether a prompt raised by taper's `ask` offers "Yes, and don't ask again" is UNVERIFIED (the
+    M0 hook-ask probe was headless). If it does, it writes a new local allow rule. That is a new
+    human-owned member with fresh grace; the removed member stays removed, but the call is then
+    allowed without it.
   - Installing hooks re-serializes the settings file with its detected indent. Every value is
     unchanged (checked), but hand formatting can change.
 

@@ -137,7 +137,8 @@ function decideOne(input: HookDecisionInput, call: ToolCall): HookDecision | nul
   )
     return null;
 
-  const full = match(input.policy, call);
+  // The mode's own approvals count on both sides of the "does the call need it" check.
+  const full = match({ ...input.policy, rules: [...input.policy.rules, ...modeRules] }, call);
   const matched = new Set(full.allMatchingAllowRules.map(memberOf));
   const actions = enforcement(
     input.knobs,

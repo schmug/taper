@@ -252,6 +252,13 @@ describe('hookDecision', () => {
           },
         ),
       ).toBeNull();
+      // The mode's own approvals count on the "with the rule" side too: here only curl needs a rule.
+      const curl = member('Bash(curl *)', 'removed');
+      expect(
+        decide(['Bash(curl *)'], [curl], [bash('mkdir out && curl x.example')], {
+          mode: 'acceptEdits',
+        })?.permissionDecision,
+      ).toBe('deny');
       // Commands acceptEdits does not approve still need the rule.
       expect(
         decide(['Bash(npm test)'], [removed], [bash('npm test')], { mode: 'acceptEdits' })

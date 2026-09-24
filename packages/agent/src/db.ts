@@ -107,6 +107,8 @@ export const MIGRATIONS: readonly string[] = [
     tick_id TEXT PRIMARY KEY,
     at INTEGER NOT NULL
   );
+  `,
+  `
   -- Mode and protection changes, so every state shown is explainable (invariant 9).
   CREATE TABLE knob_changes (
     seq INTEGER PRIMARY KEY AUTOINCREMENT,

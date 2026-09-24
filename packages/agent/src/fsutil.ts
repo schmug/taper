@@ -2,11 +2,11 @@
 // never leaves a half-written settings or config file.
 
 import {
+  chmodSync,
   lstatSync,
   mkdirSync,
   readFileSync,
   readlinkSync,
-  realpathSync,
   renameSync,
   statSync,
   writeFileSync,
@@ -24,18 +24,20 @@ export function readText(path: string): string | null {
   }
 }
 
-/** The file a path finally names: a symlink (even a dangling one) is followed. */
+/** The file a path finally names: every symlink hop is followed, even to a missing target. */
 function resolveTarget(path: string): string {
-  try {
-    return realpathSync(path);
-  } catch {
+  let p = path;
+  for (let hops = 0; hops < 40; hops++) {
+    let link: string;
     try {
-      if (lstatSync(path).isSymbolicLink()) return resolve(dirname(path), readlinkSync(path));
+      if (!lstatSync(p).isSymbolicLink()) return p;
+      link = readlinkSync(p);
     } catch {
-      // does not exist
+      return p; // does not exist yet: this is the file to create
     }
-    return path;
+    p = resolve(dirname(p), link);
   }
+  throw new Error(`refusing to write ${path}: symlink loop`);
 }
 
 /**
@@ -53,6 +55,7 @@ export function writeAtomic(link: string, text: string, mode = 0o644): void {
   }
   const tmp = `${path}.taper-${process.pid}.tmp`;
   writeFileSync(tmp, text, { mode: keep });
+  chmodSync(tmp, keep); // writeFileSync's mode is filtered by the umask
   renameSync(tmp, path);
 }
 

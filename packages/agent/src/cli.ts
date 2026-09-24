@@ -614,6 +614,20 @@ function cmdMode(agent: Agent, rest: readonly string[]): number {
   }
   const now = agent.deps.now();
   if (mode === 'shadow' && knob.mode === 'automatic') {
+    // A rule retired while removed comes back `removed` if the human re-adds it (ADR-0004). In a
+    // shadow knob, usage would then lift that removal with no re-grant (invariant 5), and core
+    // cannot re-grant a retired member. So refuse, whatever the flags.
+    const retired = agent.store
+      .members()
+      .filter((m) => m.knobId === knob.id && m.state === 'retired' && m.retiredFrom === 'removed');
+    if (retired.length > 0) {
+      agent.deps.err(
+        `Refusing: ${retired.map((m) => JSON.stringify(m.rule)).join(', ')} ${retired.length === 1 ? 'was' : 'were'} ` +
+          'removed and then deleted from the file; taper keeps such a rule removed if it returns. ' +
+          'To switch, re-add it, run `taper regrant`, and delete it again, or keep the knob automatic.',
+      );
+      return 1;
+    }
     // In shadow, usage withdraws a removal (ADR-0004). Without this step, switching to shadow
     // and back would let an enforced `removed` member leave without a re-grant (invariant 5).
     const removed = agent.store

@@ -1,10 +1,21 @@
 // Local plumbing: paths, the versioned SQLite ledger, config, repo identity, workspace trust.
 
-import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import {
+  chmodSync,
+  lstatSync,
+  mkdirSync,
+  readFileSync,
+  readlinkSync,
+  statSync,
+  symlinkSync,
+  writeFileSync,
+} from 'node:fs';
 import { join } from 'node:path';
+import Database from 'better-sqlite3';
 import { describe, expect, it } from 'vitest';
 import { defaultConfig, readConfig, writeConfig } from '../src/config.ts';
 import { MIGRATIONS, openDb } from '../src/db.ts';
+import { writeAtomic } from '../src/fsutil.ts';
 import { resolvePaths } from '../src/paths.ts';
 import { findRepo, normalizeRemote } from '../src/repo.ts';
 import { readTrust } from '../src/trust.ts';
@@ -60,6 +71,21 @@ describe('openDb', () => {
     const again = openDb(path);
     expect(again.pragma('user_version', { simple: true })).toBe(MIGRATIONS.length);
     again.close();
+  });
+
+  it('upgrades a ledger created at an earlier version with the later migrations only', () => {
+    const path = join(tempDir(), 'state.db');
+    const old = new Database(path);
+    old.exec(MIGRATIONS[0] as string);
+    old.pragma('user_version = 1');
+    old.prepare("INSERT INTO ticks (tick_id, at) VALUES ('tick:kept', 1)").run();
+    old.close();
+    const db = openDb(path);
+    expect(db.pragma('user_version', { simple: true })).toBe(MIGRATIONS.length);
+    expect(MIGRATIONS.length).toBeGreaterThan(1);
+    expect(db.prepare('SELECT COUNT(*) AS n FROM knob_changes').get()).toEqual({ n: 0 });
+    expect(db.prepare('SELECT tick_id FROM ticks').all()).toEqual([{ tick_id: 'tick:kept' }]);
+    db.close();
   });
 
   it('keeps transitions idempotent on (member, from, to, tick), including a null from', () => {
@@ -162,5 +188,36 @@ describe('readTrust (ADR-0002 row 1)', () => {
     writeJson(join(dir, 'odd.json'), { projects: { '/x': { hasTrustDialogAccepted: 'yes' } } });
     expect(readTrust(join(dir, 'odd.json'), ['/x'])).toBe('unknown');
     expect(readFileSync(join(dir, 'bad.json'), 'utf8')).toBe('{not json');
+  });
+});
+
+describe('writeAtomic', () => {
+  it('follows a chain of links, even a dangling one, and replaces only the final target', () => {
+    const d = tempDir();
+    const target = join(d, 't.json');
+    symlinkSync(target, join(d, 'l2.json'));
+    symlinkSync('l2.json', join(d, 'l.json'));
+    writeAtomic(join(d, 'l.json'), 'NEW\n');
+    expect(readlinkSync(join(d, 'l.json'))).toBe('l2.json');
+    expect(lstatSync(join(d, 'l2.json')).isSymbolicLink()).toBe(true);
+    expect(readFileSync(target, 'utf8')).toBe('NEW\n');
+  });
+
+  it('refuses a symlink loop instead of replacing a link', () => {
+    const d = tempDir();
+    symlinkSync(join(d, 'b.json'), join(d, 'a.json'));
+    symlinkSync(join(d, 'a.json'), join(d, 'b.json'));
+    expect(() => writeAtomic(join(d, 'a.json'), 'x')).toThrow(/loop/);
+    expect(lstatSync(join(d, 'a.json')).isSymbolicLink()).toBe(true);
+    expect(lstatSync(join(d, 'b.json')).isSymbolicLink()).toBe(true);
+  });
+
+  it('keeps the existing permission bits exactly, whatever the umask', () => {
+    const d = tempDir();
+    const f = join(d, 'settings.json');
+    writeFileSync(f, 'OLD');
+    chmodSync(f, 0o664);
+    writeAtomic(f, 'NEW');
+    expect(statSync(f).mode & 0o777).toBe(0o664);
   });
 });

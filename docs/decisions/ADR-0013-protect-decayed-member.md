@@ -29,6 +29,11 @@ The user said "never decay this", and the result is a rule that is still blocked
   without this a switch to shadow and back would let an enforced removal end without a re-grant
   (invariant 5; found in the M3 review). Mode changes are recorded in `knob_changes`. M6 must not
   carry this path into `AdminOnly`: there a mode change that lifts a removal needs the verifier.
+- The same switch is **refused**, with or without `--yes`, while the knob has a member that is
+  `retired` from `removed`. The human deleted a removed rule, and core returns it to `removed`
+  if it comes back. In a shadow knob, usage would then lift that removal. Core cannot re-grant a
+  retired member. To switch, the user re-adds the rule, runs `taper regrant`, and deletes it
+  again. This is found in the second review; core is unchanged.
 
 ## Consequences
 

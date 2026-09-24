@@ -13,6 +13,7 @@ Part A, `fixtures/`). Still unverified:
 | Rule-form matrix, remainder: path-rule and Agent denies, the `Task(...)` alias, asks inside compound commands, a bare `WebFetch` ask, and four cases added after the run. The 2026-09-23 run confirmed the rest (ADR-0006 table, ADR-0009) | M6: `50-taper.json` copies path, Agent and bare-name members into `ask`/`deny`, and needs them to take effect | Owner go-ahead for a rerun of fixtures 01, 06, 07, 11, 12, 15, 23, 27 (about $0.32). Then fix `observe()` from the saved streams. Every open case carries an `unverified` note. |
 | `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` effect on customer OTel export | M7 | One probe each. |
 | Whether a tool hook's `cwd` follows a Bash `cd`; the project root when Claude Code starts in a repo subdirectory; `.claude.json` under `CLAUDE_CONFIG_DIR` | Nothing (M3 handles each conservatively: ADR-0010, ADR-0011) | One interactive probe session with `cd` and a subdirectory start. |
+| Whether a prompt raised by taper's hook `ask` offers "Yes, and don't ask again" (it would write a new local allow rule that allows the call without the removed member; ADR-0011) | Nothing | One interactive session with an automatic knob holding a pending and a removed member. |
 | taper's hooks installed in a live Claude Code session (M3 ran the recorded payloads and the built binary through `sh -c`, not a live `claude`) | Dogfooding | `TAPER_DOGFOOD=1 taper init` in a scratch repo, one interactive session. |
 
 ## M0 — Verify and scaffold (2026-09-22)
@@ -169,8 +170,15 @@ does not touch `fixtures/headless/`.
 
   Also fixed: a ledger-close error could exit 1; the suggested commands are now shell-safe; a
   test no longer edits a human array. The rest is recorded in ADR-0011.
+
+  A second reviewer confirmed items 1, 3 and 5 and found two more, also fixed test-first:
+  - a switch to shadow while a removed rule sat `retired` could still lift that removal, so it is
+    now refused (ADR-0013);
+  - acceptEdits approvals were missing from the "with the rule" side of the check.
+
+  Nits fixed: `knob_changes` is migration 2; symlink chains and loops; exact file modes.
 - Tests (`pnpm test`): core 129 passing; backend 660 passing, 24 skipped (the gated differential
-  sessions); agent 80 passing. 0 failing. `pnpm lint` and `pnpm typecheck` are clean.
+  sessions); agent 85 passing. 0 failing. `pnpm lint` and `pnpm typecheck` are clean.
 
 **Deferred.**
 - `enroll`, `sync`, `agent run`, `otel serve` (M6+); `recommend --format pr` (M7); the

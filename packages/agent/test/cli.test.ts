@@ -290,6 +290,30 @@ describe('taper mode', () => {
     expect(after.changes).toEqual(['mode:shadow>automatic:user', 'mode:automatic>shadow:user']);
   });
 
+  it('refuses shadow while a removed rule sits retired: it would come back removed and usage would lift it', () => {
+    const s = setup();
+    cli(s, ['init', '--yes']);
+    expect(cli(s, ['mode', 'project', 'automatic']).code).toBe(0);
+    setState(s, PROJECT, 'Bash(git push *)', 'removed');
+    // The human deletes the removed rule (as `taper recommend` suggests): the member retires.
+    writeJson(join(s.repo, '.claude', 'settings.json'), {
+      permissions: { allow: ['Bash(npm run lint)', 'Read(./docs/**)'], deny: ['Read(./.env)'] },
+    });
+    cli(s, ['snapshot'], { now: () => T0 + 1000 });
+    for (const flags of [[], ['--yes']]) {
+      const r = cli(s, ['mode', 'project', 'shadow', ...flags], { now: () => T0 + 2000 });
+      expect(r.code).toBe(1);
+      expect(r.errors.join('\n')).toContain('"Bash(git push *)"');
+    }
+    const a = Agent.open(s.deps());
+    expect(a.store.knobs().find((k) => k.id === PROJECT)?.mode).toBe('automatic');
+    expect(a.store.members({ ids: [memberIdFor(PROJECT, 'Bash(git push *)')] })[0]).toMatchObject({
+      state: 'retired',
+      retiredFrom: 'removed',
+    });
+    a.close();
+  });
+
   it('records protect changes and shows them in explain (invariant 9)', () => {
     const s = setup();
     cli(s, ['init', '--yes']);
