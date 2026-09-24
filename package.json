@@ -16,7 +16,9 @@
     "typecheck": "pnpm -r --if-present typecheck && tsc -p scripts --noEmit",
     "lint": "biome check .",
     "format": "biome format --write .",
-    "probe": "node scripts/probe-claude-code.ts"
+    "probe": "node scripts/probe-claude-code.ts",
+    "demo:solo": "node scripts/demo.ts --solo",
+    "bench:hook": "pnpm --filter taperd build && node scripts/bench-hook.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
