@@ -126,7 +126,7 @@ export const templateNarrative: NarrativeProvider = {
     );
     section('Stale candidates:', 'stale_candidate', () => '');
     if (items.length === 0)
-      lines.push('', 'Nothing to recommend: every tracked allow rule is in use.');
+      lines.push('', 'Nothing to recommend: no tracked allow rule has decayed.');
     if (items.some((i) => i.knob.mode === 'shadow'))
       lines.push(
         '',
